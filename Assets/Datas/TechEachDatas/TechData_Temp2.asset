@@ -16,10 +16,12 @@ MonoBehaviour:
   techNamePrint: 1
   techDescription: 12
   techIcon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  requriedByteValue: 20
   baseRequiredByte: 20
   byteIncreaseRate: 20
+  increaseByteValue: 20
   maxLevel: 20
-  preTeches: []
-  postTeches: []
+  preTeches:
+  - {fileID: 11400000, guid: 254a8756c17f27848a96a30c006ed354, type: 2}
+  postTeches:
+  - {fileID: 11400000, guid: 5c743014d1b1f0f4eaf44c7fd2a5275d, type: 2}
   effects: []

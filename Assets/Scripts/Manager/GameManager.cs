@@ -1,11 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    private int currentGoldAmount = 0;
-    private int increaseGoldAmount = 0;
+    public event Action OnCurrentGoldAmountChanged;
+
+    [SerializeField] int currentGoldAmount = 0;
+    [SerializeField] int increaseGoldAmount = 0;
 
     private void Awake()
     {
@@ -20,6 +23,8 @@ public class GameManager : MonoBehaviour
     public void AddCurrentGoldAmount(int amount)
     {
         currentGoldAmount += amount;
+        // 현재 소유하고 있는 금의 양이 변경되었다고 알림
+        OnCurrentGoldAmountChanged?.Invoke();
     }
 
     public void AddIncreaseGoldAmount(int amount)

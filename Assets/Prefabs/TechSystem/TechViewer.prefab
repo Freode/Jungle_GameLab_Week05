@@ -92,3 +92,4 @@ MonoBehaviour:
   techDatas:
   - {fileID: 11400000, guid: 254a8756c17f27848a96a30c006ed354, type: 2}
   - {fileID: 11400000, guid: 6ad9c93ceecbc6744b46048de84a1e89, type: 2}
+  - {fileID: 11400000, guid: 5c743014d1b1f0f4eaf44c7fd2a5275d, type: 2}

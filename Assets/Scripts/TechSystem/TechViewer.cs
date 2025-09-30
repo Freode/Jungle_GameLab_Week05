@@ -9,14 +9,31 @@ public class TechViewer : MonoBehaviour
     [SerializeField] private GameObject uiPrefab;
     [SerializeField] private List<TechData> techDatas;      // 데이터 원본
 
+    private Dictionary<TechData, TechEachUI> techEachUIs;   // 테크 UI
+
     void Awake()
     {
         instance = this;
+        techEachUIs = new Dictionary<TechData, TechEachUI>();
     }
 
     void Start()
     {
         InitUI();
+    }
+
+    // 특정 테크의 사전 테크가 모두 해제되었는지 확인
+    public void CheckUnlockPreTech(TechData techData)
+    {
+        foreach(var preTech in techData.preTeches)
+        {
+            if (techEachUIs[preTech].GetTechUnlock() != LockState.Complete)
+                return;
+        }
+
+        // 해금 가능하다고 업데이트
+        techEachUIs[techData].SetTechUnlock();
+        techEachUIs[techData].OnCurrentGoldAmountChanged();
     }
 
     void InitUI()
@@ -35,8 +52,9 @@ public class TechViewer : MonoBehaviour
         eachUI.transform.localPosition = pos;
 
         eachUI.TryGetComponent(out TechEachUI techEachUI);
-        if (eachUI is null) return;
+        if (techEachUI is null) return;
 
+        techEachUIs.Add(techData, techEachUI);
         techEachUI.RegisterData(techData);
     }
 }
