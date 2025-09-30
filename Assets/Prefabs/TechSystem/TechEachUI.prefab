@@ -478,6 +478,7 @@ GameObject:
   - component: {fileID: 198091185975778421}
   - component: {fileID: 2405629103885552896}
   - component: {fileID: 6531596040895485867}
+  - component: {fileID: 3584340040542298618}
   m_Layer: 5
   m_Name: Button_BackGround
   m_TagString: Untagged
@@ -581,11 +582,26 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 2405629103885552896}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3584340040542298618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8631489525637754526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
+  m_EffectDistance: {x: 2, y: -2}
+  m_UseGraphicAlpha: 1
 --- !u!1 &8983777012956418944
 GameObject:
   m_ObjectHideFlags: 0
