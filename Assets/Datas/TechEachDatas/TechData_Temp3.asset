@@ -16,9 +16,9 @@ MonoBehaviour:
   techNamePrint: 1
   techDescription: 12
   techIcon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  baseRequiredByte: 30
-  byteIncreaseRate: 30
-  increaseByteValue: 30
+  baseRequiredGold: 30
+  IncreaseGoldRate: 1
+  increaseGoldValue: 30
   maxLevel: 30
   preTeches:
   - {fileID: 11400000, guid: 6ad9c93ceecbc6744b46048de84a1e89, type: 2}
