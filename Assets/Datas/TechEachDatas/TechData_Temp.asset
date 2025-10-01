@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   techName: Temp
   techNamePrint: 1
-  techDescription: 12
+  techDescription: temp1\ntemp2
   techIcon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   baseRequiredGold: 10
   IncreaseGoldRate: 2
