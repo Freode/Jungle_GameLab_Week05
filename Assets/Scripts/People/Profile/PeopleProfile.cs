@@ -1,5 +1,7 @@
 using UnityEngine;
 
+public enum NameMode { Fixed, Pool, FirstLast }
+
 [CreateAssetMenu(menuName = "People/People Profile", fileName = "PeopleProfile_")]
 public class PeopleProfile : ScriptableObject
 {
@@ -16,24 +18,95 @@ public class PeopleProfile : ScriptableObject
     [Range(0, 100)] public int fixedLoyalty = 50;
 
     [Header("Name")]
-    public bool randomName = true;
+    public NameMode nameMode = NameMode.Pool;
+
+    // Pool 모드
     public string[] namePool = new string[] { "Alex", "Blake", "Casey" };
+
+    // FirstLast 모드
+    public string[] firstNames = new string[]
+    {
+        "Alex","Blake","Casey","Drew","Evan","Finn",
+        "Jamie","Jordan","Taylor","Morgan","Quinn","Riley","Avery","Cameron","Hayden","Parker",
+        "Reese","Rowan","Skyler","Sage","Harper","Logan","Kendall","Peyton","Remy","Charlie",
+        "Emerson","Dakota","Phoenix","Rory","Micah","Sidney"
+    };
+
+    public string[] lastNames = new string[]
+    {
+        "Smith","Johnson","Williams","Brown","Jones","Miller","Davis","Garcia","Rodriguez","Martinez",
+        "Wilson","Anderson","Taylor","Thomas","Moore","Jackson","Martin","Thompson","White","Harris",
+        "Clark","Lewis","Robinson","Walker","Young","Allen"
+    };
+
+
+    // Fixed 모드
     public string fixedName = "NPC";
 
     // 프로필에서 새 인스턴스 값 생성
     public PeopleValue Generate()
     {
         var v = new PeopleValue();
-        v.age = randomAge ? Random.Range(minAge, maxAge + 1) : fixedAge;
-        v.loyalty = randomLoyalty ? Random.Range(minLoyalty, maxLoyalty + 1) : fixedLoyalty;
-        v.name = randomName && namePool != null && namePool.Length > 0
-            ? namePool[Random.Range(0, namePool.Length)]
-            : fixedName;
+
+        // Age
+        v.age = randomAge ? RandomIntInclusive(minAge, maxAge)
+                          : Mathf.Max(0, fixedAge);
+
+        // Loyalty
+        v.loyalty = randomLoyalty ? RandomIntInclusive(minLoyalty, maxLoyalty)
+                                  : Mathf.Clamp(fixedLoyalty, 0, 100);
+
+        // Name
+        v.name = GenerateName();
+
         return v;
+    }
+
+    public string GenerateName()
+    {
+        switch (nameMode)
+        {
+            case NameMode.Fixed:
+                return string.IsNullOrWhiteSpace(fixedName) ? "NPC" : fixedName;
+
+            case NameMode.Pool:
+                if (HasAny(namePool)) return Pick(namePool);
+                return string.IsNullOrWhiteSpace(fixedName) ? "NPC" : fixedName;
+
+            case NameMode.FirstLast:
+                if (HasAny(firstNames) && HasAny(lastNames))
+                    return $"{Pick(firstNames)} {Pick(lastNames)}";
+                if (HasAny(namePool)) return Pick(namePool);
+                return string.IsNullOrWhiteSpace(fixedName) ? "NPC" : fixedName;
+        }
+        return "NPC";
+    }
+
+    // --- 유틸 ---
+
+    private static bool HasAny(string[] arr) => arr != null && arr.Length > 0;
+
+    private static string Pick(string[] arr) => arr[Random.Range(0, arr.Length)];
+
+    // Unity Random.Range(int,int)는 상한 미포함 → 포함 범위 도우미
+    private static int RandomIntInclusive(int min, int max)
+    {
+        if (min > max) (min, max) = (max, min);
+        return Random.Range(min, max + 1);
+    }
+
+    private void OnValidate()
+    {
+        if (minAge > maxAge) (minAge, maxAge) = (maxAge, minAge);
+        if (minLoyalty > maxLoyalty) (minLoyalty, maxLoyalty) = (maxLoyalty, minLoyalty);
+
+        fixedAge = Mathf.Max(0, fixedAge);
+        fixedLoyalty = Mathf.Clamp(fixedLoyalty, 0, 100);
+        minLoyalty = Mathf.Clamp(minLoyalty, 0, 100);
+        maxLoyalty = Mathf.Clamp(maxLoyalty, 0, 100);
     }
 }
 
-// 런타임으로 넘겨줄 값 DTO(구조체/클래스 아무거나)
 [System.Serializable]
 public class PeopleValue
 {

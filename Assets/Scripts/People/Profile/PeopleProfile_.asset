@@ -20,9 +20,69 @@ MonoBehaviour:
   minLoyalty: 10
   maxLoyalty: 90
   fixedLoyalty: 50
-  randomName: 1
+  nameMode: 2
   namePool:
   - Alex
   - Blake
   - Casey
+  firstNames:
+  - Alex
+  - Blake
+  - Casey
+  - Drew
+  - Evan
+  - Finn
+  - Jamie
+  - Jordan
+  - Taylor
+  - Morgan
+  - Quinn
+  - Riley
+  - Avery
+  - Cameron
+  - Hayden
+  - Parker
+  - Reese
+  - Rowan
+  - Skyler
+  - Sage
+  - Harper
+  - Logan
+  - Kendall
+  - Peyton
+  - Remy
+  - Charlie
+  - Emerson
+  - Dakota
+  - Phoenix
+  - Rory
+  - Micah
+  - Sidney
+  lastNames:
+  - Smith
+  - Johnson
+  - Williams
+  - Brown
+  - Jones
+  - Miller
+  - Davis
+  - Garcia
+  - Rodriguez
+  - Martinez
+  - Wilson
+  - Anderson
+  - Taylor
+  - Thomas
+  - Moore
+  - Jackson
+  - Martin
+  - Thompson
+  - White
+  - Harris
+  - Clark
+  - Lewis
+  - Robinson
+  - Walker
+  - Young
+  - Allen
   fixedName: NPC
