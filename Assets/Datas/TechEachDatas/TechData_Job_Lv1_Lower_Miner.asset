@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2115852e50bc17549bd2f6c03796f836, type: 3}
+  m_Name: TechData_Job_Lv1_Lower_Miner
+  m_EditorClassIdentifier: 
+  techName: "\uD0C4\uAD11 \uAD11\uBD80 "
+  techNamePrint: 
+  techDescription: 
+  techIcon: {fileID: 0}
+  baseRequiredGold: 10
+  increaseGoldValue: 10
+  maxLevel: 0
+  baseCapacity: 999999999
+  isUsingLevel: 0
+  localPos: {x: 0, y: -130, z: 0}
+  preTeches:
+  - {fileID: 11400000, guid: 9afeff6d9ade18740845e5bf9e51dda7, type: 2}
+  postTeches: []
+  effects:
+  - {fileID: 11400000, guid: 21ab6ba47711ad44d92599eeda311cf5, type: 2}

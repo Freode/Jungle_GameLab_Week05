@@ -21,18 +21,20 @@ public class GoldClickAreaUI : MonoBehaviour
     private void Start()
     {
         GameManager.instance.OnCurrentGoldAmountChanged += StartModifyCurrentGoldAmount;
-        GameManager.instance.OnClickIncreaseTotalAmountChanged += PrintIncreaseGoldAmount;
+        GameManager.instance.OnClickIncreaseTotalAmountChanged += PrintClickGoldAmount;
         GameManager.instance.OnPeriodIncreaseAmountChanged += PrintPeriodGoldAmount;
         GameManager.instance.OnClickIncreaseGoldAmount += PrintIncreaseGoldAmountWhenClicked;
 
         _localCurrentGold = GameManager.instance.GetCurrentGoldAmount();
         PrintCurrentGoldAmount(_localCurrentGold);
+        PrintClickGoldAmount();
+        PrintPeriodGoldAmount();
     }
 
     private void OnDestroy()
     {
         GameManager.instance.OnCurrentGoldAmountChanged -= StartModifyCurrentGoldAmount;
-        GameManager.instance.OnClickIncreaseTotalAmountChanged -= PrintIncreaseGoldAmount;
+        GameManager.instance.OnClickIncreaseTotalAmountChanged -= PrintClickGoldAmount;
         GameManager.instance.OnPeriodIncreaseAmountChanged -= PrintPeriodGoldAmount;
         GameManager.instance.OnClickIncreaseGoldAmount -= PrintIncreaseGoldAmountWhenClicked;
     }
@@ -133,7 +135,7 @@ public class GoldClickAreaUI : MonoBehaviour
     }
 
     // 한 번 클릭 시, 얻는 골드 양 출력
-    private void PrintIncreaseGoldAmount()
+    private void PrintClickGoldAmount()
     {
         int amount = GameManager.instance.GetClickIncreaseTotalAmount();
         textClickAmount.text = "Click Gold\n" + Format(amount);
@@ -142,7 +144,7 @@ public class GoldClickAreaUI : MonoBehaviour
     // 주기적으로 얻는 골드 양 출력
     private void PrintPeriodGoldAmount()
     {
-        int amount = GameManager.instance.GetPeriodIncreaseGoldAmount();
+        int amount = GameManager.instance.GetPeriodIncreaseTotalAmount();
         textPeriodAmount.text = "Period Gold\n" + Format(amount);
     }
 }
