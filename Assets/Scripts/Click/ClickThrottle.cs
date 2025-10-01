@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 클릭 수락 간 최소 간격(minInterval)로 연타 보호.
@@ -15,6 +16,7 @@ public class ClickThrottle : MonoBehaviour
     [Header("Debug")]
     [Tooltip("거절된 클릭도 로그로 볼지 여부")]
     public bool logRejected = true;
+    public Button buttonGold;
 
     private float _lastClickTime = -9999f;
     private int _accepted;
@@ -32,8 +34,13 @@ public class ClickThrottle : MonoBehaviour
         _cpsWindowStart = Time.unscaledTime;
     }
 
+    private void Start()
+    {
+        buttonGold.onClick.AddListener(OnButtonGoldClick);
+    }
+
     /// <summary>연타 보호를 적용한 클릭 시도</summary>
-    public void TryClick()
+    public bool TryClick()
     {
         float now = Time.unscaledTime;              // 타임스케일 영향 없음
         float dt = now - _lastClickTime;
@@ -44,9 +51,9 @@ public class ClickThrottle : MonoBehaviour
             if (logRejected)
             {
                 float waitMs = (minInterval - dt) * 1000f;
-                Debug.Log($"[Click] REJECTED (anti-spam). Wait ~{waitMs:F0} ms | Rejected={_rejected}");
+                // Debug.Log($"[Click] REJECTED (anti-spam). Wait ~{waitMs:F0} ms | Rejected={_rejected}");
             }
-            return;
+            return false;
         }
 
         _lastClickTime = now;
@@ -54,22 +61,35 @@ public class ClickThrottle : MonoBehaviour
         _cpsCount++;
 
         // 클릭 수락 로그
-        Debug.Log($"[Click] Accepted #{_accepted}");
-        tempCount++;
+        // Debug.Log($"[Click] Accepted #{_accepted}");
+        //tempCount++;
 
         // 1초 창으로 CPS 출력(선택)
         if (now - _cpsWindowStart >= 1f)
         {
-            Debug.Log($"[Click] CPS={_cpsCount}, TotalAccepted={_accepted}, TotalRejected={_rejected}");
+            // Debug.Log($"[Click] CPS={_cpsCount}, TotalAccepted={_accepted}, TotalRejected={_rejected}");
             _cpsWindowStart = now;
             _cpsCount = 0;
         }
+
+        return true;
     }
 
-    // 임시: 마우스 좌클릭으로 테스트 (프로덕션에선 제거 가능)
-    private void Update()
+    //// 임시: 마우스 좌클릭으로 테스트 (프로덕션에선 제거 가능)
+    //private void Update()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //        mouseCount++;
+    //}
+
+    // 클릭 시, 금 획득
+    private void OnButtonGoldClick()
     {
-        if (Input.GetMouseButtonDown(0))
-            mouseCount++;
+        if (TryClick() == false)
+            return;
+
+        // 공식 : 선형 증가량 * 비율 증가량
+        int totalAmount = GameManager.instance.GetClickIncreaseTotalAmount();
+        GameManager.instance.AddCurrentGoldAmount(totalAmount);
     }
 }
