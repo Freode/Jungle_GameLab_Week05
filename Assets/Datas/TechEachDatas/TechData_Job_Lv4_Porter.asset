@@ -10,19 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2115852e50bc17549bd2f6c03796f836, type: 3}
-  m_Name: TechData_Job_Lv3_Porter
+  m_Name: TechData_Job_Lv4_Porter
   m_EditorClassIdentifier: 
   techName: "\uC6B4\uBC18\uC790"
   techNamePrint: 
   techDescription: 
   techIcon: {fileID: 0}
-  baseRequiredGold: 0
-  IncreaseGoldRate: 0
-  increaseGoldValue: 0
+  baseRequiredGold: 500
+  increaseGoldValue: 500
   maxLevel: 0
   baseCapacity: 0
-  localPos: {x: 0, y: -340, z: 0}
+  isUsingLevel: 0
+  localPos: {x: 0, y: -400, z: 0}
   preTeches:
   - {fileID: 11400000, guid: d99ae638ae6b6dd4f85b3b532f4df63a, type: 2}
   postTeches: []
-  effects: []
+  effects:
+  - {fileID: 11400000, guid: 16f9cffc1b08a0f4ab8f0e444da9844f, type: 2}

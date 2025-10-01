@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 893cc83c64192cb468a9b0e38958cbf6, type: 3}
-  m_Name: AddMaxCapacityEffect_Job_Lv3_Porter
+  m_Name: AddMaxCapacityEffect_Job_Lv1_Lower_Miner
   m_EditorClassIdentifier: 
-  targetTechData: {fileID: 11400000, guid: cc17e55cce8521042a58c03910d207f6, type: 2}
-  amount: 7
+  targetTechData: {fileID: 11400000, guid: ccf0efb1d231f304a9e3060069c378bf, type: 2}
+  amount: 5

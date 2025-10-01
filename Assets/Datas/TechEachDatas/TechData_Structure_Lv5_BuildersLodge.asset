@@ -16,16 +16,17 @@ MonoBehaviour:
   techNamePrint: 
   techDescription: 
   techIcon: {fileID: 0}
-  baseRequiredGold: 0
-  IncreaseGoldRate: 0
-  increaseGoldValue: 0
+  baseRequiredGold: 25000
+  increaseGoldValue: 25000
   maxLevel: 0
   baseCapacity: 0
   isUsingLevel: 1
-  localPos: {x: 0, y: 30, z: 0}
+  localPos: {x: 0, y: 60, z: 0}
   preTeches:
   - {fileID: 11400000, guid: d99ae638ae6b6dd4f85b3b532f4df63a, type: 2}
   postTeches:
   - {fileID: 11400000, guid: 75d3086872cc55740937beb3b462f90a, type: 2}
   effects:
   - {fileID: 11400000, guid: 40f1c1fd90ae86a4fa6a1bbc4d57650d, type: 2}
+  - {fileID: 11400000, guid: 1dd2877f847dd38428c63dbebbca7b2e, type: 2}
+  - {fileID: 11400000, guid: 3a99171475f62df4ca1b001bb7549168, type: 2}

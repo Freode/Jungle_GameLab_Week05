@@ -148,8 +148,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f93bf31ca621bb4c95b9fab685d02a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentGoldAmount: 100
-  clickIncreaseGoldAmountLinear: 0
+  currentGoldAmount: 0
+  clickIncreaseGoldAmountLinear: 1
   periodIncreaseGoldAmount: 0
   clickIncreaseGoldAmountRate: 0
 --- !u!4 &3125653

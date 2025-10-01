@@ -17,8 +17,7 @@ public class TechData : ScriptableObject
     public string techDescription;          // 기술 설명
     public Sprite techIcon;                 // 기술 아이콘
     public int baseRequiredGold;            // 기본 요구 바이트 (레벨 1)
-    public float IncreaseGoldRate;          // 레벨 당 요구 바이트 증가율
-    public int increaseGoldValue;           // 해금을 위한 필요 바이트 수
+    public int increaseGoldValue;           // 레벨 당 필요 바이트 수
     public int maxLevel;                    // 최대 레벨 - 변경 불가능
     public int baseCapacity;                // 기본 수용량 (레벨 1)
     public bool isUsingLevel;               // 레벨을 사용하는지 여부
@@ -48,16 +47,6 @@ public class TechState
         maxCapacity = data.baseCapacity;
         lockState = LockState.Block;
         requaireAmount = data.baseRequiredGold;
-    }
-
-    // 현재 레벨에 따른 요구 바이트 계산
-    public int GetCurrentRequiredByte()
-    {
-        if (currentLevel >= techData.maxLevel) 
-            return int.MaxValue; 
-
-        // 복리 공식 예시
-        return (int)(techData.baseRequiredGold * Mathf.Pow(techData.IncreaseGoldRate, currentLevel));
     }
 
     // 레벨업 적용
