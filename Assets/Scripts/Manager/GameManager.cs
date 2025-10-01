@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public event Action<TechData, int> OnMaxCapacityUpgrade;        // 다른 테크의 최대 수용량 업그레이드 시, 호출
     public event Action<TechData, int> OnCurrentCapacityChanged;    // 다른 테크의 현재 수용량 변동 시, 호출
     public event Action<TechData, int> OnModifyStructureLevel;      // 테크의 레벨이 변경되어 구조체 외형 변경을 호출
+    public event Action<float> OnModifyRespawnUselessPeople;        // 테크 레벨에 따라 백수 생성 주기 조정
 
     [SerializeField] int currentGoldAmount = 0;             // 현재 소지하고 있는 금의 양
     [SerializeField] int clickIncreaseGoldAmountLinear = 1; // 클릭 한 번 시, 획득하는 금의 선형적인 양
@@ -74,6 +75,12 @@ public class GameManager : MonoBehaviour
     public void ModifyStructureLevel(TechData targetType, int amount)
     {
         OnModifyStructureLevel?.Invoke(targetType, amount);
+    }
+
+    // 리스폰 주기 변경
+    public void ModifyRespawnUselessPeople(float amount)
+    {
+        OnModifyRespawnUselessPeople?.Invoke(amount);
     }
 
     // ==========================================================

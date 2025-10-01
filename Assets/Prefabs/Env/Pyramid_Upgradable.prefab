@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5266098899618858942}
   - component: {fileID: 4653349733578358192}
-  - component: {fileID: 8316639562906938426}
+  - component: {fileID: -4753656652460374165}
   m_Layer: 0
   m_Name: Pyramid_Upgradable
   m_TagString: Untagged
@@ -88,7 +88,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8316639562906938426
+--- !u!114 &-4753656652460374165
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,12 +97,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3105119767067101375}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84c9f606b3af0764eacc17bae8d62609, type: 3}
+  m_Script: {fileID: 11500000, guid: ff60b8c780a17474b8bdc8ddd55c0061, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLevel: 1
   levelAppearances:
-  - level: 1
+  - level: 0
     sprite: {fileID: 21300000, guid: f713810c1ee633e4488843d51ca5a7b3, type: 3}
     scale: {x: 0.25, y: 0.25, z: 0}
   - level: 25
@@ -117,3 +116,4 @@ MonoBehaviour:
   - level: 100
     sprite: {fileID: 21300000, guid: 6e35cc20bddbd8e4e8b563be52b300d4, type: 3}
     scale: {x: 0.2, y: 0.2, z: 0}
+  isClearStructure: 0

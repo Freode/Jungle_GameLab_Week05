@@ -45,5 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   structureInputs:
-  - areaType: 0
+  - techData: {fileID: 11400000, guid: 9afeff6d9ade18740845e5bf9e51dda7, type: 2}
+    areaStructure: {fileID: 0}
+  - techData: {fileID: 11400000, guid: b162c7d16430c5f47a5948cccf26f98b, type: 2}
     areaStructure: {fileID: 0}

@@ -13,6 +13,7 @@ public class PitHouse : MonoBehaviour
     [Header("Rules")]
     [Min(0.1f)]
     [SerializeField] private float respawnInterval = 5f; // 리스폰 주기(초)
+    [SerializeField] private float minRespawnInterval = 0.25f; // 리스폰 최소 주기(초)
     [Min(0)]
     [SerializeField] private int maxPeople = 10;         // 최대 인원(peopleParent 하위)
     [SerializeField] private bool countOnlyActive = true;// 활성화된 자식만 카운트할지
@@ -32,11 +33,18 @@ public class PitHouse : MonoBehaviour
 
     void Start()
     {
+        GameManager.instance.OnModifyRespawnUselessPeople += ModifyRespawnUselessPeople;
+
         if (!spawner) spawner = FindFirstObjectByType<PeopleSpawner>();
         if (!spawnPoint) spawnPoint = transform;
 
         if (spawnOnStart)
             TrySpawn();
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.instance.OnModifyRespawnUselessPeople -= ModifyRespawnUselessPeople;
     }
 
     void Update()
@@ -126,6 +134,12 @@ public class PitHouse : MonoBehaviour
     public void ForceSpawnOnce()
     {
         TrySpawn();
+    }
+
+    // 생성 주기 변경
+    private void ModifyRespawnUselessPeople(float amount)
+    {
+        respawnInterval = Mathf.Max(respawnInterval + amount, minRespawnInterval);
     }
 
     // 런타임에 설정 변경용 간단 API
