@@ -27,8 +27,6 @@ public class GoldClickAreaUI : MonoBehaviour
 
         _localCurrentGold = GameManager.instance.GetCurrentGoldAmount();
         PrintCurrentGoldAmount(_localCurrentGold);
-        PrintClickGoldAmount();
-        PrintPeriodGoldAmount();
     }
 
     private void OnDestroy()
@@ -49,9 +47,9 @@ public class GoldClickAreaUI : MonoBehaviour
     {
         float startTime = _curTime;
 
-        while(_curTime <= _endTime)
+        while (_curTime <= _endTime)
         {
-            if (GameManager.instance.GetIsGameOver())      
+            if (GameManager.instance.GetIsGameOver())
                 break;
 
             float dt = (_curTime - startTime) / (_endTime - startTime);
@@ -106,31 +104,13 @@ public class GoldClickAreaUI : MonoBehaviour
         if (acquireComp == null)
             return;
 
-        acquireComp.AcquireGold(Format(amount), startPosAcquireGold.transform.position, endPosAcquireGold.transform.position, color);
-    }
-
-    // 숫자 형식 변경
-    private string Format(double number)
-    {
-        return number switch
-        {
-            // 1조 (Trillion) 이상
-            >= 1_000_000_000_000 => (number / 1_000_000_000_000).ToString("F2") + "T",
-            // 10억 (Billion) 이상
-            >= 1_000_000_000 => (number / 1_000_000_000).ToString("F2") + "B",
-            // 100만 (Million) 이상
-            >= 1_000_000 => (number / 1_000_000).ToString("F2") + "M",
-            // 1천 (Kilo) 이상
-            >= 1_000 => (number / 1_000).ToString("F2") + "K",
-            // 1천 미만
-            _ => ((long)number).ToString()
-        };
+        acquireComp.AcquireGold(FuncSystem.Format(amount), startPosAcquireGold.transform.position, endPosAcquireGold.transform.position, color);
     }
 
     // 현재 골드 양 출력
     private void PrintCurrentGoldAmount(int amount)
     {
-        textCurrentGoldAmount.text = "Current Gold\n" + Format(amount);
+        textCurrentGoldAmount.text = "Current Gold\n" + FuncSystem.Format(amount);
         _localCurrentGold = amount;
     }
 
@@ -138,13 +118,13 @@ public class GoldClickAreaUI : MonoBehaviour
     private void PrintClickGoldAmount()
     {
         int amount = GameManager.instance.GetClickIncreaseTotalAmount();
-        textClickAmount.text = "Click Gold\n" + Format(amount);
+        textClickAmount.text = "Click Gold\n" + FuncSystem.Format(amount);
     }
 
     // 주기적으로 얻는 골드 양 출력
     private void PrintPeriodGoldAmount()
     {
         int amount = GameManager.instance.GetPeriodIncreaseTotalAmount();
-        textPeriodAmount.text = "Period Gold\n" + Format(amount);
+        textPeriodAmount.text = "Period Gold\n" + FuncSystem.Format(amount);
     }
 }
