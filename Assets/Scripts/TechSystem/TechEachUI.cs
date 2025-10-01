@@ -27,6 +27,10 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         StartCoroutine(CheckUnlock());
         upperY = gameObject.transform.position.y - totalRectTransform.rect.height / 2f;
         leftX = gameObject.transform.position.x - totalRectTransform.rect.width / 2f - 5f;
+
+        // === 수정 필요 ===
+        if (techState.techData.areaType != AreaType.Normal)
+            PeopleManager.Instance.OnAreaPeopleCountChanged += CurrentCapacityChange;
     }
 
     // 0.15초 후에 재검사
@@ -41,6 +45,10 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         OnActiveInfo = null;
         OnInactiveInfo = null;
         GameManager.instance.OnCurrentGoldAmountChanged -= OnCheckTechActive;
+
+        // === 수정 필요 ===
+        if (techState.techData.areaType != AreaType.Normal)
+            PeopleManager.Instance.OnAreaPeopleCountChanged -= CurrentCapacityChange;
     }
 
     // 데이터 등록
@@ -105,7 +113,16 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 현재 수용량 변경
     public void ModifyCurrentCapacity(int amount)
     {
-        techState.curCapacity += amount;
+        // techState.curCapacity += amount;
+        PrintLevelOrCapacity();
+        OnCheckTechActive();
+    }
+
+    // 현재 수용량(인원수) 변경
+    private void CurrentCapacityChange()
+    {
+        techState.curCapacity = PeopleManager.Instance.Count(techState.techData.areaType);
+        OnCheckTechActive(); // 잉여 인력이 변경되면서 추가 === 수정 필요 ===
         PrintLevelOrCapacity();
         OnCheckTechActive();
     }

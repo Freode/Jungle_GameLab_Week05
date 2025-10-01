@@ -6,6 +6,7 @@ public class TechViewer : MonoBehaviour
 {
     public static TechViewer instance;
     public GameObject techInfo;
+    public TextMeshProUGUI textPeopleCount;
 
     [SerializeField] private GameObject uiPrefab;
     [SerializeField] private List<TechData> techDatas;      // 데이터 원본
@@ -46,12 +47,14 @@ public class TechViewer : MonoBehaviour
 
         GameManager.instance.OnMaxCapacityUpgrade += MaxCapacityUpgrade;
         GameManager.instance.OnCurrentCapacityChanged += ModifyCurrentCapacity;
+        PeopleManager.Instance.OnAreaPeopleCountChanged += PrintRemainPeople;
     }
 
     private void OnDestroy()
     {
         GameManager.instance.OnMaxCapacityUpgrade -= MaxCapacityUpgrade;
         GameManager.instance.OnCurrentCapacityChanged -= ModifyCurrentCapacity;
+        PeopleManager.Instance.OnAreaPeopleCountChanged -= PrintRemainPeople;
     }
 
     // 각 테크 UI 만들기
@@ -82,5 +85,12 @@ public class TechViewer : MonoBehaviour
     void ModifyCurrentCapacity(TechData techType, int amount)
     {
         techEachUIs[techType].ModifyCurrentCapacity(amount);
+    }
+
+    // 잉여 인력 출력
+    void PrintRemainPeople()
+    {
+        int amount = PeopleManager.Instance.Count(AreaType.Normal);
+        textPeopleCount.text = "남은 인원 : " + amount;
     }
 }
