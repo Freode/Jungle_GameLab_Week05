@@ -5,6 +5,7 @@ using UnityEngine;
 public class TechViewer : MonoBehaviour
 {
     public static TechViewer instance;
+    public GameObject techInfo;
 
     [SerializeField] private GameObject uiPrefab;
     [SerializeField] private List<TechData> techDatas;      // 데이터 원본
@@ -53,6 +54,11 @@ public class TechViewer : MonoBehaviour
 
         eachUI.TryGetComponent(out TechEachUI techEachUI);
         if (techEachUI is null) return;
+
+        techInfo.TryGetComponent(out TechInfo info);
+
+        techEachUI.OnActiveInfo += info.OnActiveInfo;
+        techEachUI.OnInactiveInfo += info.OnInactiveInfo;
 
         techEachUIs.Add(techData, techEachUI);
         techEachUI.RegisterData(techData);

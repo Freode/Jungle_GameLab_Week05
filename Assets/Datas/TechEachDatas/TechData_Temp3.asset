@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2115852e50bc17549bd2f6c03796f836, type: 3}
   m_Name: TechData_Temp3
   m_EditorClassIdentifier: 
-  techName: Temp22
+  techName: t3
   techNamePrint: 1
-  techDescription: 12
+  techDescription: increase click gold amount rate
   techIcon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   baseRequiredGold: 30
   IncreaseGoldRate: 1
@@ -23,4 +23,5 @@ MonoBehaviour:
   preTeches:
   - {fileID: 11400000, guid: 6ad9c93ceecbc6744b46048de84a1e89, type: 2}
   postTeches: []
-  effects: []
+  effects:
+  - {fileID: 11400000, guid: e561f5b8199ee59468da2bf8836bd5e8, type: 2}

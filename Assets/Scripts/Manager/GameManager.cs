@@ -6,13 +6,17 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public event Action OnCurrentGoldAmountChanged;
+    public event Action OnCurrentGoldAmountChanged;         // 현재 금 소지량 변경 시, 모두 호출
+    public event Action OnClickIncreaseTotalAmountChanged;  // 현재 한 번 클릭할 때, 얻는 금의 양 변경 시, 모두 호출
+    public event Action OnPeriodIncreaseAmountChanged;      // 주기적으로 얻는 금의 양이 변화했을 때, 모두 호출
 
     [SerializeField] int currentGoldAmount = 0;             // 현재 소지하고 있는 금의 양
-    [SerializeField] int clickIncreaseGoldAmount = 0;       // 클릭 한 번 시, 획득하는 금의 양
+    [SerializeField] int clickIncreaseGoldAmountLinear = 0; // 클릭 한 번 시, 획득하는 금의 선형적인 양
     [SerializeField] int periodIncreaseGoldAmount = 0;      // 주기적으로 얻는 금의 양
+    [SerializeField] int clickIncreaseGoldAmountRate = 0;   // 클릭 한 번 시, 획득하는 금의 비율 증가 양
 
     bool isGameOver = false;                                // 게임 종료 여부
+    private int clickIncreaseTotalAmount = 0;               // 클릭 한 번 시, 획득하는 양
 
     private void Awake()
     {
@@ -47,16 +51,32 @@ public class GameManager : MonoBehaviour
         OnCurrentGoldAmountChanged?.Invoke();
     }
 
-    // 한 번 클릭할 때, 얻는 금의 양 변화
-    public void AddClickIncreaseGoldAmount(int amount)
+    // 한 번 클릭할 때, 얻는 금의 양에 대한 선형적 변화
+    public void AddClickIncreaseGoldAmountLinear(int amount)
     {
-        clickIncreaseGoldAmount += amount;
+        clickIncreaseGoldAmountLinear += amount;
+        AddClickIncreaseTotalAmount();
+    }
+
+    // 한 번 클릭할 때, 얻는 금의 양에 대한 비율 변화
+    public void AddClickIncreaseGoldAmountRate(int amount)
+    {
+        clickIncreaseGoldAmountRate += amount;
+        AddClickIncreaseTotalAmount();
     }
 
     // 주기적으로 얻는 금의 양 변화
     public void AddPeriodIncreaseGoldAmount(int amount)
     {
         periodIncreaseGoldAmount += amount;
+        OnPeriodIncreaseAmountChanged?.Invoke();
+    }
+
+    // 한 번 클릭할 때, 얻는 금의 양에 대한 총 변화
+    public void AddClickIncreaseTotalAmount()
+    {
+        clickIncreaseTotalAmount = clickIncreaseGoldAmountLinear * (100 + clickIncreaseGoldAmountRate) / 100;
+        OnClickIncreaseTotalAmountChanged?.Invoke();
     }
 
 
@@ -65,7 +85,11 @@ public class GameManager : MonoBehaviour
     // ==========================================================
 
     public int GetCurrentGoldAmount() {  return currentGoldAmount; }
-    public int GetClickIncreaseGoldAmount() { return clickIncreaseGoldAmount; }
+    public int GetClickIncreaseGoldAmountLinear() { return clickIncreaseGoldAmountLinear; }
 
     public int GetPeriodIncreaseGoldAmount() {return periodIncreaseGoldAmount; }
+
+    public int GetClickIncreaseGoldAmountRate() { return clickIncreaseGoldAmountRate; }
+
+    public int GetClickIncreaseTotalAmount() { return clickIncreaseTotalAmount; }
 }
