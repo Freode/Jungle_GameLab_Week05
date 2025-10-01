@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -34,23 +34,31 @@ public class TechViewer : MonoBehaviour
 
         // 해금 가능하다고 업데이트
         techEachUIs[techData].SetTechUnlock();
-        techEachUIs[techData].OnCurrentGoldAmountChanged();
+        techEachUIs[techData].OnCheckTechActive();
     }
 
     void InitUI()
     {
         for (int i = 0; i < techDatas.Count; i++)
         {
-            Vector3 pos = new Vector3(0, 300 - 90 * i, 0);
-            CreateTechEachUI(techDatas[i], pos);
+            CreateTechEachUI(techDatas[i]);
         }
+
+        GameManager.instance.OnMaxCapacityUpgrade += MaxCapacityUpgrade;
+        GameManager.instance.OnCurrentCapacityChanged += ModifyCurrentCapacity;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.instance.OnMaxCapacityUpgrade -= MaxCapacityUpgrade;
+        GameManager.instance.OnCurrentCapacityChanged -= ModifyCurrentCapacity;
     }
 
     // 각 테크 UI 만들기
-    void CreateTechEachUI(TechData techData, Vector3 pos)
+    void CreateTechEachUI(TechData techData)
     {
         GameObject eachUI = Instantiate(uiPrefab, transform);
-        eachUI.transform.localPosition = pos;
+        eachUI.transform.localPosition = techData.localPos;
 
         eachUI.TryGetComponent(out TechEachUI techEachUI);
         if (techEachUI is null) return;
@@ -62,5 +70,17 @@ public class TechViewer : MonoBehaviour
 
         techEachUIs.Add(techData, techEachUI);
         techEachUI.RegisterData(techData);
+    }
+
+    // 특정 테크의 수용량(유사 최대 레벨) 업그레이드
+    void MaxCapacityUpgrade(TechData techType, int amount)
+    {
+        techEachUIs[techType].IncreaseMaxCapacity(amount);
+    }
+
+    // 특정 테크의 현재 수용량 변경
+    void ModifyCurrentCapacity(TechData techType, int amount)
+    {
+        techEachUIs[techType].ModifyCurrentCapacity(amount);
     }
 }

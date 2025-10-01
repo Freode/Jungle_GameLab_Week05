@@ -10,14 +10,18 @@ public class GameManager : MonoBehaviour
     public event Action OnClickIncreaseTotalAmountChanged;          // 현재 한 번 클릭할 때, 얻는 금의 양 변경 시, 모두 호출
     public event Action OnPeriodIncreaseAmountChanged;              // 주기적으로 얻는 금의 양이 변화했을 때, 모두 호출
     public event Action<int, Color> OnClickIncreaseGoldAmount;      // 현재 클릭으로 금의 양을 새롭게 얻었다고 호출
+    public event Action<TechData, int> OnMaxCapacityUpgrade;        // 다른 테크의 최대 수용량 업그레이드 시, 호출
+    public event Action<TechData, int> OnCurrentCapacityChanged;        // 다른 테크의 현재 수용량 변동 시, 호출
 
     [SerializeField] int currentGoldAmount = 0;             // 현재 소지하고 있는 금의 양
-    [SerializeField] int clickIncreaseGoldAmountLinear = 0; // 클릭 한 번 시, 획득하는 금의 선형적인 양
-    [SerializeField] int periodIncreaseGoldAmount = 0;      // 주기적으로 얻는 금의 양
+    [SerializeField] int clickIncreaseGoldAmountLinear = 1; // 클릭 한 번 시, 획득하는 금의 선형적인 양
+    [SerializeField] int periodIncreaseGoldAmountLinear = 0;// 주기적으로 얻는 금의 양이 선형적으로 증가
     [SerializeField] int clickIncreaseGoldAmountRate = 0;   // 클릭 한 번 시, 획득하는 금의 비율 증가 양
+    [SerializeField] int periodIncreaseGoldAmountRate = 0;  // 주기적으로 얻는 금의 양이 비율적으로 증가
 
     private bool isGameOver = false;                        // 게임 종료 여부
     private int clickIncreaseTotalAmount = 0;               // 클릭 한 번 시, 획득하는 양
+    private int periodIncreaseTotalAmount = 0;              // 주기적으로 획득하는 총 양
 
     private void Awake()
     {
@@ -26,6 +30,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        AddClickIncreaseTotalAmount();
+        AddPeriodIncreaseGoldAmount();
         StartCoroutine(UpdateGoldAmount());
     }
 
@@ -35,7 +41,7 @@ public class GameManager : MonoBehaviour
         while (isGameOver == false)
         {
             yield return new WaitForSeconds(1f);
-            AddCurrentGoldAmount(periodIncreaseGoldAmount);
+            AddCurrentGoldAmount(periodIncreaseTotalAmount);
         }
     }
 
@@ -46,8 +52,20 @@ public class GameManager : MonoBehaviour
         AddCurrentGoldAmount(amount);
     }
 
+    // 특정 테크의 수용량(유사 최대 레벨) 업그레이드
+    public void ModifyMaxCapacityEffect(TechData targetTechData, int amount)
+    {
+        OnMaxCapacityUpgrade?.Invoke(targetTechData, amount);
+    }
+
+    // 특정 테크의 현재 수용량 변경
+    public void ModifyCurrentCapacity(TechData targetTechData, int amount)
+    {
+        OnCurrentCapacityChanged?.Invoke(targetTechData, amount);
+    }
+
     // ==========================================================
-    //                          Modifier
+    //                     Modify Member Value
     // ==========================================================
 
     // 현재 소지하고 있는 금의 양 변화
@@ -72,10 +90,24 @@ public class GameManager : MonoBehaviour
         AddClickIncreaseTotalAmount();
     }
 
-    // 주기적으로 얻는 금의 양 변화
-    public void AddPeriodIncreaseGoldAmount(int amount)
+    // 주기적으로 얻는 금의 선형적 수 변화
+    public void AddPeriodIncreaseGoldAmountLinear(int amount)
     {
-        periodIncreaseGoldAmount += amount;
+        periodIncreaseGoldAmountLinear += amount;
+        AddPeriodIncreaseGoldAmount();
+    }
+
+    // 주기적으로 얻는 금의 비율 변화
+    public void AddPeriodIncreaseGoldAmountRate(int amount)
+    {
+        periodIncreaseGoldAmountRate += amount;
+        AddPeriodIncreaseGoldAmount();
+    }
+
+    // 주기적으로 얻는 금의 총 변화
+    public void AddPeriodIncreaseGoldAmount()
+    {
+        periodIncreaseTotalAmount = periodIncreaseGoldAmountLinear * (100 + periodIncreaseGoldAmountRate) / 100;
         OnPeriodIncreaseAmountChanged?.Invoke();
     }
 
@@ -97,13 +129,18 @@ public class GameManager : MonoBehaviour
     // ==========================================================
 
     public int GetCurrentGoldAmount() {  return currentGoldAmount; }
+
     public int GetClickIncreaseGoldAmountLinear() { return clickIncreaseGoldAmountLinear; }
 
-    public int GetPeriodIncreaseGoldAmount() {return periodIncreaseGoldAmount; }
+    public int GetPeriodIncreaseGoldAmountLinear() {return periodIncreaseGoldAmountLinear; }
 
     public int GetClickIncreaseGoldAmountRate() { return clickIncreaseGoldAmountRate; }
 
+    public int GetPeriodIncreaseGoldAmountRate() { return periodIncreaseGoldAmountRate; }
+
     public int GetClickIncreaseTotalAmount() { return clickIncreaseTotalAmount; }
+
+    public int GetPeriodIncreaseTotalAmount() { return periodIncreaseTotalAmount; }
 
     public bool GetIsGameOver() {  return isGameOver; }
 }

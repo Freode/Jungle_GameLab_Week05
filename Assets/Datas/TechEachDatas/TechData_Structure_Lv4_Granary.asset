@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2115852e50bc17549bd2f6c03796f836, type: 3}
+  m_Name: TechData_Structure_Lv4_Granary
+  m_EditorClassIdentifier: 
+  techName: "\uC6B4\uBC18\uC18C \uAC1C\uBC1C"
+  techNamePrint: 
+  techDescription: 
+  techIcon: {fileID: 0}
+  baseRequiredGold: 4500
+  increaseGoldValue: 4500
+  maxLevel: 0
+  baseCapacity: 0
+  isUsingLevel: 1
+  localPos: {x: 0, y: 150, z: 0}
+  preTeches:
+  - {fileID: 11400000, guid: 66e0996af73c87a4792dd8fb4bc0a6f1, type: 2}
+  postTeches:
+  - {fileID: 11400000, guid: b162c7d16430c5f47a5948cccf26f98b, type: 2}
+  - {fileID: 11400000, guid: cc17e55cce8521042a58c03910d207f6, type: 2}
+  effects:
+  - {fileID: 11400000, guid: 34bff355539a2d641905cffb30b246da, type: 2}
+  - {fileID: 11400000, guid: b3f588d0c431fb840a25fda0d448fceb, type: 2}
+  - {fileID: 11400000, guid: 26e06191a378f1347acfc4e2cd34d9a9, type: 2}

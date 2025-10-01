@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEngine.Mesh;
 
 public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -25,7 +22,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     private void Start()
     {
-        GameManager.instance.OnCurrentGoldAmountChanged += OnCurrentGoldAmountChanged;
+        GameManager.instance.OnCurrentGoldAmountChanged += OnCheckTechActive;
         buttonBG.onClick.AddListener(CheckTechLevelUp);
         StartCoroutine(CheckUnlock());
         upperY = gameObject.transform.position.y - totalRectTransform.rect.height / 2f;
@@ -43,7 +40,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         OnActiveInfo = null;
         OnInactiveInfo = null;
-        GameManager.instance.OnCurrentGoldAmountChanged -= OnCurrentGoldAmountChanged;
+        GameManager.instance.OnCurrentGoldAmountChanged -= OnCheckTechActive;
     }
 
     // 데이터 등록
@@ -53,19 +50,21 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         imageIcon.sprite = techData.techIcon;
         textName.text = techData.techName;
-        PrintTextValue();
+        PrintCost();
+        PrintLevelOrCapacity();
     }
 
     // 비용이 충분하지 않다면, 비활성화
-    public void OnCurrentGoldAmountChanged()
+    // 현재 수용량이 최대 수용량보다 적어서 개발 가능한지 확인
+    public void OnCheckTechActive()
     {
         int amount = GameManager.instance.GetCurrentGoldAmount();
         // 선행 조건이 다 해결되지 않았다면, 무시
         if (techState.lockState == LockState.Block)
             return;
 
-        // 비활성화
-        if (amount < techState.requaireAmount)
+        // 비활성화 또는 수용량 여유가 있는 경우
+        if (amount < techState.requaireAmount || techState.CheckCapacity() == false)
         {
             buttonBG.interactable = false;
             textCost.color = Color.red;
@@ -90,6 +89,27 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         techState.lockState = LockState.CanUnlock;
     }
 
+    // 최대 수용량(유사 최대 레벨) 증가
+    public void IncreaseMaxCapacity(int amount)
+    {
+        techState.maxCapacity += amount;
+        OnCheckTechActive();
+    }
+
+    [ContextMenu("Do Something")]
+    public void ModifyTest()
+    {
+        ModifyCurrentCapacity(-1);
+    }
+
+    // 현재 수용량 변경
+    public void ModifyCurrentCapacity(int amount)
+    {
+        techState.curCapacity += amount;
+        PrintLevelOrCapacity();
+        OnCheckTechActive();
+    }
+
     // 레벨업 확인
     private void CheckTechLevelUp()
     {
@@ -104,15 +124,18 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 레벨업 
     private void OperateTechLevelUp()
     {
-        // 현재 금액 감소
-        GameManager.instance.AddCurrentGoldAmount(-1 * techState.requaireAmount);
-
-        // 레벨업 및 업데이트
+        int minusAmount = -1 * techState.requaireAmount;
         techState.LevelUp();
-        PrintTextValue();
+
+        // 현재 금액 감소
+        GameManager.instance.AddCurrentGoldAmount(minusAmount);
+
+        // 업데이트
+        PrintCost();
+        PrintLevelOrCapacity();
 
         // 효과 적용
-        foreach(var effect in techState.techData.effects)
+        foreach (var effect in techState.techData.effects)
         {
             effect.ApplyTechEffect();
         }
@@ -124,11 +147,17 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
     }
 
-    // 레벨과 수치 출력
-    private void PrintTextValue()
+    // 업그레이드 비용 출력
+    private void PrintCost()
     {
         textCost.text = techState.requaireAmount.ToString();
-        textLevel.text = techState.currentLevel.ToString();
+    }
+
+    // 레벨 또는 현재 수용량 출력
+    private void PrintLevelOrCapacity()
+    {
+        string value = techState.techData.isUsingLevel ? techState.currentLevel.ToString() : techState.curCapacity.ToString();
+        textLevel.text = value;
     }
 
     // 마우스 올려 놓기
@@ -143,5 +172,4 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         OnInactiveInfo?.Invoke();
     }
-
 }

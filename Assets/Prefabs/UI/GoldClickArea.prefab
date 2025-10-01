@@ -668,6 +668,8 @@ MonoBehaviour:
   logRejected: 1
   buttonGold: {fileID: 7707784904374329210}
   CriticalPercent: 2
+  animationDuration: 0.08
+  targetScaleFactor: 1.1
   tempCount: 0
   mouseCount: 0
 --- !u!114 &7456735614757226678

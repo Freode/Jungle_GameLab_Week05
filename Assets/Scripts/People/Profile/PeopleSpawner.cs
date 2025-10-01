@@ -41,18 +41,7 @@ public class PeopleSpawner : MonoBehaviour
         if (actorGO == null) return null;
 
         var actor = actorGO.GetComponent<PeopleActor>() ?? actorGO.AddComponent<PeopleActor>();
-        actor.Apply(new PeopleValue { age = age, loyalty = loyalty, name = name });
+        actor.Apply(new PeopleValue { age = age, loyalty = loyalty, name = name, job = JobType.None });
         return actor;
-    }
-
-    // 예시: 여러 명 배치
-    [ContextMenu("Spawn 5 People From Default Profile")]
-    void Spawn5()
-    {
-        for (int i = 0; i < 5; i++)
-        {
-            var p = transform.position + new Vector3(i * 1.5f, 0, 0);
-            SpawnFromProfile(p, Quaternion.identity);
-        }
     }
 }
