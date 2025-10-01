@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     public event Action OnClickIncreaseTotalAmountChanged;          // 현재 한 번 클릭할 때, 얻는 금의 양 변경 시, 모두 호출
     public event Action OnPeriodIncreaseAmountChanged;              // 주기적으로 얻는 금의 양이 변화했을 때, 모두 호출
     public event Action<int, Color> OnClickIncreaseGoldAmount;      // 현재 클릭으로 금의 양을 새롭게 얻었다고 호출
+    public event Action<TechData, int> OnMaxCapacityUpgrade;        // 다른 테크의 최대 수용량 업그레이드 시, 호출
+    public event Action<TechData, int> OnCurrentCapacityChanged;        // 다른 테크의 현재 수용량 변동 시, 호출
 
     [SerializeField] int currentGoldAmount = 0;             // 현재 소지하고 있는 금의 양
     [SerializeField] int clickIncreaseGoldAmountLinear = 0; // 클릭 한 번 시, 획득하는 금의 선형적인 양
@@ -46,8 +48,20 @@ public class GameManager : MonoBehaviour
         AddCurrentGoldAmount(amount);
     }
 
+    // 특정 테크의 수용량(유사 최대 레벨) 업그레이드
+    public void ModifyMaxCapacityEffect(TechData targetTechData, int amount)
+    {
+        OnMaxCapacityUpgrade?.Invoke(targetTechData, amount);
+    }
+
+    // 특정 테크의 현재 수용량 변경
+    public void ModifyCurrentCapacity(TechData targetTechData, int amount)
+    {
+        OnCurrentCapacityChanged?.Invoke(targetTechData, amount);
+    }
+
     // ==========================================================
-    //                          Modifier
+    //                     Modify Member Value
     // ==========================================================
 
     // 현재 소지하고 있는 금의 양 변화

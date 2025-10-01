@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 public enum LockState
@@ -19,7 +19,9 @@ public class TechData : ScriptableObject
     public int baseRequiredGold;            // 기본 요구 바이트 (레벨 1)
     public float IncreaseGoldRate;          // 레벨 당 요구 바이트 증가율
     public int increaseGoldValue;           // 해금을 위한 필요 바이트 수
-    public int maxLevel;                    // 최대 레벨
+    public int maxLevel;                    // 최대 레벨 - 변경 불가능
+    public int baseCapacity;                // 기본 수용량 (레벨 1)
+    public Vector3 localPos;                // 연구 위치
     public List<TechData> preTeches;        // 선행 기술 목록
     public List<TechData> postTeches;       // 다음 기술 목록
     public List<BaseTechEffect> effects;    // 해금 시, 적용할 효과 목록
@@ -31,6 +33,8 @@ public class TechState
 {
     public TechData techData;               // 어떤 기술의 상태인지 원본 참조
     public int currentLevel;                // 현재 레벨
+    public int curCapacity;                 // 현재 수용량
+    public int maxCapacity;                 // 최대 수용량
     public LockState lockState;             // 연구 가능 상태
     public int requaireAmount = 0;          // 요구하는 양
 
@@ -39,6 +43,8 @@ public class TechState
     {
         techData = data;
         currentLevel = 0;
+        curCapacity = 0;
+        maxCapacity = data.baseCapacity;
         lockState = LockState.Block;
         requaireAmount = data.baseRequiredGold;
     }
@@ -57,7 +63,18 @@ public class TechState
     public void LevelUp()
     {
         lockState = LockState.Complete;
+        ++curCapacity;
         ++currentLevel;
         requaireAmount += techData.increaseGoldValue;
+    }
+
+    // 현재 수용량이 최대 수용량보다 적은지 확인
+    public bool CheckCapacity()
+    {
+        // 바로 활성화 가능으로 판단
+        if (maxCapacity == 0)
+            return true;
+
+        return curCapacity < maxCapacity;
     }
 }
