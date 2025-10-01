@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2115852e50bc17549bd2f6c03796f836, type: 3}
   m_Name: TechData_Structure_Lv5_BuildersLodge
   m_EditorClassIdentifier: 
+  areaType: 0
   techName: "\uAC74\uCD95\uC18C \uAC1C\uBC1C "
   techNamePrint: 
   techDescription: 
