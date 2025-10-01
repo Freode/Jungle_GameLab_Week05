@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2115852e50bc17549bd2f6c03796f836, type: 3}
   m_Name: TechData_Temp2
   m_EditorClassIdentifier: 
-  techName: Temp22
+  techName: t2
   techNamePrint: 1
-  techDescription: 12
+  techDescription: increase period gold amount
   techIcon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   baseRequiredGold: 20
   IncreaseGoldRate: 2
