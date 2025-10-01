@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2115852e50bc17549bd2f6c03796f836, type: 3}
   m_Name: TechData_Job_Lv4_Porter
   m_EditorClassIdentifier: 
+  areaType: 2
   techName: "\uC6B4\uBC18\uC790"
   techNamePrint: 
   techDescription: 
