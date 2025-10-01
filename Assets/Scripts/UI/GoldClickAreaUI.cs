@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class GoldClickAreaUI : MonoBehaviour
 {
-    public TextMeshProUGUI textCurrentGoldAmount;       // ÇöÀç °ñµå ¼ÒÁö·®
-    public TextMeshProUGUI textClickAmount;             // ÇöÀç °ñµå Å¬¸¯ ½Ã, È¹µæ·®
-    public TextMeshProUGUI textPeriodAmount;            // ÁÖ±âÀûÀ¸·Î ¾ò´Â °ñµå ¾ç Ãâ·Â
+    public TextMeshProUGUI textCurrentGoldAmount;       // í˜„ì¬ ê³¨ë“œ ì†Œì§€ëŸ‰
+    public TextMeshProUGUI textClickAmount;             // í˜„ì¬ ê³¨ë“œ í´ë¦­ ì‹œ, íšë“ëŸ‰
+    public TextMeshProUGUI textPeriodAmount;            // ì£¼ê¸°ì ìœ¼ë¡œ ì–»ëŠ” ê³¨ë“œ ì–‘ ì¶œë ¥
+    public Transform startPosAcquireGold;               // ê¸ˆ ì–»ì—ˆì„ ë•Œ, ì¶œë ¥ ì°½ ì‹œì‘ ìœ„ì¹˜
+    public Transform endPosAcquireGold;                 // ê¸ˆ ì–»ì—ˆì„ ë•Œ, ì¶œë ¥ ì°½ ì¢…ë£Œ ìœ„ì¹˜
+    public GameObject acquireGoldAmountPrefab;          // í´ë¦­ìœ¼ë¡œ ê¸ˆ íšë“ ì‹œ, ì¶œë ¥í•  UI í”„ë¦¬íŒ¹
 
     private int _localCurrentGold = 0;
 
@@ -20,6 +23,7 @@ public class GoldClickAreaUI : MonoBehaviour
         GameManager.instance.OnCurrentGoldAmountChanged += StartModifyCurrentGoldAmount;
         GameManager.instance.OnClickIncreaseTotalAmountChanged += PrintIncreaseGoldAmount;
         GameManager.instance.OnPeriodIncreaseAmountChanged += PrintPeriodGoldAmount;
+        GameManager.instance.OnClickIncreaseGoldAmount += PrintIncreaseGoldAmountWhenClicked;
 
         _localCurrentGold = GameManager.instance.GetCurrentGoldAmount();
         PrintCurrentGoldAmount(_localCurrentGold);
@@ -30,6 +34,7 @@ public class GoldClickAreaUI : MonoBehaviour
         GameManager.instance.OnCurrentGoldAmountChanged -= StartModifyCurrentGoldAmount;
         GameManager.instance.OnClickIncreaseTotalAmountChanged -= PrintIncreaseGoldAmount;
         GameManager.instance.OnPeriodIncreaseAmountChanged -= PrintPeriodGoldAmount;
+        GameManager.instance.OnClickIncreaseGoldAmount -= PrintIncreaseGoldAmountWhenClicked;
     }
 
     private void Update()
@@ -37,7 +42,7 @@ public class GoldClickAreaUI : MonoBehaviour
         _curTime += Time.deltaTime;
     }
 
-    // °ñµå ¾ç ¾÷µ¥ÀÌÆ®
+    // ê³¨ë“œ ì–‘ ì—…ë°ì´íŠ¸
     IEnumerator UpdateLocalGoldAmount()
     {
         float startTime = _curTime;
@@ -56,22 +61,22 @@ public class GoldClickAreaUI : MonoBehaviour
             PrintCurrentGoldAmount(nextAmount);
 
 
-            // °ñµå ¾çÀÌ ¼±ÇüÀûÀ¸·Î Áõ°¡ÇÏ´Â ¾Ö´Ï¸ŞÀÌ¼Ç
+            // ê³¨ë“œ ì–‘ì´ ì„ í˜•ì ìœ¼ë¡œ ì¦ê°€í•˜ëŠ” ì• ë‹ˆë©”ì´ì…˜
             yield return new WaitForSeconds(_interval);
 
 
         }
-        // ÃÖÁ¾ ¾ç ÀçÁöÁ¤
+        // ìµœì¢… ì–‘ ì¬ì§€ì •
         PrintCurrentGoldAmount(GameManager.instance.GetCurrentGoldAmount());
 
-        // ¿Ï·á
+        // ì™„ë£Œ
         EndModifyCurrentGoldAmount();
     }
 
-    // ÇöÀç °ñµå ¾ç ¾÷µ¥ÀÌÆ® µÇ¾ú´Ù°í È£ÃâÇÏ´Â ÇÔ¼ö
+    // í˜„ì¬ ê³¨ë“œ ì–‘ ì—…ë°ì´íŠ¸ ë˜ì—ˆë‹¤ê³  í˜¸ì¶œí•˜ëŠ” í•¨ìˆ˜
     private void StartModifyCurrentGoldAmount()
     {
-        // °ªÀÌ ½ÇÁ¦·Îµµ º¯°æµÇ¾úÀ¸¸é È£Ãâ
+        // ê°’ì´ ì‹¤ì œë¡œë„ ë³€ê²½ë˜ì—ˆìœ¼ë©´ í˜¸ì¶œ
         int amount = GameManager.instance.GetCurrentGoldAmount();
         if (amount == _localCurrentGold)
             return;
@@ -84,30 +89,60 @@ public class GoldClickAreaUI : MonoBehaviour
         _animCoroutine = StartCoroutine(UpdateLocalGoldAmount());
     }
 
-    // ÇöÀç °ñµå ¾çÀ» ¸ğµÎ ¾÷µ¥ÀÌÆ® ÇßÀ» ¶§ÀÇ ÇÔ¼ö
+    // í˜„ì¬ ê³¨ë“œ ì–‘ì„ ëª¨ë‘ ì—…ë°ì´íŠ¸ í–ˆì„ ë•Œì˜ í•¨ìˆ˜
     private void EndModifyCurrentGoldAmount()
     {
         _animCoroutine = null;
     }
 
-    // ÇöÀç °ñµå ¾ç Ãâ·Â
+    // í•œ ë²ˆ í´ë¦­í–ˆì„ ë•Œ, ì–»ëŠ” ì–‘ì˜ ê¸ˆì„ ì¶œë ¥
+    private void PrintIncreaseGoldAmountWhenClicked(int amount)
+    {
+        GameObject obj = Instantiate(acquireGoldAmountPrefab, transform);
+
+        obj.TryGetComponent(out AcquireGoldAmountUI acquireComp);
+        if (acquireComp == null)
+            return;
+
+        acquireComp.AcquireGold(Format(amount), startPosAcquireGold.transform.position, endPosAcquireGold.transform.position);
+    }
+
+    // ìˆ«ì í˜•ì‹ ë³€ê²½
+    private string Format(double number)
+    {
+        return number switch
+        {
+            // 1ì¡° (Trillion) ì´ìƒ
+            >= 1_000_000_000_000 => (number / 1_000_000_000_000).ToString("F2") + "T",
+            // 10ì–µ (Billion) ì´ìƒ
+            >= 1_000_000_000 => (number / 1_000_000_000).ToString("F2") + "B",
+            // 100ë§Œ (Million) ì´ìƒ
+            >= 1_000_000 => (number / 1_000_000).ToString("F2") + "M",
+            // 1ì²œ (Kilo) ì´ìƒ
+            >= 1_000 => (number / 1_000).ToString("F2") + "K",
+            // 1ì²œ ë¯¸ë§Œ
+            _ => ((long)number).ToString()
+        };
+    }
+
+    // í˜„ì¬ ê³¨ë“œ ì–‘ ì¶œë ¥
     private void PrintCurrentGoldAmount(int amount)
     {
-        textCurrentGoldAmount.text = "Current Gold\n" + amount;
+        textCurrentGoldAmount.text = "Current Gold\n" + Format(amount);
         _localCurrentGold = amount;
     }
 
-    // ÇÑ ¹ø Å¬¸¯ ½Ã, ¾ò´Â °ñµå ¾ç Ãâ·Â
+    // í•œ ë²ˆ í´ë¦­ ì‹œ, ì–»ëŠ” ê³¨ë“œ ì–‘ ì¶œë ¥
     private void PrintIncreaseGoldAmount()
     {
         int amount = GameManager.instance.GetClickIncreaseTotalAmount();
-        textClickAmount.text = "Click Gold\n" + amount;
+        textClickAmount.text = "Click Gold\n" + Format(amount);
     }
 
-    // ÁÖ±âÀûÀ¸·Î ¾ò´Â °ñµå ¾ç Ãâ·Â
+    // ì£¼ê¸°ì ìœ¼ë¡œ ì–»ëŠ” ê³¨ë“œ ì–‘ ì¶œë ¥
     private void PrintPeriodGoldAmount()
     {
         int amount = GameManager.instance.GetPeriodIncreaseGoldAmount();
-        textPeriodAmount.text = "Period Gold\n" + amount;
+        textPeriodAmount.text = "Period Gold\n" + Format(amount);
     }
 }
