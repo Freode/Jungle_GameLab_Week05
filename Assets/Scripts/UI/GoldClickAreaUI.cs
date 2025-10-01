@@ -1,44 +1,148 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
 public class GoldClickAreaUI : MonoBehaviour
 {
-    public TextMeshProUGUI textCurrentGoldAmount;       // ���� ��� ������
-    public TextMeshProUGUI textClickAmount;             // ���� ��� Ŭ�� ��, ȹ�淮
-    public TextMeshProUGUI textPeriodAmount;            // �ֱ������� ��� ��� �� ���
+    public TextMeshProUGUI textCurrentGoldAmount;       // 현재 골드 소지량
+    public TextMeshProUGUI textClickAmount;             // 현재 골드 클릭 시, 획득량
+    public TextMeshProUGUI textPeriodAmount;            // 주기적으로 얻는 골드 양 출력
+    public Transform startPosAcquireGold;               // 금 얻었을 때, 출력 창 시작 위치
+    public Transform endPosAcquireGold;                 // 금 얻었을 때, 출력 창 종료 위치
+    public GameObject acquireGoldAmountPrefab;          // 클릭으로 금 획득 시, 출력할 UI 프리팹
+
+    private int _localCurrentGold = 0;
+
+    private float _interval = 0.05f;
+    private float _curTime = 0f;
+    private float _endTime = 0f;
+    private Coroutine _animCoroutine;
 
     private void Start()
     {
-        GameManager.instance.OnCurrentGoldAmountChanged += PrintCurrentGoldAmount;
+        GameManager.instance.OnCurrentGoldAmountChanged += StartModifyCurrentGoldAmount;
         GameManager.instance.OnClickIncreaseTotalAmountChanged += PrintIncreaseGoldAmount;
         GameManager.instance.OnPeriodIncreaseAmountChanged += PrintPeriodGoldAmount;
+        GameManager.instance.OnClickIncreaseGoldAmount += PrintIncreaseGoldAmountWhenClicked;
+
+        _localCurrentGold = GameManager.instance.GetCurrentGoldAmount();
+        PrintCurrentGoldAmount(_localCurrentGold);
     }
 
     private void OnDestroy()
     {
-        GameManager.instance.OnCurrentGoldAmountChanged -= PrintCurrentGoldAmount;
+        GameManager.instance.OnCurrentGoldAmountChanged -= StartModifyCurrentGoldAmount;
         GameManager.instance.OnClickIncreaseTotalAmountChanged -= PrintIncreaseGoldAmount;
         GameManager.instance.OnPeriodIncreaseAmountChanged -= PrintPeriodGoldAmount;
+        GameManager.instance.OnClickIncreaseGoldAmount -= PrintIncreaseGoldAmountWhenClicked;
     }
 
-    // ���� ��� �� ���
-    private void PrintCurrentGoldAmount()
+    private void Update()
     {
-        int amount = GameManager.instance.GetCurrentGoldAmount();
-        textCurrentGoldAmount.text = "Current Gold\n" + amount;
+        _curTime += Time.deltaTime;
     }
 
-    // �� �� Ŭ�� ��, ��� ��� �� ���
+    // 골드 양 업데이트
+    IEnumerator UpdateLocalGoldAmount()
+    {
+        float startTime = _curTime;
+
+        while(_curTime <= _endTime)
+        {
+            if (GameManager.instance.GetIsGameOver())      
+                break;
+
+            float dt = (_curTime - startTime) / (_endTime - startTime);
+
+            int finalAmount = GameManager.instance.GetCurrentGoldAmount();
+
+            float nextAmountF = Mathf.Lerp((float)_localCurrentGold, (float)finalAmount, dt);
+            int nextAmount = (int)nextAmountF;
+            PrintCurrentGoldAmount(nextAmount);
+
+
+            // 골드 양이 선형적으로 증가하는 애니메이션
+            yield return new WaitForSeconds(_interval);
+
+
+        }
+        // 최종 양 재지정
+        PrintCurrentGoldAmount(GameManager.instance.GetCurrentGoldAmount());
+
+        // 완료
+        EndModifyCurrentGoldAmount();
+    }
+
+    // 현재 골드 양 업데이트 되었다고 호출하는 함수
+    private void StartModifyCurrentGoldAmount()
+    {
+        // 값이 실제로도 변경되었으면 호출
+        int amount = GameManager.instance.GetCurrentGoldAmount();
+        if (amount == _localCurrentGold)
+            return;
+
+        _endTime = _curTime + 0.3f;
+
+        if (_animCoroutine != null)
+            return;
+
+        _animCoroutine = StartCoroutine(UpdateLocalGoldAmount());
+    }
+
+    // 현재 골드 양을 모두 업데이트 했을 때의 함수
+    private void EndModifyCurrentGoldAmount()
+    {
+        _animCoroutine = null;
+    }
+
+    // 한 번 클릭했을 때, 얻는 양의 금을 출력
+    private void PrintIncreaseGoldAmountWhenClicked(int amount)
+    {
+        GameObject obj = Instantiate(acquireGoldAmountPrefab, transform);
+
+        obj.TryGetComponent(out AcquireGoldAmountUI acquireComp);
+        if (acquireComp == null)
+            return;
+
+        acquireComp.AcquireGold(Format(amount), startPosAcquireGold.transform.position, endPosAcquireGold.transform.position);
+    }
+
+    // 숫자 형식 변경
+    private string Format(double number)
+    {
+        return number switch
+        {
+            // 1조 (Trillion) 이상
+            >= 1_000_000_000_000 => (number / 1_000_000_000_000).ToString("F2") + "T",
+            // 10억 (Billion) 이상
+            >= 1_000_000_000 => (number / 1_000_000_000).ToString("F2") + "B",
+            // 100만 (Million) 이상
+            >= 1_000_000 => (number / 1_000_000).ToString("F2") + "M",
+            // 1천 (Kilo) 이상
+            >= 1_000 => (number / 1_000).ToString("F2") + "K",
+            // 1천 미만
+            _ => ((long)number).ToString()
+        };
+    }
+
+    // 현재 골드 양 출력
+    private void PrintCurrentGoldAmount(int amount)
+    {
+        textCurrentGoldAmount.text = "Current Gold\n" + Format(amount);
+        _localCurrentGold = amount;
+    }
+
+    // 한 번 클릭 시, 얻는 골드 양 출력
     private void PrintIncreaseGoldAmount()
     {
         int amount = GameManager.instance.GetClickIncreaseTotalAmount();
-        textClickAmount.text = "Click Gold\n" + amount;
+        textClickAmount.text = "Click Gold\n" + Format(amount);
     }
 
-    // �ֱ������� ��� ��� �� ���
+    // 주기적으로 얻는 골드 양 출력
     private void PrintPeriodGoldAmount()
     {
         int amount = GameManager.instance.GetPeriodIncreaseGoldAmount();
-        textPeriodAmount.text = "Period Gold\n" + amount;
+        textPeriodAmount.text = "Period Gold\n" + Format(amount);
     }
 }
