@@ -1,11 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEngine.Mesh;
 
 public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -53,7 +50,8 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         imageIcon.sprite = techData.techIcon;
         textName.text = techData.techName;
-        PrintTextValue();
+        PrintCost();
+        PrintLevelOrCapacity();
     }
 
     // 비용이 충분하지 않다면, 비활성화
@@ -108,6 +106,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void ModifyCurrentCapacity(int amount)
     {
         techState.curCapacity += amount;
+        PrintLevelOrCapacity();
         OnCheckTechActive();
     }
 
@@ -132,10 +131,11 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         GameManager.instance.AddCurrentGoldAmount(minusAmount);
 
         // 업데이트
-        PrintTextValue();
+        PrintCost();
+        PrintLevelOrCapacity();
 
         // 효과 적용
-        foreach(var effect in techState.techData.effects)
+        foreach (var effect in techState.techData.effects)
         {
             effect.ApplyTechEffect();
         }
@@ -147,11 +147,17 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         }
     }
 
-    // 레벨과 수치 출력
-    private void PrintTextValue()
+    // 업그레이드 비용 출력
+    private void PrintCost()
     {
         textCost.text = techState.requaireAmount.ToString();
-        textLevel.text = techState.currentLevel.ToString();
+    }
+
+    // 레벨 또는 현재 수용량 출력
+    private void PrintLevelOrCapacity()
+    {
+        string value = techState.techData.isUsingLevel ? techState.currentLevel.ToString() : techState.curCapacity.ToString();
+        textLevel.text = value;
     }
 
     // 마우스 올려 놓기

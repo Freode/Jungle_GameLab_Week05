@@ -21,6 +21,7 @@ MonoBehaviour:
   increaseGoldValue: 0
   maxLevel: 5
   baseCapacity: 5
+  isUsingLevel: 1
   localPos: {x: 0, y: 390, z: 0}
   preTeches: []
   postTeches:

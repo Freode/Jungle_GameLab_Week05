@@ -21,6 +21,7 @@ public class TechData : ScriptableObject
     public int increaseGoldValue;           // 해금을 위한 필요 바이트 수
     public int maxLevel;                    // 최대 레벨 - 변경 불가능
     public int baseCapacity;                // 기본 수용량 (레벨 1)
+    public bool isUsingLevel;               // 레벨을 사용하는지 여부
     public Vector3 localPos;                // 연구 위치
     public List<TechData> preTeches;        // 선행 기술 목록
     public List<TechData> postTeches;       // 다음 기술 목록
@@ -72,7 +73,7 @@ public class TechState
     public bool CheckCapacity()
     {
         // 바로 활성화 가능으로 판단
-        if (maxCapacity == 0)
+        if (techData.isUsingLevel)
             return true;
 
         return curCapacity < maxCapacity;

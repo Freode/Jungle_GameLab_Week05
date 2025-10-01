@@ -21,6 +21,7 @@ MonoBehaviour:
   increaseGoldValue: 0
   maxLevel: 10
   baseCapacity: 5
+  isUsingLevel: 1
   localPos: {x: 0, y: 300, z: 0}
   preTeches:
   - {fileID: 11400000, guid: 9afeff6d9ade18740845e5bf9e51dda7, type: 2}
