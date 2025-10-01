@@ -28,3 +28,4 @@ MonoBehaviour:
   postTeches: []
   effects:
   - {fileID: 11400000, guid: 16f9cffc1b08a0f4ab8f0e444da9844f, type: 2}
+  - {fileID: 11400000, guid: 6b45ec2921aef784da65f46398b82e9f, type: 2}

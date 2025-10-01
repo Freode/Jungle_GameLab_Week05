@@ -73,13 +73,22 @@ public class PeopleManager : MonoBehaviour
         }
     }
 
-    public void MoveToArea(GameObject obj, AreaZone newArea)
+    public void MoveToArea(GameObject obj, AreaType newArea)
     {
+        AreaZone areaZone = null;
+        for (int i = 0; i < AreaZones.Length; i++)
+        {
+            if (AreaZones[i].areaType == newArea)
+            {
+                areaZone = AreaZones[i];
+                break;
+            }
+        }
         var actor = obj.GetComponent<PeopleActor>();
         var mover = obj.GetComponent<Mover>();
-        if (!actor || !mover) return;
-        mover.LockToArea(newArea);
-        SetParentToNewAnchor(obj, newArea.areaType);
+        if (!actor || !mover || !areaZone) return;
+        mover.LockToArea(areaZone);
+        SetParentToNewAnchor(obj, newArea);
         NotifyAreaChanged(actor);
     }
 
