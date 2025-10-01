@@ -79,16 +79,19 @@ public class PeopleManager : MonoBehaviour
         var mover = obj.GetComponent<Mover>();
         if (!actor || !mover) return;
         mover.LockToArea(newArea);
-        PeopleManager.Instance.SetParentToNewAnchor(obj, newArea.areaType);
-        PeopleManager.Instance.NotifyAreaChanged(actor);
+        SetParentToNewAnchor(obj, newArea.areaType);
+        NotifyAreaChanged(actor);
     }
 
-
-    [ContextMenu("Move to mine")]
-    public void MoveToMine()
+    public GameObject SelectOnePerson(AreaType type)
     {
-        GameObject gameObject = GameObject.Find("TestMan");
-        MoveToArea(gameObject, AreaZones[2]);
+        if (!_areaSets.ContainsKey(type)) return null;
+        if (Count(type) == 0) return null;
+
+        var set = _areaSets[type];
+        foreach (var person in set)
+            return person.gameObject;
+        return null;
     }
 
 
