@@ -3,24 +3,33 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEngine.Mesh;
 
-public class TechEachUI : MonoBehaviour
+public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Button buttonBG;
     public Image imageIcon;
     public TextMeshProUGUI textName;
     public TextMeshProUGUI textCost;
     public TextMeshProUGUI textLevel;
+    public RectTransform totalRectTransform;
+
+    public event System.Action<string, string, Vector3> OnActiveInfo;
+    public event System.Action OnInactiveInfo;
 
     private TechState techState;        // 데이터 원본과 상태 저장
+    private float upperY;
+    private float leftX;
 
     private void Start()
     {
         GameManager.instance.OnCurrentGoldAmountChanged += OnCurrentGoldAmountChanged;
         buttonBG.onClick.AddListener(CheckTechLevelUp);
         StartCoroutine(CheckUnlock());
+        upperY = gameObject.transform.position.y - totalRectTransform.rect.height / 2f;
+        leftX = gameObject.transform.position.x - totalRectTransform.rect.width / 2f - 5f;
     }
 
     // 0.15초 후에 재검사
@@ -32,6 +41,8 @@ public class TechEachUI : MonoBehaviour
 
     private void OnDestroy()
     {
+        OnActiveInfo = null;
+        OnInactiveInfo = null;
         GameManager.instance.OnCurrentGoldAmountChanged -= OnCurrentGoldAmountChanged;
     }
 
@@ -118,6 +129,19 @@ public class TechEachUI : MonoBehaviour
     {
         textCost.text = techState.requaireAmount.ToString();
         textLevel.text = techState.currentLevel.ToString();
+    }
+
+    // 마우스 올려 놓기
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Vector3 loc = new Vector3(leftX, upperY, 0);
+        OnActiveInfo?.Invoke(techState.techData.techName, techState.techData.techDescription, loc);
+    }
+
+    // 마우스가 빠져 나감
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        OnInactiveInfo?.Invoke();
     }
 
 }
