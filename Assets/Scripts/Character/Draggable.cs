@@ -3,32 +3,34 @@ using System.Collections;
 
 public class Draggable : MonoBehaviour
 {
+    [Header("설정")]
     [Tooltip("강에 빠진 후 몇 초 뒤에 사라질지 설정합니다.")]
     public float timeToDieInRiver = 5f;
 
     [Tooltip("오브젝트의 현재 상태를 나타냅니다. (예: 0 for Idle, 1 for Mining)")]
-    // 이 값은 이 오브젝트의 상태를 제어하는 다른 스크립트에서 업데이트해주어야 합니다.
     public int currentState = 0;
 
+    [Header("애니메이터 파라미터 이름")]
+    [Tooltip("Hanging 상태를 제외한 모든 행동 상태의 Bool 파라미터 이름을 적어주세요.")]
+    public string[] stateParameterNames = { "IsWalking", "IsMining", "IsSwimming" };
+
+    // --- 내부 변수 (수정 필요 없음) ---
     private Vector3 offset;
     private bool isDragging = false;
     private bool isOverRiver = false;
     private Coroutine deathCoroutine;
     private Animator anim;
 
-    // 스크립트가 활성화될 때 Animator 컴포넌트를 미리 찾아둡니다.
     void Awake()
     {
         anim = GetComponent<Animator>();
     }
 
-    // 오브젝트를 마우스로 클릭했을 때 호출됩니다.
     void OnMouseDown()
     {
         offset = transform.position - GetMouseWorldPos();
         isDragging = true;
 
-        // 만약 강 위에서 죽어가고 있었다면, 구출 처리
         if (deathCoroutine != null)
         {
             StopCoroutine(deathCoroutine);
@@ -36,18 +38,14 @@ public class Draggable : MonoBehaviour
             Debug.Log("강에서 구출했습니다!");
         }
 
-        // 애니메이터가 설정되어 있다면
         if (anim != null)
         {
-            // 집기 직전의 상태(Idle인지 Mining인지)를 애니메이터에 알려줍니다.
+            ResetAllStateBools();
             anim.SetInteger("PreviousState", currentState);
-            
-            // OnHang 트리거를 발동시켜 Any State -> Hanging 전환을 실행합니다.
             anim.SetTrigger("OnHang");
         }
     }
 
-    // 마우스를 드래그하는 동안 계속 호출됩니다.
     void OnMouseDrag()
     {
         if (isDragging)
@@ -56,35 +54,26 @@ public class Draggable : MonoBehaviour
         }
     }
 
-    // 마우스 클릭을 놓았을 때 호출됩니다.
     void OnMouseUp()
     {
         isDragging = false;
 
-        // 애니메이터가 설정되어 있다면
         if (anim != null)
         {
-            // OnDrop 트리거를 발동시켜 Hanging -> 이전 상태로의 전환을 실행합니다.
             anim.SetTrigger("OnDrop");
         }
 
-        // 만약 강 위에 놓았다면, 사망 코루틴 시작
         if (isOverRiver)
         {
+            if (anim != null)
+            {
+                anim.SetBool("IsSwimming", true);
+            }
             Debug.Log("강에 버려졌습니다! 곧 사라집니다...");
             deathCoroutine = StartCoroutine(DieInRiver());
         }
     }
 
-    // 마우스 위치를 게임 월드 좌표로 변환합니다.
-    private Vector3 GetMouseWorldPos()
-    {
-        Vector3 mousePoint = Input.mousePosition;
-        mousePoint.z = Camera.main.WorldToScreenPoint(transform.position).z;
-        return Camera.main.ScreenToWorldPoint(mousePoint);
-    }
-
-    // 트리거 영역에 들어갔을 때 호출됩니다.
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("River"))
@@ -97,14 +86,17 @@ public class Draggable : MonoBehaviour
         }
     }
 
-    // 트리거 영역에서 빠져나왔을 때 호출됩니다.
     void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("River"))
         {
             isOverRiver = false;
+            
+            if (anim != null)
+            {
+                anim.SetBool("IsSwimming", false);
+            }
 
-            // 강에서 빠져나왔을 때, 죽음 카운트다운을 멈춥니다.
             if (deathCoroutine != null)
             {
                 StopCoroutine(deathCoroutine);
@@ -117,16 +109,47 @@ public class Draggable : MonoBehaviour
             Debug.Log("감옥에서 나왔습니다!");
         }
     }
-
-    // 지정된 시간 후 강에서 오브젝트를 파괴하는 코루틴입니다.
+    
+    void ResetAllStateBools()
+    {
+        foreach (string paramName in stateParameterNames)
+        {
+            anim.SetBool(paramName, false);
+        }
+    }
+    
+    private Vector3 GetMouseWorldPos()
+    {
+        Vector3 mousePoint = Input.mousePosition;
+        mousePoint.z = Camera.main.WorldToScreenPoint(transform.position).z;
+        return Camera.main.ScreenToWorldPoint(mousePoint);
+    }
+    
+    // [핵심 수정] DieInRiver 코루틴 변경
     IEnumerator DieInRiver()
     {
+        // 1. 설정된 시간만큼 기다림
         yield return new WaitForSeconds(timeToDieInRiver);
 
-        // 시간이 지난 후에도 여전히 강 위에 있다면 파괴
+        // 2. 시간이 지난 후에도 여전히 강 위에 있는지 최종 확인
         if (isOverRiver)
         {
-            Debug.Log("첨벙! 사라졌습니다.");
+            // 3. 죽음이 확정되면 더 이상 드래그할 수 없도록 이 스크립트를 비활성화
+            this.enabled = false; 
+            
+            // 4. 죽는 애니메이션 재생
+            if(anim != null)
+            {
+                anim.SetTrigger("OnSwimDeath");
+            }
+            
+            Debug.Log("첨벙! 죽는 중...");
+
+            // 5. 애니메이션이 끝날 때까지 기다림 (애니메이션 길이를 1초로 가정)
+            //    만약 애니메이션 길이가 다르다면 이 숫자를 맞춰주세요.
+            yield return new WaitForSeconds(1f); 
+
+            // 6. 애니메이션이 끝난 후 오브젝트 파괴
             Destroy(gameObject);
         }
     }
