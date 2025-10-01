@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: 6e35cc20bddbd8e4e8b563be52b300d4
+guid: 4371bff3ee5f0ec44b5afb71e7c9f907
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2561435829098979917
-    second: Pyramid_0
+      213: 8353424631765913161
+    second: Pyramid_2_0
+  - first:
+      213: 2591092125072420701
+    second: Pyramid_2_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +40,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,7 +49,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -75,7 +78,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,13 +103,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Pyramid_0
+      name: Pyramid_2_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 478
-        height: 474
+        x: 2
+        y: 8
+        width: 1022
+        height: 688
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +118,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d422764c05c0c8320800000000000000
-      internalID: 2561435829098979917
+      spriteID: 94ec76ab1735de370800000000000000
+      internalID: 8353424631765913161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pyramid_2_1
+      rect:
+        serializedVersion: 2
+        x: 782
+        y: 2
+        width: 40
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5fe04f3f8865f320800000000000000
+      internalID: 2591092125072420701
       vertices: []
       indices: 
       edges: []
@@ -125,7 +150,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +160,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Pyramid_0: 2561435829098979917
+      Pyramid_2_0: 8353424631765913161
+      Pyramid_2_1: 2591092125072420701
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
