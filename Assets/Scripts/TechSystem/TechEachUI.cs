@@ -150,7 +150,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 업그레이드 비용 출력
     private void PrintCost()
     {
-        textCost.text = techState.requaireAmount.ToString();
+        textCost.text = FuncSystem.Format(techState.requaireAmount);
     }
 
     // 레벨 또는 현재 수용량 출력
