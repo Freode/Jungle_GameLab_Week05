@@ -228,6 +228,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   techInfo: {fileID: 7179027618313998262}
+  textPeopleCount: {fileID: 7711817894066583425}
   uiPrefab: {fileID: 8600423596231476583, guid: 7a6ed9130c1372f429873deee6c0a5f2, type: 3}
   techDatas:
   - {fileID: 11400000, guid: 9afeff6d9ade18740845e5bf9e51dda7, type: 2}
