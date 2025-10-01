@@ -17,6 +17,7 @@ public class ClickThrottle : MonoBehaviour
     [Tooltip("거절된 클릭도 로그로 볼지 여부")]
     public bool logRejected = true;
     public Button buttonGold;
+    public int CriticalPercent = 2;
 
     private float _lastClickTime = -9999f;
     private int _accepted;
@@ -90,6 +91,21 @@ public class ClickThrottle : MonoBehaviour
 
         // 공식 : 선형 증가량 * 비율 증가량
         int totalAmount = GameManager.instance.GetClickIncreaseTotalAmount();
-        GameManager.instance.IncreaseGoldAmountWhenClicked(totalAmount);
+
+        Color color;
+        int random = Random.Range(1, 101);
+        // 크리티컬 O
+        if(random <= CriticalPercent)
+        {
+            totalAmount *= 100;
+            color = Color.red;
+        }
+        // 크리티컬 X
+        else
+        {
+            color = Color.green;
+        }
+
+        GameManager.instance.IncreaseGoldAmountWhenClicked(totalAmount, color);
     }
 }
