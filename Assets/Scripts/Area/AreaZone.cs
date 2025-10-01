@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public enum AreaType { Normal, Mine, Carrier, Architect, StoneCarving, Prison }
+public enum AreaType { Normal, Mine, Carrier, Architect, StoneCarving, Gold ,Prison}
 
 [RequireComponent(typeof(BoxCollider2D))]
 [DisallowMultipleComponent]

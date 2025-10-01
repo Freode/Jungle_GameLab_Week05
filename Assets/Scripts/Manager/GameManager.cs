@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -11,7 +12,7 @@ public class GameManager : MonoBehaviour
     public event Action OnPeriodIncreaseAmountChanged;              // 주기적으로 얻는 금의 양이 변화했을 때, 모두 호출
     public event Action<int, Color> OnClickIncreaseGoldAmount;      // 현재 클릭으로 금의 양을 새롭게 얻었다고 호출
     public event Action<TechData, int> OnMaxCapacityUpgrade;        // 다른 테크의 최대 수용량 업그레이드 시, 호출
-    public event Action<TechData, int> OnCurrentCapacityChanged;        // 다른 테크의 현재 수용량 변동 시, 호출
+    public event Action<TechData, int> OnCurrentCapacityChanged;    // 다른 테크의 현재 수용량 변동 시, 호출
 
     [SerializeField] int currentGoldAmount = 0;             // 현재 소지하고 있는 금의 양
     [SerializeField] int clickIncreaseGoldAmountLinear = 1; // 클릭 한 번 시, 획득하는 금의 선형적인 양
@@ -23,9 +24,13 @@ public class GameManager : MonoBehaviour
     private int clickIncreaseTotalAmount = 0;               // 클릭 한 번 시, 획득하는 양
     private int periodIncreaseTotalAmount = 0;              // 주기적으로 획득하는 총 양
 
+    private Dictionary<AreaType, IncreaseInfo> increaseGoldAmounts;
+
+
     private void Awake()
     {
         instance = this;
+        increaseGoldAmounts = new Dictionary<AreaType, IncreaseInfo>();
     }
 
     private void Start()
@@ -77,44 +82,64 @@ public class GameManager : MonoBehaviour
     }
 
     // 한 번 클릭할 때, 얻는 금의 양에 대한 선형적 변화
-    public void AddClickIncreaseGoldAmountLinear(int amount)
+    public void AddClickIncreaseGoldAmountLinear(AreaType type, int amount)
     {
-        clickIncreaseGoldAmountLinear += amount;
+        if (increaseGoldAmounts.ContainsKey(type) == false)
+            increaseGoldAmounts.Add(type, new IncreaseInfo());
+
+        increaseGoldAmounts[type].clickLinear += amount;
         AddClickIncreaseTotalAmount();
     }
 
     // 한 번 클릭할 때, 얻는 금의 양에 대한 비율 변화
-    public void AddClickIncreaseGoldAmountRate(int amount)
+    public void AddClickIncreaseGoldAmountRate(AreaType type, int amount)
     {
-        clickIncreaseGoldAmountRate += amount;
+        if (increaseGoldAmounts.ContainsKey(type) == false)
+            increaseGoldAmounts.Add(type, new IncreaseInfo());
+
+        increaseGoldAmounts[type].clickRate += amount;
         AddClickIncreaseTotalAmount();
     }
 
     // 주기적으로 얻는 금의 선형적 수 변화
-    public void AddPeriodIncreaseGoldAmountLinear(int amount)
+    public void AddPeriodIncreaseGoldAmountLinear(AreaType type, int amount)
     {
-        periodIncreaseGoldAmountLinear += amount;
+        if (increaseGoldAmounts.ContainsKey(type) == false)
+            increaseGoldAmounts.Add(type, new IncreaseInfo());
+
+        increaseGoldAmounts[type].periodLinear += amount;
         AddPeriodIncreaseGoldAmount();
     }
 
     // 주기적으로 얻는 금의 비율 변화
-    public void AddPeriodIncreaseGoldAmountRate(int amount)
+    public void AddPeriodIncreaseGoldAmountRate(AreaType type, int amount)
     {
-        periodIncreaseGoldAmountRate += amount;
+        if (increaseGoldAmounts.ContainsKey(type) == false)
+            increaseGoldAmounts.Add(type, new IncreaseInfo());
+
+        increaseGoldAmounts[type].periodRate += amount;
         AddPeriodIncreaseGoldAmount();
     }
 
     // 주기적으로 얻는 금의 총 변화
     public void AddPeriodIncreaseGoldAmount()
     {
-        periodIncreaseTotalAmount = periodIncreaseGoldAmountLinear * (100 + periodIncreaseGoldAmountRate) / 100;
+        periodIncreaseTotalAmount = 0;
+        foreach (var data in increaseGoldAmounts)
+        {
+            periodIncreaseTotalAmount += data.Value.periodLinear + (100 + data.Value.periodRate) / 100;
+        }
         OnPeriodIncreaseAmountChanged?.Invoke();
     }
 
     // 한 번 클릭할 때, 얻는 금의 양에 대한 총 변화
     public void AddClickIncreaseTotalAmount()
     {
-        clickIncreaseTotalAmount = clickIncreaseGoldAmountLinear * (100 + clickIncreaseGoldAmountRate) / 100;
+        clickIncreaseTotalAmount = 0;
+        foreach (var data in increaseGoldAmounts)
+        {
+            clickIncreaseTotalAmount += data.Value.clickLinear + (100 + data.Value.clickRate) / 100;
+        }
         OnClickIncreaseTotalAmountChanged?.Invoke();
     }
 
