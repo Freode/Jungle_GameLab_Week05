@@ -6,6 +6,7 @@ public enum MoveState { Returning, Wandering, Dwelling }
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Animator))] 
 public class Mover : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -26,6 +27,7 @@ public class Mover : MonoBehaviour
     private Vector2 lastValidPosition;
     private bool wasInsideArea = false;
     private bool isInitialized = false;
+    private Animator animator;
 
     private void Awake()
     {
@@ -34,6 +36,8 @@ public class Mover : MonoBehaviour
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         lastValidPosition = transform.position;
         targetPosition = transform.position; // 초기 목표를 현재 위치로 설정
+
+        animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -93,6 +97,7 @@ public class Mover : MonoBehaviour
                 StartWandering();
             }
         }
+        UpdateAnimatorState();
     }
 
     private void FixedUpdate()
@@ -275,6 +280,94 @@ public class Mover : MonoBehaviour
         Gizmos.color = Color.blue;
         Gizmos.DrawLine(transform.position, targetPosition);
         Gizmos.DrawWireSphere(targetPosition, 0.2f);
+    }
+
+    /// <summary>
+    /// 현재 이동 상태와 지역 타입에 따라 애니메이터의 Bool 파라미터를 업데이트합니다.
+    /// </summary>
+    private void UpdateAnimatorState()
+    {
+        // Animator가 없으면 아무것도 하지 않음
+        if (animator == null) return;
+        
+        // 1. 먼저 모든 관련 애니메이션 Bool을 false로 초기화합니다.
+        //    (이것이 여러 애니메이션이 동시에 활성화되는 것을 막는 핵심입니다.)
+        ResetAnimationBools();
+
+        // 2. 현재 이동 중인지 확인합니다. (속도가 0이 아닌 경우)
+        bool isMoving = currentState == MoveState.Wandering || currentState == MoveState.Returning;
+
+        // 3. 현재 대상이 되는 지역(Area)을 가져옵니다.
+        AreaZone targetArea = lockedArea != null ? lockedArea : currentArea;
+        
+        // 4. 이동 상태에 따라 애니메이션을 설정합니다.
+        if (isMoving)
+        {
+            // Carrier 타입 지역에서는 움직일 때 'IsCarrying'을 활성화
+            if (targetArea != null && targetArea.areaType == AreaType.Carrier)
+            {
+                animator.SetBool("IsCarrying", true);
+            }
+            else // 그 외 모든 경우, 움직일 때는 'IsWalking'을 활성화
+            {
+                animator.SetBool("IsWalking", true);
+            }
+        }
+        else // 멈춰있는 상태 (Dwelling)
+        {
+            // 지역이 없으면 아무것도 안 함 (기본 Idle 상태 유지)
+            if (targetArea == null) return;
+
+            // 지역 타입에 따라 다른 행동 애니메이션을 설정
+            switch (targetArea.areaType)
+            {
+                case AreaType.Normal:
+                    // Normal 지역에서는 멈췄을 때 특별한 행동 없음 (기본 Idle)
+                    break;
+                case AreaType.Mine:
+                    animator.SetBool("IsMining", true);
+                    break;
+                case AreaType.Carrier:
+                    // Carrier는 멈췄을 때 특별한 행동 없음 (요청사항)
+                    break;
+                case AreaType.Architect:
+                    // 50% 확률로 Digging 또는 Hammering
+                    if (Random.value < 0.5f)
+                    {
+                        animator.SetBool("IsDigging", true);
+                    }
+                    else
+                    {
+                        animator.SetBool("IsHammering", true);
+                    }
+                    break;
+                case AreaType.StoneCarving:
+                    // 50% 확률로 Hammering 또는 Doing
+                    if (Random.value < 0.5f)
+                    {
+                        animator.SetBool("IsHammering", true);
+                    }
+                    else
+                    {
+                        animator.SetBool("IsDoing", true);
+                    }
+                    break;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 모든 커스텀 애니메이션 Bool 파라미터를 false로 리셋합니다.
+    /// UpdateAnimatorState에서 새 상태를 설정하기 전에 호출됩니다.
+    /// </summary>
+    private void ResetAnimationBools()
+    {
+        animator.SetBool("IsWalking", false);
+        animator.SetBool("IsMining", false);
+        animator.SetBool("IsCarrying", false);
+        animator.SetBool("IsDigging", false);
+        animator.SetBool("IsHammering", false);
+        animator.SetBool("IsDoing", false);
     }
 
     
