@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public event Action OnCurrentGoldAmountChanged;         // 현재 금 소지량 변경 시, 모두 호출
     public event Action OnClickIncreaseTotalAmountChanged;  // 현재 한 번 클릭할 때, 얻는 금의 양 변경 시, 모두 호출
     public event Action OnPeriodIncreaseAmountChanged;      // 주기적으로 얻는 금의 양이 변화했을 때, 모두 호출
+    public event Action<int> OnClickIncreaseGoldAmount;          // 현재 클릭으로 금의 양을 새롭게 얻었다고 호출
 
     [SerializeField] int currentGoldAmount = 0;             // 현재 소지하고 있는 금의 양
     [SerializeField] int clickIncreaseGoldAmountLinear = 0; // 클릭 한 번 시, 획득하는 금의 선형적인 양
@@ -38,6 +39,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // 한 번 클릭했을 때, 금의 양을 업데이트하라고 호출
+    public void IncreaseGoldAmountWhenClicked(int amount)
+    {
+        OnClickIncreaseGoldAmount?.Invoke(amount);
+        AddCurrentGoldAmount(amount);
+    }
 
     // ==========================================================
     //                          Modifier
