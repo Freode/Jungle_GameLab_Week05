@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public enum NameMode { Fixed, Pool, FirstLast }
+public enum JobType { None }
+
+
 
 [CreateAssetMenu(menuName = "People/People Profile", fileName = "PeopleProfile_")]
 public class PeopleProfile : ScriptableObject
@@ -17,13 +19,10 @@ public class PeopleProfile : ScriptableObject
     [Range(0, 100)] public int maxLoyalty = 90;
     [Range(0, 100)] public int fixedLoyalty = 50;
 
+    [Header("Job")]
+    public JobType defaultJob = JobType.None;
+
     [Header("Name")]
-    public NameMode nameMode = NameMode.Pool;
-
-    // Pool 모드
-    public string[] namePool = new string[] { "Alex", "Blake", "Casey" };
-
-    // FirstLast 모드
     public string[] firstNames = new string[]
     {
         "Alex","Blake","Casey","Drew","Evan","Finn",
@@ -59,26 +58,16 @@ public class PeopleProfile : ScriptableObject
         // Name
         v.name = GenerateName();
 
+        v.job = defaultJob;
+
         return v;
     }
 
     public string GenerateName()
     {
-        switch (nameMode)
-        {
-            case NameMode.Fixed:
-                return string.IsNullOrWhiteSpace(fixedName) ? "NPC" : fixedName;
+        if (HasAny(firstNames) && HasAny(lastNames))
+            return $"{Pick(firstNames)} {Pick(lastNames)}";
 
-            case NameMode.Pool:
-                if (HasAny(namePool)) return Pick(namePool);
-                return string.IsNullOrWhiteSpace(fixedName) ? "NPC" : fixedName;
-
-            case NameMode.FirstLast:
-                if (HasAny(firstNames) && HasAny(lastNames))
-                    return $"{Pick(firstNames)} {Pick(lastNames)}";
-                if (HasAny(namePool)) return Pick(namePool);
-                return string.IsNullOrWhiteSpace(fixedName) ? "NPC" : fixedName;
-        }
         return "NPC";
     }
 
@@ -113,4 +102,5 @@ public class PeopleValue
     public int age;
     public int loyalty; // 0~100
     public string name;
+    public JobType job;
 }
