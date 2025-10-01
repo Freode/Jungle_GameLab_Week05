@@ -20,7 +20,7 @@ MonoBehaviour:
   baseRequiredGold: 1500
   increaseGoldValue: 1500
   maxLevel: 0
-  baseCapacity: 0
+  baseCapacity: 999999
   isUsingLevel: 0
   localPos: {x: 0, y: -490, z: 0}
   preTeches:

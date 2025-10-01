@@ -144,6 +144,9 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         int minusAmount = -1 * techState.requaireAmount;
         techState.LevelUp();
 
+        // 외형 변경
+        GameManager.instance.ModifyStructureLevel(techState.techData, techState.currentLevel); ;
+
         // 현재 금액 감소
         GameManager.instance.AddCurrentGoldAmount(minusAmount);
 

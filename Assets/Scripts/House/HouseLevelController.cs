@@ -62,15 +62,3 @@ public class HouseLevelController : MonoBehaviour
         }
     }
 }
-
-
-// ★★★ 이름 변경 및 scale 변수 추가 ★★★
-// 레벨, 스프라이트, 스케일을 하나로 묶어줄 클래스입니다.
-[System.Serializable]
-public class LevelAppearance
-{
-    public int level;
-    public Sprite sprite;
-    // 기본 스케일 값을 1,1,1로 설정해 둡니다.
-    public Vector3 scale = Vector3.one; 
-}

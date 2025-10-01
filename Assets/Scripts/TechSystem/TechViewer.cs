@@ -13,6 +13,9 @@ public class TechViewer : MonoBehaviour
 
     private Dictionary<TechData, TechEachUI> techEachUIs;   // 테크 UI
 
+    // === 수정 필요 ===
+    private Dictionary<TechData, GameObject> techObjects;    // 구조물 할당
+
     void Awake()
     {
         instance = this;
