@@ -6,5 +6,6 @@ public enum ObjectType
     NPC,
     Item,
     Obstacle,
-    Environment
+    Environment,
+    AcquireInfoUI
 }

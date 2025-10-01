@@ -36,6 +36,6 @@ public class AcquireGoldAmountUI : MonoBehaviour
 
     private void CompleteAnimGold()
     {
-        Destroy(gameObject);
+        ObjectPooler.Instance.ReturnObject(gameObject);
     }
 }

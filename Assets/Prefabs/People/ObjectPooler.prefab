@@ -49,3 +49,7 @@ MonoBehaviour:
     prefab: {fileID: 2209245685371526312, guid: fafa77a2f30c9fb4d94190d2414caded, type: 3}
     initialSize: 2000
     expandable: 1
+  - type: 6
+    prefab: {fileID: 5727472975636915849, guid: e24320c9b5559c84aba9530f3441db5b, type: 3}
+    initialSize: 30
+    expandable: 1
