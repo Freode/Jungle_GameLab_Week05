@@ -83,7 +83,7 @@ public class PitHouse : MonoBehaviour
 
         // 2) Mover 부착 및 세팅
         var mover = go.GetComponent<Mover>() ?? go.AddComponent<Mover>();
-
+        
         // 3) lockedArea 설정 후 강제 초기화
         mover.LockToArea(FindClosestZone(AreaType.Normal, (Vector2)pos));
         mover.ForceInitialize(); // 추가: 즉시 초기화하여 올바른 목표 설정

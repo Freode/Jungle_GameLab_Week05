@@ -13,6 +13,7 @@ public class PeopleManager : MonoBehaviour
     [SerializeField] AreaAnchor[] AreaAnchors;
     [SerializeField] AreaZone[] AreaZones;
 
+    public event System.Action OnAreaPeopleCountChanged;            // 구역에 있는 사람 변경
 
     void Awake()
     {
@@ -31,6 +32,7 @@ public class PeopleManager : MonoBehaviour
         if (!actor) return;
         var area = ResolveArea(actor.transform);
         _areaSets[area].Add(actor);
+        OnAreaPeopleCountChanged?.Invoke();
     }
 
     /// <summary>명시적 AreaType으로 등록 (부모 체인 무시)</summary>
@@ -38,6 +40,7 @@ public class PeopleManager : MonoBehaviour
     {
         if (!actor) return;
         _areaSets[area].Add(actor);
+        OnAreaPeopleCountChanged?.Invoke();
     }
 
     /// <summary>어느 영역에 있든 안전하게 해제</summary>
@@ -47,6 +50,7 @@ public class PeopleManager : MonoBehaviour
         // 혹시 캐시가 없다면 전 영역에서 제거 (HashSet이면 비용 작음)
         foreach (var set in _areaSets.Values)
             set.Remove(actor);
+        OnAreaPeopleCountChanged?.Invoke();
     }
 
     /// <summary>부모 변경 등으로 영역이 바뀐 경우 호출</summary>
@@ -69,22 +73,36 @@ public class PeopleManager : MonoBehaviour
         }
     }
 
-    public void MoveToArea(GameObject obj, AreaZone newArea)
+    public void MoveToArea(GameObject obj, AreaType newArea)
     {
+        AreaZone areaZone = null;
+        for (int i = 0; i < AreaZones.Length; i++)
+        {
+            
+            if (AreaZones[i].areaType == newArea)
+            {
+                
+                areaZone = AreaZones[i];
+                break;
+            }
+        }
         var actor = obj.GetComponent<PeopleActor>();
         var mover = obj.GetComponent<Mover>();
-        if (!actor || !mover) return;
-        mover.LockToArea(newArea);
-        PeopleManager.Instance.SetParentToNewAnchor(obj, newArea.areaType);
-        PeopleManager.Instance.NotifyAreaChanged(actor);
+        if (!actor || !mover || !areaZone) return;
+        mover.LockToArea(areaZone);
+        SetParentToNewAnchor(obj, newArea);
+        NotifyAreaChanged(actor);
     }
 
-
-    [ContextMenu("Move to mine")]
-    public void MoveToMine()
+    public GameObject SelectOnePerson(AreaType type)
     {
-        GameObject gameObject = GameObject.Find("TestMan");
-        MoveToArea(gameObject, AreaZones[2]);
+        if (!_areaSets.ContainsKey(type)) return null;
+        if (Count(type) == 0) return null;
+
+        var set = _areaSets[type];
+        foreach (var person in set)
+            return person.gameObject;
+        return null;
     }
 
 

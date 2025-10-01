@@ -98,7 +98,8 @@ public class GoldClickAreaUI : MonoBehaviour
     // 한 번 클릭했을 때, 얻는 양의 금을 출력
     private void PrintIncreaseGoldAmountWhenClicked(int amount, Color color)
     {
-        GameObject obj = Instantiate(acquireGoldAmountPrefab, transform);
+        GameObject obj = ObjectPooler.Instance.SpawnObject(ObjectType.AcquireInfoUI);
+        obj.transform.SetParent(transform, false);
 
         obj.TryGetComponent(out AcquireGoldAmountUI acquireComp);
         if (acquireComp == null)
