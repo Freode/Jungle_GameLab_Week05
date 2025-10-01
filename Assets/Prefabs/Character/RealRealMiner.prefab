@@ -162,6 +162,10 @@ MonoBehaviour:
   - IsWalking
   - IsMining
   - IsSwimming
+  - IsCarrying
+  - IsDoing
+  - IsHammering
+  - IsDigging
 --- !u!212 &1172071191988972309
 SpriteRenderer:
   m_ObjectHideFlags: 0
