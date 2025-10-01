@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +20,13 @@ public class ClickThrottle : MonoBehaviour
     public Button buttonGold;
     public int CriticalPercent = 2;
 
+    [Header("Button Anim")]
+    [SerializeField] float animationDuration = 0.08f;    // 전체 애니메이션 시간
+    [SerializeField] float targetScaleFactor = 1.1f;    // 얼마나 커질 것인지 확인
+
+    private Vector3 originalScale;                      // 원래 버튼 크기
+    private Coroutine buttonAnimCoroutine;              // 버튼 애님 코루틴
+
     private float _lastClickTime = -9999f;
     private int _accepted;
     private int _rejected;
@@ -38,6 +46,7 @@ public class ClickThrottle : MonoBehaviour
     private void Start()
     {
         buttonGold.onClick.AddListener(OnButtonGoldClick);
+        originalScale = transform.localScale;
     }
 
     /// <summary>연타 보호를 적용한 클릭 시도</summary>
@@ -61,27 +70,15 @@ public class ClickThrottle : MonoBehaviour
         _accepted++;
         _cpsCount++;
 
-        // 클릭 수락 로그
-        // Debug.Log($"[Click] Accepted #{_accepted}");
-        //tempCount++;
-
         // 1초 창으로 CPS 출력(선택)
         if (now - _cpsWindowStart >= 1f)
         {
-            // Debug.Log($"[Click] CPS={_cpsCount}, TotalAccepted={_accepted}, TotalRejected={_rejected}");
             _cpsWindowStart = now;
             _cpsCount = 0;
         }
 
         return true;
     }
-
-    //// 임시: 마우스 좌클릭으로 테스트 (프로덕션에선 제거 가능)
-    //private void Update()
-    //{
-    //    if (Input.GetMouseButtonDown(0))
-    //        mouseCount++;
-    //}
 
     // 클릭 시, 금 획득
     private void OnButtonGoldClick()
@@ -105,7 +102,45 @@ public class ClickThrottle : MonoBehaviour
         {
             color = Color.green;
         }
-
+        ReadyToScaleCoroutine();
         GameManager.instance.IncreaseGoldAmountWhenClicked(totalAmount, color);
+    }
+
+    // 버튼 작동 준비
+    private void ReadyToScaleCoroutine()
+    {
+        if (buttonAnimCoroutine != null)
+            StopCoroutine(buttonAnimCoroutine);
+
+        buttonAnimCoroutine = StartCoroutine(PunchScaleCoroutine());
+    }
+
+    // 버튼 애니메이션 시작
+    IEnumerator PunchScaleCoroutine()
+    {
+        Vector3 targetScale = originalScale * targetScaleFactor;
+        float halfDuration = animationDuration / 2f;
+        float elapsedTime = 0f;
+
+        // 커지는 애니메이션
+        while (elapsedTime < halfDuration)
+        {
+            buttonGold.transform.localScale = Vector3.Lerp(originalScale, targetScale, elapsedTime / halfDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // 작아지는 애니메이션
+        elapsedTime = 0f;
+        while (elapsedTime < halfDuration)
+        {
+            buttonGold.transform.localScale = Vector3.Lerp(targetScale, originalScale, elapsedTime / halfDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        // 완료
+        buttonGold.transform.localScale = originalScale;
+        buttonAnimCoroutine = null;
     }
 }
