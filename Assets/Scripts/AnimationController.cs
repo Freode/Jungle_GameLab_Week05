@@ -8,29 +8,29 @@ public class AnimationController : MonoBehaviour
     [Header("Animation States")]
     [SerializeField] private bool isWalking;
     [SerializeField] private bool isRunning;
-    [SerializeField] private bool isJumping;
     [SerializeField] private bool isSwimming;
     [SerializeField] private bool isDoing;
     [SerializeField] private bool isAxe;
     [SerializeField] private bool isMining;
     [SerializeField] private bool isHammering;
     [SerializeField] private bool isDigging;
-    [SerializeField] private bool isWatering;
     [SerializeField] private bool isCarrying;
+    [SerializeField] private bool isDropping;
+    [SerializeField] private bool isHanging;
     [SerializeField] private bool isDead;
     
     [Header("Animation Parameters")]
     public string walkParameter = "IsWalking";
     public string runParameter = "IsRunning";
-    public string jumpParameter = "IsJumping";
     public string swimParameter = "IsSwimming";
     public string doParameter = "IsDoing";
     public string axeParameter = "IsAxe";
     public string miningParameter = "IsMining";
-    public string hammerParameter = "IsHammel";
+    public string hammerParameter = "IsHamering";
     public string digParameter = "IsDigging";
-    public string waterParameter = "IsWatering";
     public string carryParameter = "IsCarrying";
+    public string droppingTrigger = "IsDropping";
+    public string hangingParameter = "IsHanging";
     public string deathParameter = "Death";
     
     void Start()
@@ -73,42 +73,6 @@ public class AnimationController : MonoBehaviour
     }
     
     /// <summary>
-    /// 점프 애니메이션 트리거 (추천)
-    /// </summary>
-    public void TriggerJump()
-    {
-        if (animator != null)
-            animator.SetTrigger(jumpParameter);
-    }
-    
-    /// <summary>
-    /// 점프 애니메이션 Bool 설정 (대안)
-    /// </summary>
-    public void SetJumping(bool value)
-    {
-        isJumping = value;
-        if (animator != null)
-            animator.SetBool(jumpParameter, value);
-            
-        // 점프 시작 시 일정 시간 후 자동으로 false로 설정
-        if (value)
-        {
-            StartCoroutine(ResetJumpAfterDelay());
-        }
-    }
-    
-    /// <summary>
-    /// 점프 상태를 일정 시간 후 리셋
-    /// </summary>
-    private System.Collections.IEnumerator ResetJumpAfterDelay()
-    {
-        yield return new WaitForSeconds(0.1f); // 짧은 지연 후
-        isJumping = false;
-        if (animator != null)
-            animator.SetBool(jumpParameter, false);
-    }
-    
-    /// <summary>
     /// 수영 애니메이션 설정
     /// </summary>
     public void SetSwimming(bool value)
@@ -116,6 +80,25 @@ public class AnimationController : MonoBehaviour
         isSwimming = value;
         if (animator != null)
             animator.SetBool(swimParameter, value);
+    }
+    
+    /// <summary>
+    /// 떨어뜨리기 애니메이션 트리거
+    /// </summary>
+    public void TriggerDropping()
+    {
+        if (animator != null)
+            animator.SetTrigger(droppingTrigger);
+    }
+    
+    /// <summary>
+    /// 매달리기 애니메이션 설정
+    /// </summary>
+    public void SetHanging(bool value)
+    {
+        isHanging = value;
+        if (animator != null)
+            animator.SetBool(hangingParameter, value);
     }
     
     /// <summary>
@@ -169,16 +152,6 @@ public class AnimationController : MonoBehaviour
     }
     
     /// <summary>
-    /// 물주기 애니메이션 설정
-    /// </summary>
-    public void SetWatering(bool value)
-    {
-        isWatering = value;
-        if (animator != null)
-            animator.SetBool(waterParameter, value);
-    }
-    
-    /// <summary>
     /// 운반 애니메이션 설정
     /// </summary>
     public void SetCarrying(bool value)
@@ -207,30 +180,30 @@ public class AnimationController : MonoBehaviour
     {
         isWalking = false;
         isRunning = false;
-        isJumping = false;
         isSwimming = false;
         isDoing = false;
         isAxe = false;
         isMining = false;
         isHammering = false;
         isDigging = false;
-        isWatering = false;
+        isDropping = false;
         isCarrying = false;
+        isHanging = false;
         isDead = false;
         
         if (animator != null)
         {
             animator.SetBool(walkParameter, false);
             animator.SetBool(runParameter, false);
-            animator.SetBool(jumpParameter, false);
             animator.SetBool(swimParameter, false);
             animator.SetBool(doParameter, false);
             animator.SetBool(axeParameter, false);
             animator.SetBool(miningParameter, false);
             animator.SetBool(hammerParameter, false);
             animator.SetBool(digParameter, false);
-            animator.SetBool(waterParameter, false);
             animator.SetBool(carryParameter, false);
+            animator.SetBool(droppingTrigger, false);
+            animator.SetBool(hangingParameter, false);
             animator.SetBool(deathParameter, false);
         }
     }
@@ -241,15 +214,15 @@ public class AnimationController : MonoBehaviour
     
     public bool IsWalking => isWalking;
     public bool IsRunning => isRunning;
-    public bool IsJumping => isJumping;
     public bool IsSwimming => isSwimming;
     public bool IsDoing => isDoing;
     public bool IsAxe => isAxe;
     public bool IsMining => isMining;
     public bool IsHammering => isHammering;
     public bool IsDigging => isDigging;
-    public bool IsWatering => isWatering;
     public bool IsCarrying => isCarrying;
+    public bool IsDropping => isDropping;
+    public bool IsHanging => isHanging;
     public bool IsDead => isDead;
     
     #endregion
@@ -266,15 +239,15 @@ public class AnimationController : MonoBehaviour
         // 각 상태를 Animator에 전달
         animator.SetBool(walkParameter, isWalking);
         animator.SetBool(runParameter, isRunning);
-        animator.SetBool(jumpParameter, isJumping);
         animator.SetBool(swimParameter, isSwimming);
         animator.SetBool(doParameter, isDoing);
         animator.SetBool(axeParameter, isAxe);
         animator.SetBool(miningParameter, isMining);
         animator.SetBool(hammerParameter, isHammering);
         animator.SetBool(digParameter, isDigging);
-        animator.SetBool(waterParameter, isWatering);
         animator.SetBool(carryParameter, isCarrying);
+        animator.SetBool(droppingTrigger, isDropping);
+        animator.SetBool(hangingParameter, isHanging);
         animator.SetBool(deathParameter, isDead);
     }
     
@@ -290,7 +263,6 @@ public class AnimationController : MonoBehaviour
                stateInfo.IsName("Idle") ? "Idle" :
                stateInfo.IsName("walk") ? "Walk" :
                stateInfo.IsName("run") ? "Run" :
-               stateInfo.IsName("jump") ? "Jump" :
                stateInfo.IsName("carry") ? "Carry" :
                stateInfo.IsName("swimming") ? "Swimming" :
                stateInfo.IsName("doing") ? "Doing" :
@@ -298,7 +270,8 @@ public class AnimationController : MonoBehaviour
                stateInfo.IsName("mining") ? "Mining" :
                stateInfo.IsName("hammering") ? "Hammering" :
                stateInfo.IsName("dig") ? "Dig" :
-               stateInfo.IsName("watering") ? "Watering" :
+               stateInfo.IsName("dropping") ? "Dropping" :
+               stateInfo.IsName("hanging") ? "Hanging" :
                stateInfo.IsName("death") ? "Death" : "Unknown";
     }
     
@@ -314,9 +287,9 @@ public class AnimationController : MonoBehaviour
     }
     
     /// <summary>
-    /// 점프 애니메이션 디버깅 정보 출력
+    /// 애니메이션 디버깅 정보 출력
     /// </summary>
-    public void DebugJumpAnimation()
+    public void DebugAnimationInfo()
     {
         if (animator == null)
         {
@@ -324,18 +297,17 @@ public class AnimationController : MonoBehaviour
             return;
         }
         
-        Debug.Log($"점프 파라미터 이름: {jumpParameter}");
-        Debug.Log($"현재 점프 상태: {isJumping}");
         Debug.Log($"현재 애니메이션 상태: {GetCurrentStateName()}");
+        Debug.Log($"걷기: {isWalking}, 달리기: {isRunning}, 수영: {isSwimming}");
+        Debug.Log($"행동: {isDoing}, 운반: {isCarrying}, 떨어뜨리기: {isDropping},매달리기: {isHanging}");
+        Debug.Log($"도끼: {isAxe}, 채굴: {isMining}, 망치: {isHammering}, 파기: {isDigging}");
+        Debug.Log($"죽음: {isDead}");
         
-        // Animator Controller에 해당 파라미터가 있는지 확인
+        // Animator Parameters 확인
+        Debug.Log("사용 가능한 파라미터들:");
         foreach (AnimatorControllerParameter param in animator.parameters)
         {
-            if (param.name == jumpParameter)
-            {
-                Debug.Log($"점프 파라미터 발견! 타입: {param.type}");
-                break;
-            }
+            Debug.Log($"- {param.name} ({param.type})");
         }
     }
     
