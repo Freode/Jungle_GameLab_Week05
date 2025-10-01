@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
@@ -90,6 +90,6 @@ public class ClickThrottle : MonoBehaviour
 
         // 공식 : 선형 증가량 * 비율 증가량
         int totalAmount = GameManager.instance.GetClickIncreaseTotalAmount();
-        GameManager.instance.AddCurrentGoldAmount(totalAmount);
+        GameManager.instance.IncreaseGoldAmountWhenClicked(totalAmount);
     }
 }
