@@ -9,8 +9,9 @@ public class AcquireGoldAmountUI : MonoBehaviour
     [SerializeField] float maxTime = 0.5f;
 
     // 금 획득량 표기 시작
-    public void AcquireGold(string amount, Vector3 startPos, Vector3 endPos)
+    public void AcquireGold(string amount, Vector3 startPos, Vector3 endPos, Color color)
     {
+        textAmount.color = color;
         textAmount.text = "+" + amount;
         StartCoroutine(AnimGold(startPos, endPos));
     }
