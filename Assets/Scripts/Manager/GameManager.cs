@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] int periodIncreaseGoldAmount = 0;      // 주기적으로 얻는 금의 양
     [SerializeField] int clickIncreaseGoldAmountRate = 0;   // 클릭 한 번 시, 획득하는 금의 비율 증가 양
 
-    bool isGameOver = false;                                // 게임 종료 여부
+    private bool isGameOver = false;                                // 게임 종료 여부
     private int clickIncreaseTotalAmount = 0;               // 클릭 한 번 시, 획득하는 양
 
     private void Awake()
@@ -79,9 +79,14 @@ public class GameManager : MonoBehaviour
         OnClickIncreaseTotalAmountChanged?.Invoke();
     }
 
+    // ==========================================================
+    //                            Setter
+    // ==========================================================
+
+    public void SetIsGameOver(bool isGameOver) { this.isGameOver = isGameOver; }
 
     // ==========================================================
-    //                      Getter & Setter
+    //                            Getter
     // ==========================================================
 
     public int GetCurrentGoldAmount() {  return currentGoldAmount; }
@@ -92,4 +97,6 @@ public class GameManager : MonoBehaviour
     public int GetClickIncreaseGoldAmountRate() { return clickIncreaseGoldAmountRate; }
 
     public int GetClickIncreaseTotalAmount() { return clickIncreaseTotalAmount; }
+
+    public bool GetIsGameOver() {  return isGameOver; }
 }
