@@ -96,7 +96,7 @@ public class GoldClickAreaUI : MonoBehaviour
     }
 
     // 한 번 클릭했을 때, 얻는 양의 금을 출력
-    private void PrintIncreaseGoldAmountWhenClicked(int amount)
+    private void PrintIncreaseGoldAmountWhenClicked(int amount, Color color)
     {
         GameObject obj = Instantiate(acquireGoldAmountPrefab, transform);
 
@@ -104,7 +104,7 @@ public class GoldClickAreaUI : MonoBehaviour
         if (acquireComp == null)
             return;
 
-        acquireComp.AcquireGold(Format(amount), startPosAcquireGold.transform.position, endPosAcquireGold.transform.position);
+        acquireComp.AcquireGold(Format(amount), startPosAcquireGold.transform.position, endPosAcquireGold.transform.position, color);
     }
 
     // 숫자 형식 변경
