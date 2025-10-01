@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 95db689f83af53b4ea6cac8b66ac0e15
+guid: 407fad7c75eec1d4992b9b86d0b7e0d9
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1392413761674417751
-    second: Mining_0
+      213: -2685500213718037671
+    second: Miner_2_Stare_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Mining_0
+      name: Miner_2_Stare_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1024
-        height: 1024
+        width: 800
+        height: 1300
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 75618fc50f8d25310800000000000000
-      internalID: 1392413761674417751
+      spriteID: 95bc915b8cf2bbad0800000000000000
+      internalID: -2685500213718037671
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Mining_0: 1392413761674417751
+      Miner_2_Stare_0: -2685500213718037671
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
