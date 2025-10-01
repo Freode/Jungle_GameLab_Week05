@@ -78,8 +78,10 @@ public class PeopleManager : MonoBehaviour
         AreaZone areaZone = null;
         for (int i = 0; i < AreaZones.Length; i++)
         {
+            
             if (AreaZones[i].areaType == newArea)
             {
+                
                 areaZone = AreaZones[i];
                 break;
             }

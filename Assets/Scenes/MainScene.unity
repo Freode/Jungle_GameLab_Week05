@@ -345,6 +345,14 @@ PrefabInstance:
       value: PeopleManager
       objectReference: {fileID: 0}
     - target: {fileID: 4795887057659189725, guid: f3af3327dd40e3f43aae5061e7825ecd, type: 3}
+      propertyPath: AreaZones.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4795887057659189725, guid: f3af3327dd40e3f43aae5061e7825ecd, type: 3}
+      propertyPath: AreaAnchors.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4795887057659189725, guid: f3af3327dd40e3f43aae5061e7825ecd, type: 3}
       propertyPath: 'AreaZones.Array.data[0]'
       value: 
       objectReference: {fileID: 1419742164}
@@ -940,7 +948,7 @@ PrefabInstance:
     - target: {fileID: 7707093166031970057, guid: 704b7f3ed1ce8b0449d30f5b4148bce7, type: 3}
       propertyPath: entries.Array.data[0].prefab
       value: 
-      objectReference: {fileID: 73214248640607516, guid: 0d58e3f90a76e364a849f985d3203832, type: 3}
+      objectReference: {fileID: 8606077447229817456, guid: 597274fe6c4f0234796c6371cd145ee3, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -7,17 +7,16 @@ public class PeopleTechEffect : BaseTechEffect
 
     public override void ApplyTechEffect()
     {
-        GameObject obj = PeopleManager.Instance.SelectOnePerson(targetArea);
-        Debug.Log("PeopleTechEffect 적용: " + (obj != null ? obj.name : "선택된 사람 없음"));
+        GameObject obj = PeopleManager.Instance.SelectOnePerson(AreaType.Normal);
+        
         if (obj == null) return;
-
+        
         switch (targetArea)
         {
             case AreaType.Normal:
                 Debug.Log("Normal 영역의 사람을 선택했습니다: " + obj.name);
                 break;
             case AreaType.Mine:
-                Debug.Log("Mine 영역의 사람을 선택했습니다: " + obj.name);
                 PeopleManager.Instance.MoveToArea(obj, AreaType.Mine);
                 break;
             case AreaType.Carrier:
@@ -30,7 +29,6 @@ public class PeopleTechEffect : BaseTechEffect
                 PeopleManager.Instance.MoveToArea(obj, AreaType.StoneCarving);
                 break;
             case AreaType.Gold:
-                Debug.Log("Gold 영역의 사람을 선택했습니다: " + obj.name);
                 PeopleManager.Instance.MoveToArea(obj, AreaType.Gold);
                 break;
             case AreaType.Prison:
