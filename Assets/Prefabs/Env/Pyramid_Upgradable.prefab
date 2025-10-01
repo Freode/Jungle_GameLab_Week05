@@ -116,4 +116,4 @@ MonoBehaviour:
   - level: 100
     sprite: {fileID: 21300000, guid: 6e35cc20bddbd8e4e8b563be52b300d4, type: 3}
     scale: {x: 0.2, y: 0.2, z: 0}
-  isClearStructure: 0
+  isClearStructure: 1

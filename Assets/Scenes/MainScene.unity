@@ -687,18 +687,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7074317229673955979, guid: b7ffba0ae2d51d5479cb87e0af15c9a6, type: 3}
-      propertyPath: structureInputs.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7074317229673955979, guid: b7ffba0ae2d51d5479cb87e0af15c9a6, type: 3}
-      propertyPath: structureInputs.Array.data[0].techData
-      value: 
-      objectReference: {fileID: 11400000, guid: 9afeff6d9ade18740845e5bf9e51dda7, type: 2}
-    - target: {fileID: 7074317229673955979, guid: b7ffba0ae2d51d5479cb87e0af15c9a6, type: 3}
-      propertyPath: structureInputs.Array.data[1].techData
-      value: 
-      objectReference: {fileID: 11400000, guid: b162c7d16430c5f47a5948cccf26f98b, type: 2}
-    - target: {fileID: 7074317229673955979, guid: b7ffba0ae2d51d5479cb87e0af15c9a6, type: 3}
       propertyPath: structureInputs.Array.data[0].areaStructure
       value: 
       objectReference: {fileID: 1217336290}
