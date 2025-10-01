@@ -22,6 +22,8 @@ public class PeopleProfile : ScriptableObject
     [Header("Job")]
     public JobType defaultJob = JobType.None;
 
+    
+
     [Header("Name")]
     public string[] firstNames = new string[]
     {
@@ -46,22 +48,13 @@ public class PeopleProfile : ScriptableObject
     public PeopleValue Generate()
     {
         var v = new PeopleValue();
-
-        // Age
-        v.age = randomAge ? RandomIntInclusive(minAge, maxAge)
-                          : Mathf.Max(0, fixedAge);
-
-        // Loyalty
-        v.loyalty = randomLoyalty ? RandomIntInclusive(minLoyalty, maxLoyalty)
-                                  : Mathf.Clamp(fixedLoyalty, 0, 100);
-
-        // Name
+        v.age = randomAge ? RandomIntInclusive(minAge, maxAge) : Mathf.Max(0, fixedAge);
+        v.loyalty = randomLoyalty ? RandomIntInclusive(minLoyalty, maxLoyalty) : Mathf.Clamp(fixedLoyalty, 0, 100);
         v.name = GenerateName();
-
         v.job = defaultJob;
-
         return v;
     }
+
 
     public string GenerateName()
     {

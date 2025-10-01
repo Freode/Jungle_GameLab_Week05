@@ -51,30 +51,6 @@ public class PitHouse : MonoBehaviour
         }
     }
 
-    //void TrySpawn()
-    //{
-    //    if (!spawner || !peopleParent)
-    //    {
-    //        Debug.LogWarning($"[PitHouse] Spawner or peopleParent missing on {name}");
-    //        return;
-    //    }
-
-    //    int current = GetPeopleCount();
-    //    if (current >= maxPeople)
-    //        return; // 최대치면 스폰 안 함
-
-    //    Vector3 pos = spawnPoint ? spawnPoint.position : transform.position;
-    //    var actor = spawner.SpawnFromProfile(pos, Quaternion.identity, null, peopleParent);
-    //    if (!actor)
-    //    {
-    //        Debug.LogWarning("[PitHouse] Spawn failed.");
-    //        return;
-    //    }
-
-    //    // 이동 관련 초기화
-    //    var mover = actor.GetComponent<Mover>() ?? actor.gameObject.AddComponent<Mover>();
-
-    //}
 
     void TrySpawn()
     {
@@ -88,6 +64,9 @@ public class PitHouse : MonoBehaviour
         Vector3 pos = spawnPoint ? spawnPoint.position : transform.position;
         var actor = spawner.SpawnFromProfile(pos, Quaternion.identity, null, peopleParent);
         if (!actor) { Debug.LogWarning("[PitHouse] Spawn failed."); return; }
+
+        // people 등록
+        PeopleManager.Instance.Register(actor);
 
         // --- 이동 관련 초기화 ---
         var go = actor.gameObject;
@@ -106,7 +85,7 @@ public class PitHouse : MonoBehaviour
         var mover = go.GetComponent<Mover>() ?? go.AddComponent<Mover>();
 
         // 3) lockedArea 설정 후 강제 초기화
-        mover.lockedArea = FindClosestZone(AreaType.Normal, (Vector2)pos);
+        mover.LockToArea(FindClosestZone(AreaType.Normal, (Vector2)pos));
         mover.ForceInitialize(); // 추가: 즉시 초기화하여 올바른 목표 설정
     }
 

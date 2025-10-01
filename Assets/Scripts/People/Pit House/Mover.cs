@@ -277,6 +277,9 @@ public class Mover : MonoBehaviour
         Gizmos.DrawWireSphere(targetPosition, 0.2f);
     }
 
+    
+
+
     // Public getters
     public MoveState GetCurrentState() => currentState;
     public AreaZone GetCurrentArea() => currentArea;

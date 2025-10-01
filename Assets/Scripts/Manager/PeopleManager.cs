@@ -1,0 +1,122 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+[DisallowMultipleComponent]
+public class PeopleManager : MonoBehaviour
+{
+    public static PeopleManager Instance { get; private set; }
+
+    // 영역별 인원 목록
+    private readonly Dictionary<AreaType, HashSet<PeopleActor>> _areaSets =
+        new Dictionary<AreaType, HashSet<PeopleActor>>();
+
+    [SerializeField] AreaAnchor[] AreaAnchors;
+    [SerializeField] AreaZone[] AreaZones;
+
+
+    void Awake()
+    {
+        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
+        Instance = this;
+
+        foreach (AreaType a in System.Enum.GetValues(typeof(AreaType)))
+            _areaSets[a] = new HashSet<PeopleActor>();
+    }
+
+    // --------- 등록/해제 (오버로드 2종) ---------
+
+    /// <summary>현재 부모 체인의 AreaAnchor 기준으로 등록</summary>
+    public void Register(PeopleActor actor)
+    {
+        if (!actor) return;
+        var area = ResolveArea(actor.transform);
+        _areaSets[area].Add(actor);
+    }
+
+    /// <summary>명시적 AreaType으로 등록 (부모 체인 무시)</summary>
+    public void Register(AreaType area, PeopleActor actor)
+    {
+        if (!actor) return;
+        _areaSets[area].Add(actor);
+    }
+
+    /// <summary>어느 영역에 있든 안전하게 해제</summary>
+    public void Unregister(PeopleActor actor)
+    {
+        if (!actor) return;
+        // 혹시 캐시가 없다면 전 영역에서 제거 (HashSet이면 비용 작음)
+        foreach (var set in _areaSets.Values)
+            set.Remove(actor);
+    }
+
+    /// <summary>부모 변경 등으로 영역이 바뀐 경우 호출</summary>
+    public void NotifyAreaChanged(PeopleActor actor)
+    {
+        if (!actor) return;
+        Unregister(actor);
+        Register(actor); // 새 부모 기준으로 재등록
+    }
+
+    public void SetParentToNewAnchor(GameObject obj, AreaType newType)
+    {
+        for (int i = 0; i < AreaAnchors.Length; i++)
+        {
+            if (AreaAnchors[i].area == newType)
+            {
+                obj.transform.SetParent(AreaAnchors[i].transform, true);
+                return;
+            }
+        }
+    }
+
+    public void MoveToArea(GameObject obj, AreaZone newArea)
+    {
+        var actor = obj.GetComponent<PeopleActor>();
+        var mover = obj.GetComponent<Mover>();
+        if (!actor || !mover) return;
+        mover.LockToArea(newArea);
+        PeopleManager.Instance.SetParentToNewAnchor(obj, newArea.areaType);
+        PeopleManager.Instance.NotifyAreaChanged(actor);
+    }
+
+
+    [ContextMenu("Move to mine")]
+    public void MoveToMine()
+    {
+        GameObject gameObject = GameObject.Find("TestMan");
+        MoveToArea(gameObject, AreaZones[2]);
+    }
+
+
+    /// <summary>영역 수</summary>
+    public int Count(AreaType area) => _areaSets[area].Count;
+
+    /// <summary>영역 목록(읽기용)</summary>
+    public IReadOnlyCollection<PeopleActor> GetPeople(AreaType area) => _areaSets[area];
+
+    
+
+    // --------- 내부 유틸 ---------
+
+    private static AreaType ResolveArea(Transform t)
+    {
+        if (!t) return AreaType.Normal;
+        var anchor = t.GetComponentInParent<AreaAnchor>(true);
+        return anchor ? anchor.area : AreaType.Normal;
+    }
+
+
+    
+
+    // ----------------------------------------
+    [ContextMenu("Print All Areas")]
+    public void PrintAllAreas()
+    {
+        foreach (var kvp in _areaSets)
+        {
+            Debug.Log($"Area: {kvp.Key}, Count: {kvp.Value.Count}");
+            foreach (var actor in kvp.Value)
+                Debug.Log($"  - {actor.name}");
+        }
+    }
+}

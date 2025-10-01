@@ -9,7 +9,6 @@ public class AreaZone : MonoBehaviour
 {
     [Header("Area Settings")]
     public AreaType areaType = AreaType.Normal;
-    [SerializeField] private Color gizmoColor = new Color(0f, 1f, 0f, 0.3f);
 
     [Header("Random Point Settings")]
     [SerializeField] private float edgePadding = 0.5f; // 가장자리로부터의 여백
@@ -23,14 +22,6 @@ public class AreaZone : MonoBehaviour
         boxCollider.isTrigger = true;
     }
 
-    private void Start()
-    {
-        // 영역 타입에 따라 색상 자동 설정 (선택사항)
-        if (gizmoColor == new Color(0f, 1f, 0f, 0.3f))
-        {
-            gizmoColor = GetColorByType(areaType);
-        }
-    }
 
     // 영역 내부의 랜덤한 점 반환
     public Vector2 GetRandomPointInside()
@@ -144,46 +135,6 @@ public class AreaZone : MonoBehaviour
                 return new Color(1f, 0f, 0f, 0.3f); // 빨간색
             default:
                 return new Color(1f, 1f, 1f, 0.3f); // 흰색
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (boxCollider == null)
-        {
-            boxCollider = GetComponent<BoxCollider2D>();
-        }
-
-        if (boxCollider != null)
-        {
-            // 영역 박스 그리기
-            Gizmos.color = gizmoColor;
-            Gizmos.matrix = transform.localToWorldMatrix;
-            Gizmos.DrawCube(boxCollider.offset, boxCollider.size);
-
-            // 테두리 그리기
-            Gizmos.color = new Color(gizmoColor.r, gizmoColor.g, gizmoColor.b, 1f);
-            Gizmos.DrawWireCube(boxCollider.offset, boxCollider.size);
-        }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        if (boxCollider == null)
-        {
-            boxCollider = GetComponent<BoxCollider2D>();
-        }
-
-        if (boxCollider != null)
-        {
-            // 선택 시 더 밝게 표시
-            Gizmos.color = new Color(gizmoColor.r, gizmoColor.g, gizmoColor.b, 0.6f);
-            Gizmos.matrix = transform.localToWorldMatrix;
-            Gizmos.DrawCube(boxCollider.offset, boxCollider.size);
-
-            // 중심점 표시
-            Gizmos.color = Color.white;
-            Gizmos.DrawWireSphere(boxCollider.offset, 0.2f);
         }
     }
 

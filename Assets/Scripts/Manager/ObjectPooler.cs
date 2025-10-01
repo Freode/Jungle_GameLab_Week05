@@ -10,39 +10,39 @@ public class ObjectPooler : MonoBehaviour
         public ObjectType type;
         public GameObject prefab;
         [Min(0)] public int initialSize = 0;
-        public bool expandable = true; // Queue°¡ ºñ¸é Instantiate Çã¿ë
+        public bool expandable = true; // Queueê°€ ë¹„ë©´ Instantiate í—ˆìš©
     }
 
     public static ObjectPooler Instance { get; private set; }
 
-    [Header("Å¸ÀÔ ¡ê ÇÁ¸®ÆÕ ¸ÅÇÎ ¹× ÃÊ±â Å©±â")]
+    [Header("íƒ€ì… â†” í”„ë¦¬íŒ¹ ë§¤í•‘ ë° ì´ˆê¸° í¬ê¸°")]
     public List<PoolEntry> entries = new();
 
-    // Å¸ÀÔº° Å¥
+    // íƒ€ì…ë³„ í
     private readonly Dictionary<ObjectType, Queue<GameObject>> _pools = new();
-    // Å¸ÀÔº° ÇÁ¸®ÆÕ/¿É¼Ç
+    // íƒ€ì…ë³„ í”„ë¦¬íŒ¹/ì˜µì…˜
     private readonly Dictionary<ObjectType, PoolEntry> _registry = new();
 
     void Awake()
     {
         if (Instance != null && Instance != this)
         {
-            Debug.LogWarning("[ObjectPooler] Áßº¹ ÀÎ½ºÅÏ½º°¡ °¨ÁöµÇ¾î ÀÌÀü ÀÎ½ºÅÏ½º¸¦ ´ëÃ¼ÇÕ´Ï´Ù.");
+            Debug.LogWarning("[ObjectPooler] ì¤‘ë³µ ì¸ìŠ¤í„´ìŠ¤ê°€ ê°ì§€ë˜ì–´ ì´ì „ ì¸ìŠ¤í„´ìŠ¤ë¥¼ ëŒ€ì²´í•©ë‹ˆë‹¤.");
         }
         Instance = this;
 
-        // ·¹Áö½ºÆ®¸®/Å¥ ÃÊ±âÈ­
+        // ë ˆì§€ìŠ¤íŠ¸ë¦¬/í ì´ˆê¸°í™”
         foreach (var e in entries)
         {
             if (e.prefab == null)
             {
-                Debug.LogError($"[ObjectPooler] {e.type} ÀÇ prefabÀÌ ºñ¾îÀÖ½À´Ï´Ù.");
+                Debug.LogError($"[ObjectPooler] {e.type} ì˜ prefabì´ ë¹„ì–´ìˆìŠµë‹ˆë‹¤.");
                 continue;
             }
 
             if (_registry.ContainsKey(e.type))
             {
-                Debug.LogWarning($"[ObjectPooler] Áßº¹ Å¸ÀÔ µî·Ï °¨Áö: {e.type}. ¸¶Áö¸· µî·ÏÀ¸·Î µ¤¾î¼­ »ç¿ëÇÕ´Ï´Ù.");
+                Debug.LogWarning($"[ObjectPooler] ì¤‘ë³µ íƒ€ì… ë“±ë¡ ê°ì§€: {e.type}. ë§ˆì§€ë§‰ ë“±ë¡ìœ¼ë¡œ ë®ì–´ì„œ ì‚¬ìš©í•©ë‹ˆë‹¤.");
             }
             _registry[e.type] = e;
 
@@ -67,9 +67,9 @@ public class ObjectPooler : MonoBehaviour
     
 
     /// <summary>
-    /// °£´Ü Spawn: À§Ä¡/È¸Àü ±âº»°ª
+    /// ê°„ë‹¨ Spawn: ìœ„ì¹˜/íšŒì „ ê¸°ë³¸ê°’
     /// </summary>
-    /// <summary>°£´Ü Spawn: À§Ä¡/È¸Àü ±âº»°ª</summary>
+    /// <summary>ê°„ë‹¨ Spawn: ìœ„ì¹˜/íšŒì „ ê¸°ë³¸ê°’</summary>
     public GameObject SpawnObject(ObjectType type)
     {
         return SpawnObject(type, Vector3.zero, Quaternion.identity, null);
@@ -77,8 +77,8 @@ public class ObjectPooler : MonoBehaviour
 
 
     /// <summary>
-    /// Ç®¿¡¼­ ²¨³» È°¼ºÈ­ ¡æ ºÎ¸ğ null(¶Ç´Â ÁöÁ¤ parent) ¡æ À§Ä¡/È¸Àü ¼¼ÆÃ
-    /// Queue°¡ ºñ¸é InstantiateÇÏ°í ObjectPoolInfo ºÙÀÓ
+    /// í’€ì—ì„œ êº¼ë‚´ í™œì„±í™” â†’ ë¶€ëª¨ null(ë˜ëŠ” ì§€ì • parent) â†’ ìœ„ì¹˜/íšŒì „ ì„¸íŒ…
+    /// Queueê°€ ë¹„ë©´ Instantiateí•˜ê³  ObjectPoolInfo ë¶™ì„
     /// </summary>
     /// 
 
@@ -90,28 +90,28 @@ public class ObjectPooler : MonoBehaviour
 
         GameObject go = null;
 
-        // 1) Queue¿¡¼­ ¹İÈ¯
+        // 1) Queueì—ì„œ ë°˜í™˜
         if (_pools[type].Count > 0)
         {
             go = _pools[type].Dequeue();
         }
         else
         {
-            // 4) Queue°¡ ºñ¾îÀÖ´Ù¸é Instantiate
+            // 4) Queueê°€ ë¹„ì–´ìˆë‹¤ë©´ Instantiate
             if (!_registry.TryGetValue(type, out var entry) || entry.prefab == null)
             {
-                Debug.LogError($"[ObjectPooler] {type} Å¸ÀÔÀÌ ·¹Áö½ºÆ®¸®¿¡ ¾ø½À´Ï´Ù. entries¿¡ µî·ÏÇÏ¼¼¿ä.");
+                Debug.LogError($"[ObjectPooler] {type} íƒ€ì…ì´ ë ˆì§€ìŠ¤íŠ¸ë¦¬ì— ì—†ìŠµë‹ˆë‹¤. entriesì— ë“±ë¡í•˜ì„¸ìš”.");
                 return null;
             }
 
             if (!entry.expandable)
             {
-                Debug.LogWarning($"[ObjectPooler] {type} Ç®Àº È®Àå ºÒ°¡·Î ¼³Á¤µÇ¾î ÀÖ°í, Àç°í°¡ ¾ø½À´Ï´Ù.");
+                Debug.LogWarning($"[ObjectPooler] {type} í’€ì€ í™•ì¥ ë¶ˆê°€ë¡œ ì„¤ì •ë˜ì–´ ìˆê³ , ì¬ê³ ê°€ ì—†ìŠµë‹ˆë‹¤.");
                 return null;
             }
 
             go = Instantiate(entry.prefab);
-            // AddComponent·Î ObjectPoolInfo¸¦ º¸Àå
+            // AddComponentë¡œ ObjectPoolInfoë¥¼ ë³´ì¥
             var info = go.GetComponent<ObjectPoolInfo>();
             if (info == null) info = go.AddComponent<ObjectPoolInfo>();
             info.type = type;
@@ -120,17 +120,18 @@ public class ObjectPooler : MonoBehaviour
         // 2) SetActive(true)
         go.SetActive(true);
 
-        // 3) ºÎ¸ğ¸¦ null (ÇÊ¿ä ½Ã parent ÁöÁ¤ ¿ì¼±)
+        // 3) ë¶€ëª¨ë¥¼ null (í•„ìš” ì‹œ parent ì§€ì • ìš°ì„ )
         go.transform.SetParent(parent ? parent : null, worldPositionStays: false);
 
-        // À§Ä¡/È¸Àü ¼¼ÆÃ
+        // ìœ„ì¹˜/íšŒì „ ì„¸íŒ…
         go.transform.SetPositionAndRotation(position, rotation);
 
+        
         return go;
     }
 
     /// <summary>
-    /// ÀÎÀÚ·Î ¹ŞÀº ¿ÀºêÁ§Æ®¸¦ ºñÈ°¼ºÈ­ ¡æ Ç®·¯ÀÇ ÀÚ½ÄÀ¸·Î ÀÌµ¿ ¡æ Å¸ÀÔ È®ÀÎ ÈÄ ÇØ´ç Å¥¿¡ »ğÀÔ
+    /// ì¸ìë¡œ ë°›ì€ ì˜¤ë¸Œì íŠ¸ë¥¼ ë¹„í™œì„±í™” â†’ í’€ëŸ¬ì˜ ìì‹ìœ¼ë¡œ ì´ë™ â†’ íƒ€ì… í™•ì¸ í›„ í•´ë‹¹ íì— ì‚½ì…
     /// </summary>
     public void ReturnObject(GameObject obj)
     {
@@ -139,18 +140,18 @@ public class ObjectPooler : MonoBehaviour
         // 1) SetActive(false)
         obj.SetActive(false);
 
-        // 2) Ç®·¯ÀÇ ÀÚ½ÄÀ¸·Î ÀÌµ¿
+        // 2) í’€ëŸ¬ì˜ ìì‹ìœ¼ë¡œ ì´ë™
         obj.transform.SetParent(transform, worldPositionStays: false);
 
-        // 3) Å¸ÀÔ È®ÀÎ ÈÄ Å¥ »ğÀÔ
+        // 3) íƒ€ì… í™•ì¸ í›„ í ì‚½ì…
         //var info = obj.GetComponent<ObjectPoolInfo>();
         var info = obj.TryGetComponent<ObjectPoolInfo>(out var temp) ? temp : null;
 
         if (info == null)
         {
-            // ¸í¼¼´ë·Î¶ó¸é AddComponent´Â Spawn ½Ã º¸ÀåµÇÁö¸¸, È¤½Ã ¾øÀ¸¸é ¿©±â¼­ ºÙ¿©µµ µÊ.
-            // ´Ù¸¸ Å¸ÀÔÀ» ¸ğ¸£¸é Àç»ç¿ëÀÌ ¾Ö¸ÅÇØ ·Î±×¸¸ ³²±è.
-            Debug.LogWarning($"[ObjectPooler] ¹İÈ¯µÈ ¿ÀºêÁ§Æ®¿¡ ObjectPoolInfo°¡ ¾ø½À´Ï´Ù. ¼öµ¿ ÇÒ´çÀÌ ÇÊ¿äÇÕ´Ï´Ù. ({obj.name})");
+            // ëª…ì„¸ëŒ€ë¡œë¼ë©´ AddComponentëŠ” Spawn ì‹œ ë³´ì¥ë˜ì§€ë§Œ, í˜¹ì‹œ ì—†ìœ¼ë©´ ì—¬ê¸°ì„œ ë¶™ì—¬ë„ ë¨.
+            // ë‹¤ë§Œ íƒ€ì…ì„ ëª¨ë¥´ë©´ ì¬ì‚¬ìš©ì´ ì• ë§¤í•´ ë¡œê·¸ë§Œ ë‚¨ê¹€.
+            Debug.LogWarning($"[ObjectPooler] ë°˜í™˜ëœ ì˜¤ë¸Œì íŠ¸ì— ObjectPoolInfoê°€ ì—†ìŠµë‹ˆë‹¤. ìˆ˜ë™ í• ë‹¹ì´ í•„ìš”í•©ë‹ˆë‹¤. ({obj.name})");
             return;
         }
 
@@ -160,7 +161,7 @@ public class ObjectPooler : MonoBehaviour
         _pools[info.type].Enqueue(obj);
     }
 
-    // ¼±ÅÃ: ·±Å¸ÀÓ¿¡ Å¸ÀÔ/ÇÁ¸®ÆÕ µî·Ï & ¼±ÇàÃ¤¿òÀÌ ÇÊ¿äÇÒ ¶§
+    // ì„ íƒ: ëŸ°íƒ€ì„ì— íƒ€ì…/í”„ë¦¬íŒ¹ ë“±ë¡ & ì„ í–‰ì±„ì›€ì´ í•„ìš”í•  ë•Œ
     public void Register(ObjectType type, GameObject prefab, int prewarm = 0, bool expandable = true)
     {
         var entry = new PoolEntry { type = type, prefab = prefab, initialSize = prewarm, expandable = expandable };
@@ -178,9 +179,9 @@ public class ObjectPooler : MonoBehaviour
         }
     }
 
-    // ¼±ÅÃ: ÇØ´ç Å¸ÀÔ Àç°í ¼ö Á¶È¸
+    // ì„ íƒ: í•´ë‹¹ íƒ€ì… ì¬ê³  ìˆ˜ ì¡°íšŒ
     public int Count(ObjectType type) => _pools.TryGetValue(type, out var q) ? q.Count : 0;
 
-    // ¼±ÅÃ: ÇØ´ç Å¸ÀÔ Ç® º¸À¯ ¿©ºÎ
+    // ì„ íƒ: í•´ë‹¹ íƒ€ì… í’€ ë³´ìœ  ì—¬ë¶€
     public bool HasPool(ObjectType type) => _registry.ContainsKey(type);
 }
