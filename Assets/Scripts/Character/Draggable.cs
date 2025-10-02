@@ -24,6 +24,8 @@ public class Draggable : MonoBehaviour
     [Tooltip("흔들기 이벤트 발생 후 다음 감지까지 필요한 대기 시간.")]
     public float shakeCooldown = 3.0f;
 
+    public GameObject dropObject;
+
     // --- 내부 변수 (수정 필요 없음) ---
     private Vector3 offset;
     private bool isDragging = false;
@@ -74,7 +76,8 @@ public class Draggable : MonoBehaviour
             transform.position = GetMouseWorldPos() + offset;
 
             // 흔들기 감지 로직
-            DetectShaking();
+            if(dropObject != null)
+                DetectShaking();
         }
     }
 
@@ -213,16 +216,13 @@ public class Draggable : MonoBehaviour
         }
     }
 
-    // [추가] 흔들기가 감지되었을 때 실행될 함수
+    // 흔들기가 감지되었을 때 실행될 함수
     void OnShakeDetected()
     {
         isShakeOnCooldown = true;
         StartCoroutine(ShakeCooldownCoroutine());
 
-        Debug.LogWarning("흔들기 감지! 이벤트가 발생했습니다!");
-        // 여기에 원하는 이벤트를 추가하세요.
-        // 예: 캐릭터의 충성도가 떨어진다거나, 어지러움 상태가 되는 등
-        // anim.SetTrigger("OnDizzy");
+        GameManager.instance.DropGoldEasterEgg(dropObject);
     }
 
     // 쿨타임 관리 코루틴
