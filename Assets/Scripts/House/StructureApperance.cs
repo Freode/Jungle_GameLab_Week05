@@ -8,7 +8,7 @@ public class StructureApperance : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private int finalLevel = 0;
 
-    void OnValidate()
+    void Start()
     {
         // 에디터에서 값 변경 시 실시간으로 적용
         if (spriteRenderer == null)
@@ -17,6 +17,7 @@ public class StructureApperance : MonoBehaviour
         }
 
         finalLevel = levelAppearances[levelAppearances.Length - 1].level;
+        Debug.Log(finalLevel);
     }
 
     // 레벨에 따른 외형 변경
