@@ -39,13 +39,11 @@ public class Draggable : MonoBehaviour
         {
             StopCoroutine(deathCoroutine);
             deathCoroutine = null;
-            Debug.Log("강에서 구출했습니다!");
         }
 
         if (anim != null)
         {
             ResetAllStateBools();
-            anim.SetInteger("PreviousState", currentState);
             anim.SetTrigger("OnHang");
         }
     }
@@ -73,7 +71,6 @@ public class Draggable : MonoBehaviour
             {
                 anim.SetBool("IsSwimming", true);
             }
-            Debug.Log("강에 버려졌습니다! 곧 사라집니다...");
             deathCoroutine = StartCoroutine(DieInRiver());
         }
     }
@@ -107,7 +104,6 @@ public class Draggable : MonoBehaviour
             {
                 StopCoroutine(deathCoroutine);
                 deathCoroutine = null;
-                Debug.Log("강에서 빠져나와 목숨을 건졌습니다!");
             }
         }
         else if (other.CompareTag("Jail"))
@@ -149,14 +145,14 @@ public class Draggable : MonoBehaviour
                 anim.SetTrigger("OnSwimDeath");
             }
             
-            Debug.Log("첨벙! 죽는 중...");
+            
 
             // 5. 애니메이션이 끝날 때까지 기다림 (애니메이션 길이를 1초로 가정)
             //    만약 애니메이션 길이가 다르다면 이 숫자를 맞춰주세요.
-            yield return new WaitForSeconds(1f); 
+            yield return new WaitForSeconds(1f);
 
             // 6. 애니메이션이 끝난 후 오브젝트 파괴
-            Destroy(gameObject);
+            PeopleManager.Instance.DespawnPerson(this.gameObject);
         }
     }
 }

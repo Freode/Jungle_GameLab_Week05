@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1172071191988972309}
   - component: {fileID: -1543987212832354637}
   - component: {fileID: 4412279892193556303}
+  - component: {fileID: 327503323986743776}
   m_Layer: 0
   m_Name: RealRealMiner
   m_TagString: Untagged
@@ -238,3 +239,20 @@ MonoBehaviour:
   - IsWalking
   - IsMining
   - IsSwimming
+--- !u!114 &327503323986743776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8606077447229817456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e4cff6c0a894f442a5b945363a2bc59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
+  age: 0
+  loyalty: 0
+  displayName: 
+  job: 0

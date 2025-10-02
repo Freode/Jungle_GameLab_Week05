@@ -110,6 +110,7 @@ public class PeopleManager : MonoBehaviour
         var actor = obj.GetComponent<PeopleActor>();
         if (!actor) return;
         Unregister(actor);
+        
         ObjectPooler.Instance.ReturnObject(obj);
     }
 
