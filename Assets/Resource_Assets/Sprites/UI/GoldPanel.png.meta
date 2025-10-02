@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 7432d7ae3eb3ee142a0377e24f19562d
+guid: af721634ef767d649a8dcce44f64dc9a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2760816961058613159
-    second: Marble_1_0
+      213: -7064235925950590416
+    second: StonePanel_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Marble_1_0
+      name: StonePanel_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 400
-        height: 80
+        width: 898
+        height: 304
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 9585a32f99b9fa9d0800000000000000
-      internalID: -2760816961058613159
+      spriteID: 03299207adac6fd90800000000000000
+      internalID: -7064235925950590416
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Marble_1_0: -2760816961058613159
+      StonePanel_0: -7064235925950590416
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
