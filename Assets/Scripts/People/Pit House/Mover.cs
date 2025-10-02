@@ -21,7 +21,7 @@ public class Mover : MonoBehaviour
     [Header("Death Settings")]
     [Tooltip("이동을 시작하기 전 1회 체크되는 즉사 확률(%)")]
     [Range(0f, 100f)]
-    [SerializeField] private float deathChancePercent = 0.5f;
+    [SerializeField] private float deathChancePercent = 0.2f;
 
     [Tooltip("즉사 시 현재 위치에 생성할 프리팹(시체/유골 등)")]
     [SerializeField] private GameObject deathPrefab;
@@ -184,6 +184,10 @@ public class Mover : MonoBehaviour
     // 클래스 내부 어딘가에 추가
     private bool TrySuddenDeath()
     {
+        // normal 타입의 area에 있을때는 즉사 없음
+        if (lockedArea != null && lockedArea.areaType == AreaType.Normal)
+            return false;
+
         // 1%: Random.value < 0.01f (deathChancePercent 기준)
         float p = deathChancePercent / 100f;
         if (p <= 0f) return false;
