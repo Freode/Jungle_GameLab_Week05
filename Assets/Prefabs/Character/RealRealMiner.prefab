@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 4401362705259337584}
   - component: {fileID: 8451693579674039887}
   - component: {fileID: 1172071191988972309}
+  - component: {fileID: -5557679032189099348}
+  - component: {fileID: 8980313082978823670}
   m_Layer: 0
   m_Name: RealRealMiner
   m_TagString: Untagged
@@ -227,6 +229,43 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-5557679032189099348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8606077447229817456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e4cff6c0a894f442a5b945363a2bc59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
+  age: 0
+  loyalty: 0
+  displayName: 
+  job: 0
+--- !u!114 &8980313082978823670
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8606077447229817456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b35bcb7132134534ebef4f9de23a4af1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 3
+  dwellTimeMin: 1
+  dwellTimeMax: 3
+  arrivalDistance: 0.1
+  showDebugGizmos: 1
+  deathChancePercent: 0.2
+  deathPrefab: {fileID: 2804783601361070082, guid: 49d51ab5821182d4ebd84849750bce76, type: 3}
+  lockedArea: {fileID: 0}
 --- !u!1001 &2137918468979866047
 PrefabInstance:
   m_ObjectHideFlags: 0
