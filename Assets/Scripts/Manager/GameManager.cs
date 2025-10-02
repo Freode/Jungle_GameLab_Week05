@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,6 +23,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] int periodIncreaseGoldAmountLinear = 0;// 주기적으로 얻는 금의 양이 선형적으로 증가
     [SerializeField] int clickIncreaseGoldAmountRate = 0;   // 클릭 한 번 시, 획득하는 금의 비율 증가 양
     [SerializeField] int periodIncreaseGoldAmountRate = 0;  // 주기적으로 얻는 금의 양이 비율적으로 증가
+    // Ending
+    [SerializeField] Image fadeOut;
 
     private bool isGameOver = false;                        // 게임 종료 여부
     private int clickIncreaseTotalAmount = 0;               // 클릭 한 번 시, 획득하는 양
@@ -162,20 +166,56 @@ public class GameManager : MonoBehaviour
     //                            Setter
     // ==========================================================
 
-    public void SetIsGameOver(bool isGameOver) 
-    { 
-        this.isGameOver = isGameOver; 
+
+    public void SetIsGameOver(bool isGameOver)
+    {
+        this.isGameOver = isGameOver;
+        // event 추가 예정
+        if (this.isGameOver)
+            StartCoroutine(CoFadeOut()); // 임시
     }
+
+
+    public IEnumerator CoFadeOut(float duration = 2.0f)
+    {
+        if (fadeOut == null) yield break;
+
+        // 시작 알파(현재값)와 목표 알파(1.0)
+        Color c = fadeOut.color;
+        float startA = c.a;
+        float endA = 1f;
+
+        // 필요 시 Raycast 막기 (UI 클릭 차단)
+        fadeOut.raycastTarget = true;
+        fadeOut.gameObject.SetActive(true);
+
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime;                // 일시정지 중에도 동작
+            float p = Mathf.Clamp01(t / duration);      // 0→1
+            c.a = Mathf.Lerp(startA, endA, p);
+            fadeOut.color = c;
+            yield return null;
+        }
+
+        // 마무리 보정
+        c.a = endA;
+        fadeOut.color = c;
+        SceneManager.LoadScene("EndingScene");
+    }
+
+
 
     // ==========================================================
     //                            Getter
     // ==========================================================
 
-    public int GetCurrentGoldAmount() {  return currentGoldAmount; }
+    public int GetCurrentGoldAmount() { return currentGoldAmount; }
 
     public int GetClickIncreaseGoldAmountLinear() { return clickIncreaseGoldAmountLinear; }
 
-    public int GetPeriodIncreaseGoldAmountLinear() {return periodIncreaseGoldAmountLinear; }
+    public int GetPeriodIncreaseGoldAmountLinear() { return periodIncreaseGoldAmountLinear; }
 
     public int GetClickIncreaseGoldAmountRate() { return clickIncreaseGoldAmountRate; }
 
@@ -185,5 +225,5 @@ public class GameManager : MonoBehaviour
 
     public int GetPeriodIncreaseTotalAmount() { return periodIncreaseTotalAmount; }
 
-    public bool GetIsGameOver() {  return isGameOver; }
+    public bool GetIsGameOver() { return isGameOver; }
 }
