@@ -14739,6 +14739,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: env
       objectReference: {fileID: 0}
+    - target: {fileID: 936074817504354550, guid: abaad19b0c654fb448801f16d15d53a9, type: 3}
+      propertyPath: edgePadding
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3929371039162342744, guid: abaad19b0c654fb448801f16d15d53a9, type: 3}
+      propertyPath: edgePadding
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4439092247160980603, guid: abaad19b0c654fb448801f16d15d53a9, type: 3}
+      propertyPath: edgePadding
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5538464213866172227, guid: abaad19b0c654fb448801f16d15d53a9, type: 3}
+      propertyPath: edgePadding
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5738429450238737065, guid: abaad19b0c654fb448801f16d15d53a9, type: 3}
+      propertyPath: edgePadding
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
