@@ -105,6 +105,13 @@ public class PeopleManager : MonoBehaviour
         return null;
     }
 
+    public void DespawnPerson(GameObject obj)
+    {
+        var actor = obj.GetComponent<PeopleActor>();
+        if (!actor) return;
+        Unregister(actor);
+        ObjectPooler.Instance.ReturnObject(obj);
+    }
 
     /// <summary>영역 수</summary>
     public int Count(AreaType area) => _areaSets[area].Count;
