@@ -1,4 +1,4 @@
-﻿using TMPro;
+using TMPro;
 using UnityEngine;
 
 public class TechInfo : MonoBehaviour
@@ -21,6 +21,11 @@ public class TechInfo : MonoBehaviour
     {
         textName.text = name;
         textDescription.text = description;
+
+        // 기준보다 아래에 있으면, UI 위치를 위로 올리기
+        float baseY = infoTranform.rect.height / 2f;
+        if (loc.y <= baseY)
+            loc.y += 20f;
 
         gameObject.transform.position = new Vector3(loc.x - modifyX, loc.y, 0);
         gameObject.SetActive(true);

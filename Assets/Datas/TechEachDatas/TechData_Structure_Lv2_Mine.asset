@@ -15,7 +15,8 @@ MonoBehaviour:
   areaType: 0
   techName: "\uAD11\uC0B0 \uAC1C\uCC99"
   techNamePrint: 
-  techDescription: 
+  techDescription: "\uAD11\uC0B0 \uBC1C\uC804\\n\uAD11\uBD80 \uBC30\uCE58 \uAC00\uB2A5\\n\uC8FC\uAE30\uC801\uC73C\uB85C
+    \uAD11\uC0B0\uC5D0\uC11C \uC5BB\uB294 \uAE08 +n%"
   techIcon: {fileID: 21300000, guid: 95db689f83af53b4ea6cac8b66ac0e15, type: 3}
   baseRequiredGold: 150
   increaseGoldValue: 150
@@ -29,6 +30,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 66e0996af73c87a4792dd8fb4bc0a6f1, type: 2}
   - {fileID: 11400000, guid: d9df0734ee0837c4885670f2f0200d6e, type: 2}
   effects:
-  - {fileID: 11400000, guid: db295d62ebe74544f83ee926b61719c9, type: 2}
-  - {fileID: 11400000, guid: 0b1f3edaa45d8534c9fe8357d2a2d206, type: 2}
   - {fileID: 11400000, guid: 5331ac302a9af47498d040805ce4a4a9, type: 2}
