@@ -19,7 +19,7 @@ MonoBehaviour:
   techIcon: {fileID: 21300000, guid: 95db689f83af53b4ea6cac8b66ac0e15, type: 3}
   baseRequiredGold: 150
   increaseGoldValue: 150
-  maxLevel: 10
+  maxLevel: 0
   baseCapacity: 5
   isUsingLevel: 1
   localPos: {x: 0, y: 330, z: 0}

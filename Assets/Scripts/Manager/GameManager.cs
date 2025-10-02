@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        Screen.SetResolution(1920, 1080, false);
         increaseGoldAmounts = new Dictionary<AreaType, IncreaseInfo>();
     }
 
