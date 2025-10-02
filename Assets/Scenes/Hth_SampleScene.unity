@@ -13458,6 +13458,7 @@ MonoBehaviour:
   periodIncreaseGoldAmountLinear: 0
   clickIncreaseGoldAmountRate: 0
   periodIncreaseGoldAmountRate: 0
+  fadeOutImage: {fileID: 0}
 --- !u!4 &1148643021
 Transform:
   m_ObjectHideFlags: 0
