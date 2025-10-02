@@ -18,6 +18,14 @@ public class Mover : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool showDebugGizmos = true;
 
+    [Header("Death Settings")]
+    [Tooltip("이동을 시작하기 전 1회 체크되는 즉사 확률(%)")]
+    [Range(0f, 100f)]
+    [SerializeField] private float deathChancePercent = 0.5f;
+
+    [Tooltip("즉사 시 현재 위치에 생성할 프리팹(시체/유골 등)")]
+    [SerializeField] private GameObject deathPrefab;
+
     private MoveState currentState = MoveState.Dwelling; // 초기에는 대기 상태로 시작
     private AreaZone currentArea;
     public AreaZone lockedArea; // public으로 변경하여 외부에서 직접 설정 가능
@@ -173,12 +181,36 @@ public class Mover : MonoBehaviour
         wasInsideArea = false;
     }
 
+    // 클래스 내부 어딘가에 추가
+    private bool TrySuddenDeath()
+    {
+        // 1%: Random.value < 0.01f (deathChancePercent 기준)
+        float p = deathChancePercent / 100f;
+        if (p <= 0f) return false;
+
+        if (Random.value < p)
+        {
+            // 프리팹 스폰 (있을 때만)
+            if (deathPrefab != null)
+                Instantiate(deathPrefab, transform.position, transform.rotation);
+
+            
+            PeopleManager.Instance.DespawnPerson(this.gameObject);
+
+            return true; // 죽음 발생
+        }
+        return false; // 생존
+    }
+
+
     private void StartWandering()
     {
         AreaZone targetArea = lockedArea != null ? lockedArea : currentArea;
 
         if (targetArea != null)
         {
+            if (TrySuddenDeath()) return;
+
             currentState = MoveState.Wandering;
             targetPosition = targetArea.GetRandomPointInside();
         }
