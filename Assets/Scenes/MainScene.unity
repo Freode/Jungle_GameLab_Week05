@@ -562,7 +562,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &300598812
 RectTransform:
   m_ObjectHideFlags: 0
@@ -820,7 +820,7 @@ MonoBehaviour:
   periodIncreaseGoldAmountLinear: 0
   clickIncreaseGoldAmountRate: 0
   periodIncreaseGoldAmountRate: 0
-  fadeOut: {fileID: 300598813}
+  fadeOutImage: {fileID: 300598811}
 --- !u!4 &1049823907
 Transform:
   m_ObjectHideFlags: 0

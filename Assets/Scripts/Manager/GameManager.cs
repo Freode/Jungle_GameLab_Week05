@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] int clickIncreaseGoldAmountRate = 0;   // 클릭 한 번 시, 획득하는 금의 비율 증가 양
     [SerializeField] int periodIncreaseGoldAmountRate = 0;  // 주기적으로 얻는 금의 양이 비율적으로 증가
     // Ending
-    [SerializeField] Image fadeOut;
+    [SerializeField] GameObject fadeOutImage;
 
     private bool isGameOver = false;                        // 게임 종료 여부
     private int clickIncreaseTotalAmount = 0;               // 클릭 한 번 시, 획득하는 양
@@ -178,7 +178,10 @@ public class GameManager : MonoBehaviour
 
     public IEnumerator CoFadeOut(float duration = 2.0f)
     {
+        fadeOutImage.SetActive(true);
+        Image fadeOut = fadeOutImage.GetComponent<Image>();
         if (fadeOut == null) yield break;
+        
 
         // 시작 알파(현재값)와 목표 알파(1.0)
         Color c = fadeOut.color;
