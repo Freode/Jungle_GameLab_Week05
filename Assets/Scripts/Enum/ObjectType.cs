@@ -7,5 +7,6 @@ public enum ObjectType
     Item,
     Obstacle,
     Environment,
-    AcquireInfoUI
+    AcquireInfoUI,
+    DropGold,
 }

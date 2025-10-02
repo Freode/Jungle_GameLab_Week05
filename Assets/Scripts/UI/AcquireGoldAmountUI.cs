@@ -12,22 +12,33 @@ public class AcquireGoldAmountUI : MonoBehaviour
 
     public Sprite criticalGoldImage;
     public Sprite normalGoldImage;
+    public Sprite dropGoldImage;
 
     [SerializeField] float maxTime = 0.5f;
 
     // 금 획득량 표기 시작
     public void AcquireGold(string amount, Vector3 startPos, Vector3 endPos, Color color)
     {
-        textAmount.color = color;
         textAmount.text = "+" + amount;
 
         ModifySize();
 
         // 금 이미지 조정
         if (color == Color.red)
+        {
             imageGold.sprite = criticalGoldImage;
-        else
+            textAmount.color = color;
+        }
+        else if (color == Color.green)
+        {
             imageGold.sprite = normalGoldImage;
+            textAmount.color = color;
+        }
+        else if (color == Color.black)
+        {
+            imageGold.sprite = dropGoldImage;
+            textAmount.color = Color.green;
+        }
 
         StartCoroutine(AnimGold(startPos, endPos));
     }

@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public GameObject canvasObject;                         // 캔버스 객체
+
     public event Action OnCurrentGoldAmountChanged;                 // 현재 금 소지량 변경 시, 모두 호출
     public event Action OnClickIncreaseTotalAmountChanged;          // 현재 한 번 클릭할 때, 얻는 금의 양 변경 시, 모두 호출
     public event Action OnPeriodIncreaseAmountChanged;              // 주기적으로 얻는 금의 양이 변화했을 때, 모두 호출
@@ -86,6 +88,17 @@ public class GameManager : MonoBehaviour
     public void ModifyRespawnUselessPeople(float amount)
     {
         OnModifyRespawnUselessPeople?.Invoke(amount);
+    }
+
+    // 골드 주머니 드랍
+    public void DropGoldEasterEgg(GameObject targetObject)
+    {
+        targetObject.TryGetComponent(out PeopleDropGold dropGoldComp);
+
+        if (dropGoldComp == null) return;
+
+        targetObject.SetActive(true);
+        dropGoldComp.StartGoldDrop();
     }
 
     // ==========================================================
