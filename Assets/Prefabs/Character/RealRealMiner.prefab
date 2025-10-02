@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc331e3f14d12114cb5d72640c2d8996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToDieInRiver: 5
+  timeToDieInRiver: 2
   currentState: 0
   stateParameterNames:
   - IsWalking
