@@ -159,7 +159,7 @@ public class GameManager : MonoBehaviour
         periodIncreaseTotalAmount = 0;
         foreach (var data in increaseGoldAmounts)
         {
-            periodIncreaseTotalAmount += data.Value.periodLinear + (100 + data.Value.periodRate) / 100;
+            periodIncreaseTotalAmount += data.Value.periodLinear * (100 + data.Value.periodRate) / 100;
         }
         OnPeriodIncreaseAmountChanged?.Invoke();
     }
@@ -170,7 +170,7 @@ public class GameManager : MonoBehaviour
         clickIncreaseTotalAmount = 0;
         foreach (var data in increaseGoldAmounts)
         {
-            clickIncreaseTotalAmount += data.Value.clickLinear + (100 + data.Value.clickRate) / 100;
+            clickIncreaseTotalAmount += data.Value.clickLinear * (100 + data.Value.clickRate) / 100;
         }
         OnClickIncreaseTotalAmountChanged?.Invoke();
     }
