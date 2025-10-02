@@ -138,6 +138,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4753656652460374165, guid: 36049f88c4336974c89d0ef15e1b0e37, type: 3}
+      propertyPath: levelAppearances.Array.data[1].level
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -4753656652460374165, guid: 36049f88c4336974c89d0ef15e1b0e37, type: 3}
+      propertyPath: levelAppearances.Array.data[2].level
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: -4753656652460374165, guid: 36049f88c4336974c89d0ef15e1b0e37, type: 3}
+      propertyPath: levelAppearances.Array.data[3].level
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: -4753656652460374165, guid: 36049f88c4336974c89d0ef15e1b0e37, type: 3}
+      propertyPath: levelAppearances.Array.data[4].level
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 3105119767067101375, guid: 36049f88c4336974c89d0ef15e1b0e37, type: 3}
       propertyPath: m_Name
       value: Pyramid_Upgradable

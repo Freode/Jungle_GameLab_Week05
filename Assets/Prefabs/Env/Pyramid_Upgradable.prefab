@@ -104,16 +104,16 @@ MonoBehaviour:
   - level: 0
     sprite: {fileID: 21300000, guid: f713810c1ee633e4488843d51ca5a7b3, type: 3}
     scale: {x: 0.25, y: 0.25, z: 0}
-  - level: 25
+  - level: 5
     sprite: {fileID: 21300000, guid: 90a41ba3d316cc949be9cf60246d4b08, type: 3}
     scale: {x: 0.2, y: 0.2, z: 0}
-  - level: 50
+  - level: 15
     sprite: {fileID: 21300000, guid: 4371bff3ee5f0ec44b5afb71e7c9f907, type: 3}
     scale: {x: 0.2, y: 0.2, z: 0}
-  - level: 75
+  - level: 30
     sprite: {fileID: 21300000, guid: f3bafdac53adb494785f0d96008ece96, type: 3}
     scale: {x: 0.2, y: 0.2, z: 0}
-  - level: 100
+  - level: 50
     sprite: {fileID: 21300000, guid: 6e35cc20bddbd8e4e8b563be52b300d4, type: 3}
     scale: {x: 0.2, y: 0.2, z: 0}
   isClearStructure: 1
