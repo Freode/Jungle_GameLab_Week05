@@ -94,6 +94,6 @@ public class TechViewer : MonoBehaviour
     void PrintRemainPeople()
     {
         int amount = PeopleManager.Instance.Count(AreaType.Normal);
-        textPeopleCount.text = "남은 인원 : " + amount;
+        textPeopleCount.text = "인력 : " + amount;
     }
 }
