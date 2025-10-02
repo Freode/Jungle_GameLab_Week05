@@ -166,6 +166,9 @@ MonoBehaviour:
   - IsDoing
   - IsHammering
   - IsDigging
+  shakeThreshold: 20
+  shakeSensitivity: 0.15
+  shakeDecayRate: 20
 --- !u!212 &1172071191988972309
 SpriteRenderer:
   m_ObjectHideFlags: 0

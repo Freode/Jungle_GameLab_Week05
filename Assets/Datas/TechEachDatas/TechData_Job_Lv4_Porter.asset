@@ -15,12 +15,14 @@ MonoBehaviour:
   areaType: 2
   techName: "\uC6B4\uBC18\uC790"
   techNamePrint: 
-  techDescription: 
+  techDescription: "\uC789\uC5EC \uC778\uB825 -1\uBA85\\n\uC6B4\uBC18\uC790\uB85C
+    1\uBA85 \uBC30\uCE58\\n\uC790\uB3D9\uC73C\uB85C \uC6B4\uBC18\uC18C\uC5D0\uC11C
+    \uC5BB\uB294 \uAE08 +n"
   techIcon: {fileID: 21300000, guid: e896a8d1e68af6c488edf08a7c85f99e, type: 3}
   baseRequiredGold: 500
   increaseGoldValue: 500
   maxLevel: 0
-  baseCapacity: 999999
+  baseCapacity: 99999999
   isUsingLevel: 0
   localPos: {x: 0, y: -400, z: 0}
   preTeches:
