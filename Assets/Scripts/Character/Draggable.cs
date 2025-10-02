@@ -34,6 +34,11 @@ public class Draggable : MonoBehaviour
     private Animator anim;
     private Mover spriteMover;
 
+    private float lastVelocityX = 0f;
+    private float currentShakeEnergy = 0f;
+    private bool isShakeOnCooldown = false;
+    private Vector3 lastPosition;
+
     void Awake()
     {
         anim = GetComponent<Animator>();
