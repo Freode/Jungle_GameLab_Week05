@@ -180,6 +180,7 @@ public class Draggable : MonoBehaviour
     //흔들기를 감지하는 핵심 로직
     void DetectShaking()
     {
+        Debug.Log("Detect");
         // 현재 프레임의 속도 계산
         Vector3 currentVelocity = (transform.position - lastPosition) / Time.deltaTime;
 
@@ -214,7 +215,7 @@ public class Draggable : MonoBehaviour
     {
         isShakeOnCooldown = true;
         StartCoroutine(ShakeCooldownCoroutine());
-
+        Debug.Log("Shake");
         GameManager.instance.DropGoldEasterEgg(dropObject);
     }
 
