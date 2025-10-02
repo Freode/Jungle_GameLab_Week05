@@ -21,7 +21,7 @@ public class Mover : MonoBehaviour
     [Header("Death Settings")]
     [Tooltip("이동을 시작하기 전 1회 체크되는 즉사 확률(%)")]
     [Range(0f, 100f)]
-    [SerializeField] private float deathChancePercent = 0.2f;
+    [SerializeField] private float deathChancePercent = 0.1f;
 
     [Tooltip("즉사 시 현재 위치에 생성할 프리팹(시체/유골 등)")]
     [SerializeField] private GameObject deathPrefab;

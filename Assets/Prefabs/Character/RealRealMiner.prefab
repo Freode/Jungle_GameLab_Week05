@@ -263,7 +263,7 @@ MonoBehaviour:
   dwellTimeMax: 3
   arrivalDistance: 0.1
   showDebugGizmos: 1
-  deathChancePercent: 0.2
+  deathChancePercent: 0.1
   deathPrefab: {fileID: 2804783601361070082, guid: 49d51ab5821182d4ebd84849750bce76, type: 3}
   lockedArea: {fileID: 0}
 --- !u!1001 &2137918468979866047
