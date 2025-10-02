@@ -1,10 +1,15 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AcquireGoldAmountUI : MonoBehaviour
 {
+    public Image imageGold;
     public TextMeshProUGUI textAmount;
+
+    public Sprite criticalGoldImage;
+    public Sprite normalGoldImage;
 
     [SerializeField] float maxTime = 0.5f;
 
@@ -13,6 +18,13 @@ public class AcquireGoldAmountUI : MonoBehaviour
     {
         textAmount.color = color;
         textAmount.text = "+" + amount;
+
+        // 금 이미지 조정
+        if (color == Color.red)
+            imageGold.sprite = criticalGoldImage;
+        else
+            imageGold.sprite = normalGoldImage;
+
         StartCoroutine(AnimGold(startPos, endPos));
     }
 
