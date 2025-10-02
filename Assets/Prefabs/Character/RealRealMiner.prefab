@@ -13,8 +13,9 @@ GameObject:
   - component: {fileID: 2713464436763227878}
   - component: {fileID: 6095247905963552332}
   - component: {fileID: 4401362705259337584}
-  - component: {fileID: 8451693579674039887}
   - component: {fileID: 1172071191988972309}
+  - component: {fileID: -1543987212832354637}
+  - component: {fileID: 4412279892193556303}
   m_Layer: 0
   m_Name: RealRealMiner
   m_TagString: Untagged
@@ -71,7 +72,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.00010919571, y: 0.0071172416}
+  m_Offset: {x: 0.0036652088, y: 0.0040977597}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -81,7 +82,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.2827344, y: 0.36235815}
+  m_Size: {x: 0.2902832, y: 0.36839712}
   m_EdgeRadius: 0
 --- !u!50 &2713464436763227878
 Rigidbody2D:
@@ -144,28 +145,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 860bf6e8a6a7dc64496965bdda117a97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8451693579674039887
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8606077447229817456}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc331e3f14d12114cb5d72640c2d8996, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeToDieInRiver: 5
-  currentState: 0
-  stateParameterNames:
-  - IsWalking
-  - IsMining
-  - IsSwimming
-  - IsCarrying
-  - IsDoing
-  - IsHammering
-  - IsDigging
 --- !u!212 &1172071191988972309
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -209,7 +188,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -3753329644184871737, guid: 86748a646038258408c1ba239badb57c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -221,3 +200,33 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-1543987212832354637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8606077447229817456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b35bcb7132134534ebef4f9de23a4af1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 3
+  dwellTimeMin: 1
+  dwellTimeMax: 3
+  arrivalDistance: 0.1
+  showDebugGizmos: 1
+  lockedArea: {fileID: 0}
+--- !u!114 &4412279892193556303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8606077447229817456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc331e3f14d12114cb5d72640c2d8996, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

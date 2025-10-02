@@ -20,14 +20,18 @@ public class Draggable : MonoBehaviour
     private bool isOverRiver = false;
     private Coroutine deathCoroutine;
     private Animator anim;
+    private Mover spriteMover;
 
     void Awake()
     {
         anim = GetComponent<Animator>();
+        spriteMover = GetComponent<Mover>();
     }
 
     void OnMouseDown()
     {
+        if (isOverRiver) return;
+
         offset = transform.position - GetMouseWorldPos();
         isDragging = true;
 
@@ -79,6 +83,7 @@ public class Draggable : MonoBehaviour
         if (other.CompareTag("River"))
         {
             isOverRiver = true;
+            spriteMover.moveSpeed = 0.5f;
         }
         else if (other.CompareTag("Jail"))
         {
@@ -91,7 +96,8 @@ public class Draggable : MonoBehaviour
         if (other.CompareTag("River"))
         {
             isOverRiver = false;
-            
+            spriteMover.moveSpeed = 3f;
+
             if (anim != null)
             {
                 anim.SetBool("IsSwimming", false);
