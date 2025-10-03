@@ -1,10 +1,12 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TechInfo : MonoBehaviour
 {
     public TextMeshProUGUI textName;
     public TextMeshProUGUI textDescription;
+    public Image techIcon;
     public RectTransform infoTranform;
 
     private float modifyX = 0f;
@@ -17,10 +19,15 @@ public class TechInfo : MonoBehaviour
     }
 
     // 테크 정보 활성화
-    public void OnActiveInfo(string name, string description, Vector3 loc)
+    public void OnActiveInfo(string name, string description, Sprite icon, Vector3 loc)
     {
         textName.text = name;
         textDescription.text = description;
+
+        if (techIcon != null)
+        {
+            techIcon.sprite = icon;
+        }
 
         // 기준보다 아래에 있으면, UI 위치를 위로 올리기
         float baseY = infoTranform.rect.height / 2f;

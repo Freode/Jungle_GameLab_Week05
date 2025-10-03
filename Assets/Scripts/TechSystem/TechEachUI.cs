@@ -13,7 +13,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public TextMeshProUGUI textLevel;
     public RectTransform totalRectTransform;
 
-    public event System.Action<string, string, Vector3> OnActiveInfo;
+    public event System.Action<string, string, Sprite, Vector3> OnActiveInfo;
     public event System.Action OnInactiveInfo;
 
     private TechState techState;        // 데이터 원본과 상태 저장
@@ -184,7 +184,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void OnPointerEnter(PointerEventData eventData)
     {
         Vector3 loc = new Vector3(leftX, upperY, 0);
-        OnActiveInfo?.Invoke(techState.techData.techName, techState.techData.techDescription, loc);
+        OnActiveInfo?.Invoke(techState.techData.techName, techState.techData.techDescription, techState.techData.techIcon, loc);
     }
 
     // 마우스가 빠져 나감
