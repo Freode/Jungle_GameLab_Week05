@@ -36,6 +36,7 @@ public class Mover : MonoBehaviour
     private bool wasInsideArea = false;
     private bool isInitialized = false;
     private Animator animator;
+    private SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
@@ -46,6 +47,7 @@ public class Mover : MonoBehaviour
         targetPosition = transform.position; // 초기 목표를 현재 위치로 설정
 
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Start()
@@ -143,6 +145,8 @@ public class Mover : MonoBehaviour
         Vector2 currentPos = transform.position;
         Vector2 direction = (targetPosition - currentPos).normalized;
         float distance = Vector2.Distance(currentPos, targetPosition);
+    
+        UpdateSpriteDirection(direction);
 
         if (distance > arrivalDistance)
         {
@@ -170,6 +174,17 @@ public class Mover : MonoBehaviour
                 StartDwelling();
             }
         }
+    }
+
+    private void UpdateSpriteDirection(Vector2 direction)
+    {
+        if (spriteRenderer == null) return;
+
+        // 수평 이동이 거의 없을 때는 방향을 바꾸지 않음
+        if (Mathf.Abs(direction.x) < 0.01f) return;
+
+        // 왼쪽으로 이동하면 true, 오른쪽이면 false로 설정
+        spriteRenderer.flipX = direction.x < 0;
     }
 
     private void ReturnToArea(AreaZone area)
