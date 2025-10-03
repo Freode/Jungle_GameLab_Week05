@@ -29,12 +29,26 @@ public class TechInfo : MonoBehaviour
             techIcon.sprite = icon;
         }
 
-        // 기준보다 아래에 있으면, UI 위치를 위로 올리기
-        float baseY = infoTranform.rect.height / 2f;
-        if (loc.y <= baseY)
-            loc.y += 20f;
 
-        gameObject.transform.position = new Vector3(loc.x - modifyX, loc.y, 0);
+        // 1. 기본 위치 계산 (아이콘의 왼쪽에 표시)
+        Vector3 desiredPos = new Vector3(loc.x - modifyX, loc.y, 0);
+
+        // 2. 툴팁 UI의 절반 넓이와 높이를 구합니다. (Pivot이 중앙이라고 가정)
+        float halfWidth = infoTranform.rect.width / 2f;
+        float halfHeight = infoTranform.rect.height / 2f;
+
+        // 3. 툴팁의 중심점이 있을 수 있는 화면 상의 최소/최대 좌표를 계산합니다.
+        float minX = halfWidth;
+        float maxX = Screen.width - halfWidth;
+        float minY = halfHeight;
+        float maxY = Screen.height - halfHeight;
+
+        // 4. Mathf.Clamp 함수로 툴팁의 위치가 화면 경계선을 넘지 않도록 강제로 고정합니다.
+        desiredPos.x = Mathf.Clamp(desiredPos.x, minX, maxX);
+        desiredPos.y = Mathf.Clamp(desiredPos.y, minY, maxY);
+
+        // 5. 최종 계산된 위치를 적용합니다.
+        gameObject.transform.position = desiredPos;
         gameObject.SetActive(true);
     }
 
