@@ -258,9 +258,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b35bcb7132134534ebef4f9de23a4af1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 3
-  dwellTimeMin: 1
-  dwellTimeMax: 3
+  moveSpeed: 0.5
+  dwellTimeMin: 5
+  dwellTimeMax: 15
   arrivalDistance: 0.1
   showDebugGizmos: 1
   deathChancePercent: 0.1
