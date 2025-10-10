@@ -50,8 +50,15 @@ public class TutorialManager : MonoBehaviour
         TutorialStep step = currentSequence.steps[stepIndex];
         descriptionText.text = step.description;
 
-        // 타겟 찾기
-        TutorialTarget[] allTargets = FindObjectsByType<TutorialTarget>(FindObjectsSortMode.None);
+        // 임시 하드 코딩
+        if (stepIndex == 2)
+            TechViewer.instance.ChangeTechTab(TechKind.Job);
+        else if (stepIndex == 3)
+            TechViewer.instance.ChangeTechTab(TechKind.Structure);
+
+
+            // 타겟 찾기
+            TutorialTarget[] allTargets = FindObjectsByType<TutorialTarget>(FindObjectsSortMode.None);
         bool targetFound = false;
         foreach (TutorialTarget target in allTargets)
         {
