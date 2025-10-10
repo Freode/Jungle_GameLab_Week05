@@ -73,7 +73,7 @@ public class PeopleManager : MonoBehaviour
         }
     }
 
-    public void MoveToArea(GameObject obj, AreaType newArea)
+    public void MoveToArea(GameObject obj, AreaType newArea, JobType _job)
     {
         AreaZone areaZone = null;
         for (int i = 0; i < AreaZones.Length; i++)
@@ -89,6 +89,7 @@ public class PeopleManager : MonoBehaviour
         var actor = obj.GetComponent<PeopleActor>();
         var mover = obj.GetComponent<Mover>();
         if (!actor || !mover || !areaZone) return;
+        actor.ApplyJop(_job);
         mover.LockToArea(areaZone);
         SetParentToNewAnchor(obj, newArea);
         NotifyAreaChanged(actor);

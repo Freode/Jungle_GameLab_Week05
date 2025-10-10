@@ -17,19 +17,19 @@ public class PeopleTechEffect : BaseTechEffect
                 Debug.Log("Normal 영역의 사람을 선택했습니다: " + obj.name);
                 break;
             case AreaType.Mine:
-                PeopleManager.Instance.MoveToArea(obj, AreaType.Mine);
+                PeopleManager.Instance.MoveToArea(obj, AreaType.Mine, JobType.Miner);
                 break;
             case AreaType.Carrier:
-                PeopleManager.Instance.MoveToArea(obj, AreaType.Carrier);
+                PeopleManager.Instance.MoveToArea(obj, AreaType.Carrier, JobType.Carrier);
                 break;
             case AreaType.Architect:
-                PeopleManager.Instance.MoveToArea(obj, AreaType.Architect);
+                PeopleManager.Instance.MoveToArea(obj, AreaType.Architect, JobType.Architect);
                 break;
             case AreaType.StoneCarving:
-                PeopleManager.Instance.MoveToArea(obj, AreaType.StoneCarving);
+                PeopleManager.Instance.MoveToArea(obj, AreaType.StoneCarving, JobType.Carver);
                 break;
             case AreaType.Gold:
-                PeopleManager.Instance.MoveToArea(obj, AreaType.Gold);
+                PeopleManager.Instance.MoveToArea(obj, AreaType.Gold, JobType.Worker);
                 break;
             case AreaType.Prison:
                 Debug.Log("Prison 영역의 사람을 선택했습니다: " + obj.name);
