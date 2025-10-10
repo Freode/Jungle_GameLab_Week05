@@ -1398,6 +1398,8 @@ MonoBehaviour:
     sprite: {fileID: -2263264567363676519, guid: ee0621a419992b74fa554a3a07faa09f, type: 3}
     scale: {x: 0.75, y: 0.75, z: 1}
   isClearStructure: 0
+  OnStructureInfoActive: {fileID: 0}
+  OnStructureInfoInactive: {fileID: 0}
 --- !u!1001 &1251659111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15208,6 +15210,7 @@ MonoBehaviour:
     isChanging: 0
   globalChangeDuration: 0.5
   changeAllSimultaneously: 1
+  useGoldAreaCount: 0
 --- !u!114 &1973533531 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5538464213866172227, guid: abaad19b0c654fb448801f16d15d53a9, type: 3}
