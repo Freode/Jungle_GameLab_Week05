@@ -257,4 +257,6 @@ public class GameManager : MonoBehaviour
     public long GetPeriodIncreaseTotalAmount() { return periodIncreaseTotalAmount; }
 
     public bool GetIsGameOver() { return isGameOver; }
+
+    public Dictionary<AreaType, bool> GetCheckUnlockStructures() { return checkUnlockStructures; }
 }
