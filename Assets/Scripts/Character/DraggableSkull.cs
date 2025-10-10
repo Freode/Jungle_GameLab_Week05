@@ -9,6 +9,7 @@ public class DraggableSkull : MonoBehaviour
     [SerializeField] private string deceasedName;
     [SerializeField] private int ageAtDeath;
     [SerializeField] private JobType jobAtDeath;
+    [SerializeField] private int loyaltyAtDeath;
     // --- 내부 변수 (수정 필요 없음) ---
     private Vector3 offset;
     private bool isDragging = false;
@@ -23,8 +24,14 @@ public class DraggableSkull : MonoBehaviour
         deceasedName = actor.DisplayName;
         ageAtDeath = actor.Age;
         jobAtDeath = actor.Job;
+        loyaltyAtDeath = actor.Loyalty;
         // 필요하다면 더 많은 정보를 여기에 기록할 수 있습니다.
     }
+    // ★ UI가 정보를 읽어갈 수 있도록 public getter 추가
+    public string DeceasedName => deceasedName;
+    public int AgeAtDeath => ageAtDeath;
+    public JobType JobAtDeath => jobAtDeath;
+    public int LoyaltyAtDeath => loyaltyAtDeath;
 
     void OnMouseDown()
     {
