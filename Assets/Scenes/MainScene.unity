@@ -15455,6 +15455,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1464799249}
     m_Modifications:
+    - target: {fileID: 1775260434400756840, guid: 68674d5e29ce8de4b9d180c04996d1f1, type: 3}
+      propertyPath: globalCriticalChangeDuration
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1775260434400756840, guid: 68674d5e29ce8de4b9d180c04996d1f1, type: 3}
+      propertyPath: imageDataList.Array.data[1].changedSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: f5dc4671b373c2e4d90b4c2d85d9a7f1, type: 3}
+    - target: {fileID: 1775260434400756840, guid: 68674d5e29ce8de4b9d180c04996d1f1, type: 3}
+      propertyPath: imageDataList.Array.data[1].originalSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 440ce227e4e0abd4d8367ed64c52f918, type: 3}
     - target: {fileID: 2990336637755051562, guid: 68674d5e29ce8de4b9d180c04996d1f1, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -15535,9 +15547,33 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4732664162713261103, guid: 68674d5e29ce8de4b9d180c04996d1f1, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 440ce227e4e0abd4d8367ed64c52f918, type: 3}
     - target: {fileID: 6547805875454259584, guid: 68674d5e29ce8de4b9d180c04996d1f1, type: 3}
       propertyPath: m_Name
       value: GoldClick
+      objectReference: {fileID: 0}
+    - target: {fileID: 6577466116984647831, guid: 68674d5e29ce8de4b9d180c04996d1f1, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.1338202
+      objectReference: {fileID: 0}
+    - target: {fileID: 6577466116984647831, guid: 68674d5e29ce8de4b9d180c04996d1f1, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.1338202
+      objectReference: {fileID: 0}
+    - target: {fileID: 6577466116984647831, guid: 68674d5e29ce8de4b9d180c04996d1f1, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.1338202
+      objectReference: {fileID: 0}
+    - target: {fileID: 6577466116984647831, guid: 68674d5e29ce8de4b9d180c04996d1f1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -38
+      objectReference: {fileID: 0}
+    - target: {fileID: 6577466116984647831, guid: 68674d5e29ce8de4b9d180c04996d1f1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 83
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

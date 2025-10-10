@@ -18,8 +18,12 @@ public class ImageSpriteData
     public Sprite criticalSprite;
     
     [Header("Individual Settings")]
-    public float changeDuration = 0.2f;
+    public float changeDuration = 0.5f;
     public bool useGlobalDuration = true;
+    
+    [Header("Critical Duration Settings")]
+    public float criticalChangeDuration = 1.0f;
+    public bool useGlobalCriticalDuration = true;
     
     [HideInInspector]
     public bool isChanging = false;
@@ -29,7 +33,7 @@ public class ImageSpriteData
     public Transform cachedTransform;
     
     // 초기화 메서드
-    public void Initialize(float globalDuration)
+    public void Initialize(float globalDuration, float globalCriticalDuration)
     {
         if (targetImage != null)
         {
@@ -38,6 +42,8 @@ public class ImageSpriteData
                 originalSprite = targetImage.sprite;
             if (useGlobalDuration)
                 changeDuration = globalDuration;
+            if (useGlobalCriticalDuration)
+                criticalChangeDuration = globalCriticalDuration;
         }
     }
     
@@ -56,6 +62,9 @@ public class ButtonImageChanger : MonoBehaviour
     [Header("Global Settings")]
     [SerializeField] private float globalChangeDuration = 0.5f;
     [SerializeField] private bool changeAllSimultaneously = true;
+    
+    [Header("Global Critical Settings")]
+    [SerializeField] private float globalCriticalChangeDuration = 1.0f;
     
     [Header("Gold Area People Count Settings")]
     [SerializeField] private bool useGoldAreaCount = true;
@@ -108,7 +117,7 @@ public class ButtonImageChanger : MonoBehaviour
         for (int i = 0; i < imageDataList.Count; i++)
         {
             var data = imageDataList[i];
-            data.Initialize(globalChangeDuration);
+            data.Initialize(globalChangeDuration, globalCriticalChangeDuration);
             
             if (data.IsValid)
             {
@@ -252,7 +261,7 @@ public class ButtonImageChanger : MonoBehaviour
     // 크리티컬 모드 해제
     private IEnumerator ResetCriticalModeAfterDelay()
     {
-        yield return new WaitForSeconds(globalChangeDuration + 0.5f);
+        yield return new WaitForSeconds(globalCriticalChangeDuration + 0.5f);
         isCriticalMode = false;
         criticalResetCoroutine = null;
     }
@@ -335,8 +344,16 @@ public class ButtonImageChanger : MonoBehaviour
         // 스프라이트 변경
         data.targetImage.sprite = spriteToUse;
         
-        // 지정된 시간만큼 대기
-        float duration = data.useGlobalDuration ? globalChangeDuration : data.changeDuration;
+        // 지정된 시간만큼 대기 (크리티컬 모드인지에 따라 다른 지속 시간 사용)
+        float duration;
+        if (isCriticalMode && data.criticalSprite != null)
+        {
+            duration = data.useGlobalCriticalDuration ? globalCriticalChangeDuration : data.criticalChangeDuration;
+        }
+        else
+        {
+            duration = data.useGlobalDuration ? globalChangeDuration : data.changeDuration;
+        }
         yield return new WaitForSeconds(duration);
         
         // 원본 스프라이트로 복원
@@ -390,6 +407,20 @@ public class ButtonImageChanger : MonoBehaviour
         }
     }
     
+    public void SetGlobalCriticalChangeDuration(float duration)
+    {
+        globalCriticalChangeDuration = duration;
+        
+        // 글로벌 크리티컬 duration을 사용하는 데이터들 업데이트
+        for (int i = 0; i < validImageData.Count; i++)
+        {
+            if (validImageData[i].useGlobalCriticalDuration)
+            {
+                validImageData[i].criticalChangeDuration = globalCriticalChangeDuration;
+            }
+        }
+    }
+    
     public void AddImageData(Image image, Sprite changedSprite, float duration = -1f)
     {
         var newData = new ImageSpriteData
@@ -402,7 +433,7 @@ public class ButtonImageChanger : MonoBehaviour
         };
         
         imageDataList.Add(newData);
-        newData.Initialize(globalChangeDuration);
+        newData.Initialize(globalChangeDuration, globalCriticalChangeDuration);
         
         if (newData.IsValid)
         {
@@ -423,7 +454,30 @@ public class ButtonImageChanger : MonoBehaviour
         };
         
         imageDataList.Add(newData);
-        newData.Initialize(globalChangeDuration);
+        newData.Initialize(globalChangeDuration, globalCriticalChangeDuration);
+        
+        if (newData.IsValid)
+        {
+            validImageData.Add(newData);
+        }
+    }
+    
+    public void AddImageData(Image image, Sprite changedSprite, Sprite criticalSprite, float duration = -1f, float criticalDuration = -1f)
+    {
+        var newData = new ImageSpriteData
+        {
+            targetImage = image,
+            originalSprite = image?.sprite,
+            changedSprite = changedSprite,
+            criticalSprite = criticalSprite,
+            changeDuration = duration > 0 ? duration : globalChangeDuration,
+            criticalChangeDuration = criticalDuration > 0 ? criticalDuration : globalCriticalChangeDuration,
+            useGlobalDuration = duration <= 0,
+            useGlobalCriticalDuration = criticalDuration <= 0
+        };
+        
+        imageDataList.Add(newData);
+        newData.Initialize(globalChangeDuration, globalCriticalChangeDuration);
         
         if (newData.IsValid)
         {
