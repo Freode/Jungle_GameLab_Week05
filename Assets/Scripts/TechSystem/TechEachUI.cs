@@ -1,9 +1,7 @@
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.HID;
 using UnityEngine.UI;
 
 public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
