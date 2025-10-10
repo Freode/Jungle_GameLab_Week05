@@ -1782,6 +1782,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnPeopleSelectedChannel: {fileID: 11400000, guid: 9c85e2194ab112645a8ef560d79262dc, type: 2}
   OnDeselectedChannel: {fileID: 11400000, guid: 7515757cc825c2849b5d28c43e945ed9, type: 2}
+  OnYearPassedChannel: {fileID: 11400000, guid: f6f3db6cdae3de645912ac32889e7835, type: 2}
   infoPanel: {fileID: 1855839585950276556}
   nameText: {fileID: 5333317554893133385}
   ageText: {fileID: 8517230640920887477}

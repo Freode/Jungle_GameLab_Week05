@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using TMPro;
+using System.Collections;
 
 // 인스펙터에 노출시키기 위한 데이터 묶음 클래스
 [System.Serializable]
@@ -18,6 +19,7 @@ public class PeopleInfoUI : MonoBehaviour
     [Header("Event Channels")]
     public PeopleActorEventChannelSO OnPeopleSelectedChannel;
     public VoidEventChannelSO OnDeselectedChannel;
+    public VoidEventChannelSO OnYearPassedChannel; 
 
     [Header("UI Components")]
     public GameObject infoPanel;
@@ -39,17 +41,42 @@ public class PeopleInfoUI : MonoBehaviour
 
     // 현재 UI에 정보를 표시하고 있는 Actor를 저장하는 변수
     private PeopleActor currentActor;
-
     private void OnEnable()
     {
         OnPeopleSelectedChannel.OnEventRaised += OnPeopleSelected;
         OnDeselectedChannel.OnEventRaised += HideUI;
+        OnYearPassedChannel.OnEventRaised += OnYearPassed;
     }
 
     private void OnDisable()
     {
         OnPeopleSelectedChannel.OnEventRaised -= OnPeopleSelected;
         OnDeselectedChannel.OnEventRaised -= HideUI;
+        OnYearPassedChannel.OnEventRaised -= OnYearPassed;
+    }
+    // '1년 지남' 방송을 받으면 호출되는 함수 (수정됨)
+    private void OnYearPassed()
+    {
+        // 정보창이 켜져있을 때만 지연 보고 코루틴을 시작시킴
+        if (infoPanel.activeSelf && currentActor != null)
+        {
+            StartCoroutine(RefreshAgeAfterDelay());
+        }
+    }
+    
+    // ★ 새로 추가된 지연 함수 (코루틴)
+    private IEnumerator RefreshAgeAfterDelay()
+    {
+        // 폐하의 명대로 0.1초를 기다립니다.
+        yield return new WaitForSeconds(0.1f);
+
+        // 0.1초 후, 나이 담당관이 일을 마쳤을 것이므로
+        // 그 때 다시 장군(currentActor)에게 최신 나이를 물어보고 보고서를 갱신합니다.
+        // 혹시 그 사이에 창이 꺼졌을 경우를 대비해 한번 더 확인합니다.
+        if (infoPanel.activeSelf && currentActor != null)
+        {
+            ageText.text = $"나이: {currentActor.Age.ToString()}";
+        }
     }
 
     // '선택됨' 방송을 받으면 호출되는 메인 함수
@@ -57,7 +84,7 @@ public class PeopleInfoUI : MonoBehaviour
     {
         // 현재 선택된 actor를 클래스 변수에 저장해서 다른 함수에서도 쓸 수 있게 함
         currentActor = selectedActor;
-        
+
         infoPanel.SetActive(true);
 
         // 모든 UI 텍스트 정보 업데이트
@@ -65,7 +92,7 @@ public class PeopleInfoUI : MonoBehaviour
         ageText.text = $"나이: {currentActor.Age.ToString()}";
         jobText.text = $"직업: {currentActor.Job.ToString()}";
         loyaltyText.text = $"충성도: {currentActor.Loyalty.ToString()}";
-        
+
         // 직업에 맞는 비주얼(초상화/비디오) 업데이트
         UpdateVisuals(currentActor.Job);
 
