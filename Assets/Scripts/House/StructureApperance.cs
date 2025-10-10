@@ -17,7 +17,6 @@ public class StructureApperance : MonoBehaviour
         }
 
         finalLevel = levelAppearances[levelAppearances.Length - 1].level;
-        Debug.Log(finalLevel);
     }
 
     // 레벨에 따른 외형 변경
