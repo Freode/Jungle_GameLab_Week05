@@ -18,8 +18,8 @@ MonoBehaviour:
   techNamePrint: 
   techDescription: "\uD53C\uB77C\uBBF8\uB4DC \uBC1C\uC804"
   techIcon: {fileID: 21300000, guid: 6ccd7936efd7e1840b2e4f674cfe1aff, type: 3}
-  baseRequiredGold: 37500
-  increaseGoldValue: 37500
+  baseRequiredGold: 50000
+  increaseGoldValue: 50000
   maxLevel: 50
   baseCapacity: 0
   isUsingLevel: 1
