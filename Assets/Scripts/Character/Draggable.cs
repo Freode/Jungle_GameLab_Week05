@@ -26,6 +26,8 @@ public class Draggable : MonoBehaviour
 
     public GameObject dropObject;
 
+    
+
     // --- 내부 변수 (수정 필요 없음) ---
     private Vector3 offset;
     private bool isDragging = false;
@@ -33,6 +35,8 @@ public class Draggable : MonoBehaviour
     private Coroutine deathCoroutine;
     private Animator anim;
     private Mover spriteMover;
+
+    private float defaultMoverSpeed;
 
     private float lastVelocityX = 0f;
     private float currentShakeEnergy = 0f;
@@ -43,6 +47,7 @@ public class Draggable : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         spriteMover = GetComponent<Mover>();
+        defaultMoverSpeed = spriteMover.moveSpeed;
     }
 
     void OnMouseDown()
@@ -101,7 +106,6 @@ public class Draggable : MonoBehaviour
         if (other.CompareTag("River"))
         {
             isOverRiver = true;
-            spriteMover.moveSpeed = 0.5f;
         }
         else if (other.CompareTag("Jail"))
         {
@@ -114,7 +118,7 @@ public class Draggable : MonoBehaviour
         if (other.CompareTag("River"))
         {
             isOverRiver = false;
-            spriteMover.moveSpeed = 3f;
+            spriteMover.moveSpeed = defaultMoverSpeed;
 
             if (anim != null)
             {
