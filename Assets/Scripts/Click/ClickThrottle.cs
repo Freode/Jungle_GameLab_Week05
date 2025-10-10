@@ -27,6 +27,10 @@ public class ClickThrottle : MonoBehaviour
     private Vector3 originalScale;                      // 원래 버튼 크기
     private Coroutine buttonAnimCoroutine;              // 버튼 애님 코루틴
 
+    // 크리티컬 이벤트
+    public static event System.Action OnCriticalHit;
+    public static event System.Action OnNormalHit;
+
     private float _lastClickTime = -9999f;
     private int _accepted;
     private int _rejected;
@@ -90,17 +94,19 @@ public class ClickThrottle : MonoBehaviour
         long totalAmount = GameManager.instance.GetClickIncreaseTotalAmount();
 
         Color color;
-        int random = Random.Range(1, 101);
+        int random = UnityEngine.Random.Range(1, 101);
         // 크리티컬 O
         if(random <= CriticalPercent)
         {
             totalAmount *= 100;
             color = Color.red;
+            OnCriticalHit?.Invoke(); // 크리티컬 이벤트 발생
         }
         // 크리티컬 X
         else
         {
             color = Color.green;
+            OnNormalHit?.Invoke(); // 일반 이벤트 발생
         }
         ReadyToScaleCoroutine();
         GameManager.instance.IncreaseGoldAmountWhenClicked(totalAmount, color);
