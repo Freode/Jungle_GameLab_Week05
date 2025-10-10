@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System;
 using UnityEngine;
 
@@ -24,4 +25,13 @@ public class StructureData
 {
     public TechData techData;
     public GameObject areaStructure;
+}
+
+
+// 테크 유형에 따른 배열
+[System.Serializable]
+public struct TechKindInfo
+{
+    public TechKind techKind;
+    public List<TechData> techDatas;
 }

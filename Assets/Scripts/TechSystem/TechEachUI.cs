@@ -1,7 +1,9 @@
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.HID;
 using UnityEngine.UI;
 
 public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
@@ -17,49 +19,73 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public event System.Action OnInactiveInfo;
 
     private TechState techState;        // 데이터 원본과 상태 저장
-    private float upperY;
-    private float leftX;
+    private float upperY = 5000f;
+    private float leftX = 5000f;
+    private Color baseColor;            // 기본 색상
 
     private void Start()
     {
-        GameManager.instance.OnCurrentGoldAmountChanged += OnCheckTechActive;
-        buttonBG.onClick.AddListener(CheckTechLevelUp);
-        StartCoroutine(CheckUnlock());
-        upperY = gameObject.transform.position.y - totalRectTransform.rect.height / 2f;
         leftX = gameObject.transform.position.x - totalRectTransform.rect.width / 2f - 5f;
+        buttonBG.onClick.AddListener(CheckTechLevelUp);
+        baseColor = textCost.color;
+    }
+
+    // 0.1초 후에 재검사
+    IEnumerator CheckUnlock()
+    {
+        yield return new WaitForSeconds(0.05f);
+        TechViewer.instance.CheckUnlockPreTech(techState.techData);
+    }
+
+    private void OnDestroy()
+    {
+        //OnActiveInfo = null;
+        //OnInactiveInfo = null;
+        //GameManager.instance.OnCurrentGoldAmountChanged -= OnCheckTechActive;
+
+        //// === 수정 필요 ===
+        //if (techState.techData.areaType != AreaType.Normal)
+        //    PeopleManager.Instance.OnAreaPeopleCountChanged -= CurrentCapacityChange;
+    }
+
+    // 데이터 등록
+    public void RegisterState(TechState techState)
+    {
+        this.techState = techState;
+
+        imageIcon.sprite = techState.techData.techIcon;
+        textName.text = techState.techData.techName;
+
+        PrintCost();
+        PrintLevelOrCapacity();
+
+        // 버튼 활성화 여부 설정
+        GameManager.instance.OnCurrentGoldAmountChanged += OnCheckTechActive;
+        StartCoroutine(CheckUnlock());
 
         // === 수정 필요 ===
         if (techState.techData.areaType != AreaType.Normal)
             PeopleManager.Instance.OnAreaPeopleCountChanged += CurrentCapacityChange;
     }
 
-    // 0.15초 후에 재검사
-    IEnumerator CheckUnlock()
+    // 상태 제거하는 함수
+    public void RemoveState()
     {
-        yield return new WaitForSeconds(0.15f);
-        TechViewer.instance.CheckUnlockPreTech(techState.techData);
-    }
+        if(techState == null)
+            return;
 
-    private void OnDestroy()
-    {
-        OnActiveInfo = null;
-        OnInactiveInfo = null;
+        // 모두 초기화
+        buttonBG.interactable = false;
+        textCost.color = baseColor;
+
+        // 모두 제거
         GameManager.instance.OnCurrentGoldAmountChanged -= OnCheckTechActive;
 
         // === 수정 필요 ===
         if (techState.techData.areaType != AreaType.Normal)
             PeopleManager.Instance.OnAreaPeopleCountChanged -= CurrentCapacityChange;
-    }
 
-    // 데이터 등록
-    public void RegisterData(TechData techData)
-    {
-        techState = new TechState(techData);
-
-        imageIcon.sprite = techData.techIcon;
-        textName.text = techData.techName;
-        PrintCost();
-        PrintLevelOrCapacity();
+        techState = null;
     }
 
     // 비용이 충분하지 않다면, 비활성화
@@ -183,6 +209,15 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 마우스 올려 놓기
     public void OnPointerEnter(PointerEventData eventData)
     {
+        // 위치 초기화가 되지 않았을 때만 진행
+        if (upperY == 5000f)
+        {
+            Vector3[] corners = new Vector3[4];
+            totalRectTransform.GetWorldCorners(corners);
+            upperY = corners[1].y;
+            leftX = corners[1].x;
+        }
+
         Vector3 loc = new Vector3(leftX, upperY, 0);
         OnActiveInfo?.Invoke(techState.techData.techName, techState.techData.techDescription, techState.techData.techIcon, loc);
     }
