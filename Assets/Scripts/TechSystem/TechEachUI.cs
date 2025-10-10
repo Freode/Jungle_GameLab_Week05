@@ -1,9 +1,7 @@
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.HID;
 using UnityEngine.UI;
 
 public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
@@ -92,7 +90,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 현재 수용량이 최대 수용량보다 적어서 개발 가능한지 확인
     public void OnCheckTechActive()
     {
-        int amount = GameManager.instance.GetCurrentGoldAmount();
+        long amount = GameManager.instance.GetCurrentGoldAmount();
         // 선행 조건이 다 해결되지 않았다면, 무시
         if (techState.lockState == LockState.Block)
             return;
@@ -157,7 +155,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     private void CheckTechLevelUp()
     {
         // 비용 충분한지 확인
-        int goldAmount = GameManager.instance.GetCurrentGoldAmount();
+        long goldAmount = GameManager.instance.GetCurrentGoldAmount();
         if (goldAmount < techState.requaireAmount)
             return;
 

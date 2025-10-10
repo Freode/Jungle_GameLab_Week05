@@ -11,7 +11,7 @@ public enum CarrierItem
 
 
 
-[CreateAssetMenu(menuName = "People/People Profile", fileName = "PeopleProfile_")]
+[CreateAssetMenu(menuName = "Scriptable Objects/People/People Profile", fileName = "PeopleProfile_")]
 public class PeopleProfile : ScriptableObject
 {
     [Header("Age")]
