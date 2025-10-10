@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f342355543b23f43ba02812ed6531f7, type: 3}
+  m_Name: SurvivalProfile
+  m_EditorClassIdentifier: 
+  survivalChanceByAge:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 20.231884
+      value: 0.9898203
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 49.7862
+      value: 0.8186521
+      inSlope: -0.0046349447
+      outSlope: -0.0046349447
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.16140196
+      outWeight: 0.15463004
+    - serializedVersion: 3
+      time: 77.90342
+      value: 0.66299284
+      inSlope: -0.0069138547
+      outSlope: -0.0069138547
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.19896644
+    - serializedVersion: 3
+      time: 100.00001
+      value: 0.5049554
+      inSlope: -0.0026367537
+      outSlope: -0.0026367537
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.19120993
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

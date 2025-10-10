@@ -5,6 +5,10 @@ using UnityEngine;
 /// </summary>
 public class DraggableSkull : MonoBehaviour
 {
+    [Header("Deceased Info")]
+    [SerializeField] private string deceasedName;
+    [SerializeField] private int ageAtDeath;
+    [SerializeField] private JobType jobAtDeath;
     // --- 내부 변수 (수정 필요 없음) ---
     private Vector3 offset;
     private bool isDragging = false;
@@ -13,7 +17,14 @@ public class DraggableSkull : MonoBehaviour
     // TODO: 나중에 마우스 툴팁을 추가할 경우 여기에 관련 변수와 로직을 추가합니다.
     // [Tooltip("마우스 오버 시 표시될 툴팁 텍스트")]
     // public string tooltipText = "💀 앗, 해골이다!";
-
+    // ★ PeopleActor로부터 정보를 받는 함수
+    public void Initialize(PeopleActor actor)
+    {
+        deceasedName = actor.DisplayName;
+        ageAtDeath = actor.Age;
+        jobAtDeath = actor.Job;
+        // 필요하다면 더 많은 정보를 여기에 기록할 수 있습니다.
+    }
 
     void OnMouseDown()
     {
