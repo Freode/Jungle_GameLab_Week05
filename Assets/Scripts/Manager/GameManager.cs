@@ -240,6 +240,8 @@ public class GameManager : MonoBehaviour
     //                            Getter
     // ==========================================================
 
+    public Dictionary<AreaType, IncreaseInfo> GetIncreaseGoldAmounts() { return increaseGoldAmounts; }
+
     public long GetCurrentGoldAmount() { return currentGoldAmount; }
 
     public long GetClickIncreaseGoldAmountLinear() { return clickIncreaseGoldAmountLinear; }

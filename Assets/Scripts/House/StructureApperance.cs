@@ -3,11 +3,10 @@ using UnityEngine.EventSystems;
 
 public class StructureApperance : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    public AreaType areaType;
     public LevelAppearance[] levelAppearances;
     public bool isClearStructure = false;
-
-    [SerializeField] private VoidEventChannelSO OnStructureInfoActive;
-    [SerializeField] private VoidEventChannelSO OnStructureInfoInactive;
+    public GameObject InfoUI;
 
     private SpriteRenderer spriteRenderer;
     private int finalLevel = 0;
@@ -46,6 +45,17 @@ public class StructureApperance : MonoBehaviour, IPointerEnterHandler, IPointerE
     // 마우스 올려 놓기
     public void OnPointerEnter(PointerEventData eventData)
     {
+        IncreaseInfo increaseInfo = GameManager.instance.GetIncreaseGoldAmounts()[areaType];
+
+        string description = $"클릭 당 얻는 세금 양 : +{FuncSystem.Format(increaseInfo.clickLinear)}\n" +
+            $"클릭 당 얻는 세금 추가 비율 : +{FuncSystem.Format(increaseInfo.clickRate)}%\n" +
+            $"1초 당 얻는 세금 양 : +{FuncSystem.Format(increaseInfo.periodLinear)}%\n" +
+            $"1초 당 얻는 세금 추가 비율 : +{FuncSystem.Format(increaseInfo.periodRate)}%\n";
+
+        InfoUI.TryGetComponent(out TechInfo techInfo);
+        if (techInfo == null) return;
+
+        techInfo.OnActiveInfo("테스트", description, null, Vector3.zero);
         //// 위치 초기화가 되지 않았을 때만 진행
         //if (upperY == 5000f)
         //{
@@ -62,6 +72,9 @@ public class StructureApperance : MonoBehaviour, IPointerEnterHandler, IPointerE
     // 마우스가 빠져 나감
     public void OnPointerExit(PointerEventData eventData)
     {
-       // OnInactiveInfo?.Invoke();
+        InfoUI.TryGetComponent(out TechInfo techInfo);
+        if (techInfo == null) return;
+
+        techInfo.OnInactiveInfo();
     }
 }
