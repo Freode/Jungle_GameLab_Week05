@@ -8,10 +8,18 @@ public enum LockState
     Complete,
 };
 
+public enum TechKind
+{
+    None = 0,
+    Structure,
+    Job
+};
+
 // 데이터를 저장하는 클래스
 [CreateAssetMenu(fileName = "TechData", menuName = "Scriptable Objects/TechData")]
 public class TechData : ScriptableObject
 {
+    public TechKind techKind;               // 테크 유형 (좀 더 큰 단위)
     public AreaType areaType;               // 존재할 구역 타입(나중에 수정)
     public string techName;                 // 기술 이름
     public string techNamePrint;            // 출력용 기술 이름
@@ -38,6 +46,7 @@ public class TechState
     public int maxCapacity;                 // 최대 수용량
     public LockState lockState;             // 연구 가능 상태
     public int requaireAmount = 0;          // 요구하는 양
+    public int curTechUIIdx;                // 현재 UI의 위치
 
     // 생성자
     public TechState(TechData data)

@@ -10,12 +10,14 @@ public class TechInfo : MonoBehaviour
     public RectTransform infoTranform;
 
     private float modifyX = 0f;
+    private float modifyY = 0f;
 
     private void Start()
     {
         gameObject.SetActive(false);
 
-        modifyX = infoTranform.rect.width + 10f;
+        modifyX = infoTranform.rect.width / 2f + 20f;
+        modifyY = infoTranform.rect.height / 2f;
     }
 
     // 테크 정보 활성화
@@ -29,10 +31,9 @@ public class TechInfo : MonoBehaviour
             techIcon.sprite = icon;
         }
 
-
         // 1. 기본 위치 계산 (아이콘의 왼쪽에 표시)
-        Vector3 desiredPos = new Vector3(loc.x - modifyX, loc.y, 0);
-
+        Vector3 desiredPos = new Vector3(loc.x - modifyX, loc.y - modifyY, 0);
+        Debug.Log(loc.y);
         // 2. 툴팁 UI의 절반 넓이와 높이를 구합니다. (Pivot이 중앙이라고 가정)
         float halfWidth = infoTranform.rect.width / 2f;
         float halfHeight = infoTranform.rect.height / 2f;

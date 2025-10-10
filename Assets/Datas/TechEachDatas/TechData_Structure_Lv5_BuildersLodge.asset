@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2115852e50bc17549bd2f6c03796f836, type: 3}
   m_Name: TechData_Structure_Lv5_BuildersLodge
   m_EditorClassIdentifier: 
+  techKind: 1
   areaType: 0
   techName: "\uAC74\uCD95\uC18C \uAC1C\uBC1C "
   techNamePrint: 
@@ -29,6 +30,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d99ae638ae6b6dd4f85b3b532f4df63a, type: 2}
   postTeches:
   - {fileID: 11400000, guid: 75d3086872cc55740937beb3b462f90a, type: 2}
+  - {fileID: 11400000, guid: 351780dd5029a354eaf654a40afba13e, type: 2}
   effects:
   - {fileID: 11400000, guid: 40f1c1fd90ae86a4fa6a1bbc4d57650d, type: 2}
   - {fileID: 11400000, guid: 3a99171475f62df4ca1b001bb7549168, type: 2}
