@@ -25,6 +25,7 @@ MonoBehaviour:
   maxLevel: 0
   baseCapacity: 0
   isUsingLevel: 1
+  isClearTech: 0
   localPos: {x: 0, y: 145.5, z: 0}
   preTeches:
   - {fileID: 11400000, guid: 72ef8243d02daff48b62413354645423, type: 2}
@@ -32,5 +33,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 66e0996af73c87a4792dd8fb4bc0a6f1, type: 2}
   - {fileID: 11400000, guid: cc17e55cce8521042a58c03910d207f6, type: 2}
   effects:
-  - {fileID: 11400000, guid: 26e06191a378f1347acfc4e2cd34d9a9, type: 2}
-  - {fileID: 11400000, guid: 473bae7f0e87a1f42a00586d7ed754ff, type: 2}
+  - {fileID: 11400000, guid: 39c5f72acba1a714fb4d8e02131dad54, type: 2}
+  - {fileID: 11400000, guid: 28f008f36816dc74f863b86603034d9b, type: 2}
