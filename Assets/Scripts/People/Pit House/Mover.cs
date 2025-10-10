@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public enum MoveState { Returning, Wandering, Dwelling }
+public enum MoveState { Returning, Wandering, Dwelling, Carring }
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
-[RequireComponent(typeof(Animator))] 
+[RequireComponent(typeof(Animator))]
 public class Mover : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -26,6 +26,7 @@ public class Mover : MonoBehaviour
     [Tooltip("즉사 시 현재 위치에 생성할 프리팹(시체/유골 등)")]
     [SerializeField] private GameObject deathPrefab;
 
+    private PeopleActor peopleActor;
     private MoveState currentState = MoveState.Dwelling; // 초기에는 대기 상태로 시작
     private AreaZone currentArea;
     public AreaZone lockedArea; // public으로 변경하여 외부에서 직접 설정 가능
@@ -39,6 +40,11 @@ public class Mover : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private string currentDwellAnimation;
 
+    public bool isCarring = false;
+
+
+
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -49,6 +55,7 @@ public class Mover : MonoBehaviour
 
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        peopleActor = GetComponent<PeopleActor>();
     }
 
     private void Start()
@@ -87,6 +94,8 @@ public class Mover : MonoBehaviour
         isInitialized = true;
     }
 
+
+
     private void Update()
     {
         // 초기화가 안 됐으면 다시 시도
@@ -104,7 +113,13 @@ public class Mover : MonoBehaviour
             dwellTimer -= Time.deltaTime;
             if (dwellTimer <= 0)
             {
+                // 만약 운반자면 여기서 로직 실행
+                if (peopleActor.Job == JobType.Carrier)
+                {
+                    StartCarring();
+                }
                 StartWandering();
+
             }
         }
         UpdateAnimatorState();
@@ -145,7 +160,7 @@ public class Mover : MonoBehaviour
         Vector2 currentPos = transform.position;
         Vector2 direction = (targetPosition - currentPos).normalized;
         float distance = Vector2.Distance(currentPos, targetPosition);
-    
+
         UpdateSpriteDirection(direction);
 
         if (distance > arrivalDistance)
@@ -213,12 +228,54 @@ public class Mover : MonoBehaviour
             if (deathPrefab != null)
                 Instantiate(deathPrefab, transform.position, transform.rotation);
 
-            
+
             PeopleManager.Instance.DespawnPerson(this.gameObject);
 
             return true; // 죽음 발생
         }
         return false; // 생존
+    }
+
+    void StartCarring()
+    {
+        if (isCarring)
+        {
+            PeopleManager.Instance.SetAreaLock(this.gameObject, AreaType.Carrier);
+            isCarring = false;
+            return;
+        }
+
+        CarrierItem carrierItem = peopleActor.CarrierItem;
+        
+
+        bool isStoneCarve = PeopleManager.Instance.checkUnlockStructures.ContainsKey(AreaType.StoneCarving);
+        bool isArchitect = PeopleManager.Instance.checkUnlockStructures.ContainsKey(AreaType.Architect);
+        
+
+        switch (carrierItem)
+        {
+            case CarrierItem.None:
+                peopleActor.SetCarrierItem(CarrierItem.Stone);
+                PeopleManager.Instance.SetAreaLock(this.gameObject, AreaType.Mine);
+                isCarring = true;
+                break;
+            case CarrierItem.Stone:
+                if (isStoneCarve)
+                {
+                    PeopleManager.Instance.SetAreaLock(this.gameObject, AreaType.StoneCarving);
+                    peopleActor.SetCarrierItem(CarrierItem.CarvedStone);
+                    isCarring = true;
+                }
+                break;
+            case CarrierItem.CarvedStone:
+                if (isArchitect)
+                {
+                    PeopleManager.Instance.SetAreaLock(this.gameObject, AreaType.Architect);
+                    peopleActor.SetCarrierItem(CarrierItem.None);
+                    isCarring = true;
+                }
+                break;
+        }
     }
 
 
@@ -250,7 +307,7 @@ public class Mover : MonoBehaviour
         currentDwellAnimation = null; // 기본값으로 초기화
         AreaZone targetArea = lockedArea != null ? lockedArea : currentArea;
         if (targetArea == null) return;
-        
+
         switch (targetArea.areaType)
         {
             case AreaType.Mine:
@@ -262,7 +319,7 @@ public class Mover : MonoBehaviour
             case AreaType.StoneCarving:
                 currentDwellAnimation = Random.value < 0.5f ? "IsHammering" : "IsDoing";
                 break;
-            // Normal, Carrier 등은 특별한 행동이 없으므로 null 유지
+                // Normal, Carrier 등은 특별한 행동이 없으므로 null 유지
         }
     }
 
@@ -364,13 +421,13 @@ public class Mover : MonoBehaviour
     private void UpdateAnimatorState()
     {
         if (animator == null) return;
-        
+
         ResetAnimationBools();
 
         bool isMoving = currentState == MoveState.Wandering || currentState == MoveState.Returning;
-        
+
         AreaZone targetArea = lockedArea != null ? lockedArea : currentArea;
-        
+
         if (isMoving)
         {
             if (targetArea != null && targetArea.areaType == AreaType.Carrier)
@@ -406,7 +463,7 @@ public class Mover : MonoBehaviour
         animator.SetBool("IsDoing", false);
     }
 
-    
+
 
 
     // Public getters

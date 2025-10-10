@@ -40,6 +40,11 @@ public class PeopleActor : MonoBehaviour
         return;
     }
 
+    public void SetCarrierItem(CarrierItem _carrierItem)
+    {
+        carrierItem = _carrierItem;
+    }
+
     public void ChangeName(string newName)
     {
         // 이름이 비어있거나 공백뿐인 경우는 무시하고, 아니라면 displayName을 변경

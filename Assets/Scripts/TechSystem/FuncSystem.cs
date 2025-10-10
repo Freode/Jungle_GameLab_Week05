@@ -1,3 +1,5 @@
+using System.Xml.Linq;
+
 public static class FuncSystem
 {
     // 숫자 형식 변경
@@ -27,5 +29,88 @@ public static class FuncSystem
     {
         decimal dt = (decimal)UnityEngine.Random.value;
         return (long)(min + (max - min) * dt);
+    }
+
+    // 구조물 이름 가져오기
+    public static string GetStructureName(AreaType areaType)
+    {
+        string name = string.Empty;
+        switch(areaType)
+        {
+            case AreaType.Mine:
+                name = "광산";
+                break;
+
+            case AreaType.Gold:
+                name = "움집";
+                break;
+
+            case AreaType.StoneCarving:
+                name = "세공소";
+                break;
+
+            case AreaType.Carrier:
+                name = "운반소";
+                break;
+
+            case AreaType.Architect:
+                name = "건축소";
+                break;
+
+            case AreaType.Pyramid:
+                name = "피라미드";
+                break;
+
+            default:
+                name = "없음";
+                break;
+        }
+
+        return name;
+    }
+
+    // 구조물 효과 반환
+    public static string GetStructureDescription(AreaType areaType, long linearAmount, long periodAmount, int currentLevel, int maxLevel)
+    {
+        string description = string.Empty;
+        switch (areaType)
+        {
+            case AreaType.Mine:
+                description = $"클릭 세금 : +{Format(linearAmount)}\n" +
+                    $"주기 세금 : +{Format(periodAmount)}\n";
+                break;
+
+            case AreaType.Gold:
+                description = $"클릭 세금 : +{Format(linearAmount)}\n" +
+                    $"주기 세금 : +{Format(periodAmount)}\n" +
+                    $"인력 생성 주기 : {GameManager.instance.GetRespawnTime().ToString("F3")}초\n";
+                break;
+
+            case AreaType.StoneCarving:
+                description = $"클릭 세금 : +{Format(linearAmount)}\n" +
+                    $"주기 세금 : +{Format(periodAmount)}\n";
+                break;
+
+            case AreaType.Carrier:
+                description = $"클릭 세금 : +{Format(linearAmount)}\n" +
+                    $"주기 세금 : +{Format(periodAmount)}\n";
+                break;
+
+            case AreaType.Architect:
+                description = $"클릭 세금 : +{Format(linearAmount)}\n" +
+                    $"주기 세금 : +{Format(periodAmount)}\n";
+                break;
+
+            case AreaType.Pyramid:
+                description = $"피라미드 진척도 : {currentLevel}/{maxLevel}\n";
+                break;
+
+            default:
+                description = "없음";
+                break;
+        }
+
+
+        return description;
     }
 }

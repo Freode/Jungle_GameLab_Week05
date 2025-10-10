@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 
 // 증가량 구조체
-class IncreaseInfo
+public class IncreaseInfo
 {
     public long clickLinear = 0;
     public long clickRate = 0;

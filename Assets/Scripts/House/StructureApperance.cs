@@ -1,15 +1,15 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class StructureApperance : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class StructureApperance : MonoBehaviour
 {
+    public AreaType areaType;
     public LevelAppearance[] levelAppearances;
     public bool isClearStructure = false;
-
-    [SerializeField] private VoidEventChannelSO OnStructureInfoActive;
-    [SerializeField] private VoidEventChannelSO OnStructureInfoInactive;
+    public GameObject InfoUI;
 
     private SpriteRenderer spriteRenderer;
+    private int currentLevel = 0;
     private int finalLevel = 0;
 
     void Start()
@@ -26,10 +26,11 @@ public class StructureApperance : MonoBehaviour, IPointerEnterHandler, IPointerE
     // 레벨에 따른 외형 변경
     public void UpdateApperanceByLevel(int level)
     {
+        currentLevel = level;
         // 클리어 구조체를 모두 완성한 경우
         if (isClearStructure && level >= finalLevel)
         {
-            GameManager.instance.SetIsGameOver(true);
+            // GameManager.instance.SetIsGameOver(true);
         }
 
         for (int i = levelAppearances.Length - 1; i >= 0; i--)
@@ -44,24 +45,20 @@ public class StructureApperance : MonoBehaviour, IPointerEnterHandler, IPointerE
     }
 
     // 마우스 올려 놓기
-    public void OnPointerEnter(PointerEventData eventData)
+    private void OnMouseEnter()
     {
-        //// 위치 초기화가 되지 않았을 때만 진행
-        //if (upperY == 5000f)
-        //{
-        //    Vector3[] corners = new Vector3[4];
-        //    totalRectTransform.GetWorldCorners(corners);
-        //    upperY = corners[1].y;
-        //    leftX = corners[1].x;
-        //}
+        InfoUI.TryGetComponent(out TechInfo techInfo);
+        if (techInfo == null) return;
 
-        //Vector3 loc = new Vector3(leftX, upperY, 0);
-        //OnActiveInfo?.Invoke(techState.techData.techName, techState.techData.techDescription, techState.techData.techIcon, loc);
+        techInfo.OnActiveInfo(areaType, currentLevel, finalLevel, null, new Vector3(1920f, 0f, 0f));
     }
 
     // 마우스가 빠져 나감
-    public void OnPointerExit(PointerEventData eventData)
+    private void OnMouseExit()
     {
-       // OnInactiveInfo?.Invoke();
+        InfoUI.TryGetComponent(out TechInfo techInfo);
+        if (techInfo == null) return;
+
+        techInfo.OnInactiveInfo();
     }
 }
