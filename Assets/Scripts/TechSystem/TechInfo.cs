@@ -33,7 +33,7 @@ public class TechInfo : MonoBehaviour
 
         // 1. 기본 위치 계산 (아이콘의 왼쪽에 표시)
         Vector3 desiredPos = new Vector3(loc.x - modifyX, loc.y - modifyY, 0);
-        Debug.Log(loc.y);
+
         // 2. 툴팁 UI의 절반 넓이와 높이를 구합니다. (Pivot이 중앙이라고 가정)
         float halfWidth = infoTranform.rect.width / 2f;
         float halfHeight = infoTranform.rect.height / 2f;

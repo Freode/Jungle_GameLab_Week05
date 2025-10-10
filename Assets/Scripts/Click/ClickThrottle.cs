@@ -87,7 +87,7 @@ public class ClickThrottle : MonoBehaviour
             return;
 
         // 공식 : 선형 증가량 * 비율 증가량
-        int totalAmount = GameManager.instance.GetClickIncreaseTotalAmount();
+        long totalAmount = GameManager.instance.GetClickIncreaseTotalAmount();
 
         Color color;
         int random = Random.Range(1, 101);
