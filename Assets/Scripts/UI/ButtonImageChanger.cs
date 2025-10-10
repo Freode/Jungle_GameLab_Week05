@@ -19,6 +19,26 @@ public class ImageSpriteData
     
     [HideInInspector]
     public bool isChanging = false;
+    
+    // 캐시된 Transform (최적화)
+    [System.NonSerialized]
+    public Transform cachedTransform;
+    
+    // 초기화 메서드
+    public void Initialize(float globalDuration)
+    {
+        if (targetImage != null)
+        {
+            cachedTransform = targetImage.transform;
+            if (originalSprite == null)
+                originalSprite = targetImage.sprite;
+            if (useGlobalDuration)
+                changeDuration = globalDuration;
+        }
+    }
+    
+    // 유효성 검사
+    public bool IsValid => targetImage != null && changedSprite != null;
 }
 
 public class ButtonImageChanger : MonoBehaviour
@@ -33,126 +53,267 @@ public class ButtonImageChanger : MonoBehaviour
     [SerializeField] private float globalChangeDuration = 0.5f;
     [SerializeField] private bool changeAllSimultaneously = true;
     
+    [Header("Gold Area People Count Settings")]
+    [SerializeField] private bool useGoldAreaCount = false;
+    [Tooltip("Gold 영역 사람 수에 따라 이미지를 순차적으로 활성화합니다")]
+    
+    // 최적화를 위한 캐시
+    private readonly List<Coroutine> activeCoroutines = new List<Coroutine>();
+    private readonly List<ImageSpriteData> validImageData = new List<ImageSpriteData>();
+    private readonly List<ImageSpriteData> activeImageData = new List<ImageSpriteData>();
+    
+    // 이벤트 구독 상태 추적
+    private bool isSubscribedToGoldAreaEvents = false;
+    
+    // 마지막으로 확인한 Gold 영역 사람 수 (불필요한 업데이트 방지)
+    private int lastGoldAreaCount = -1;
+    
     private void Start()
+    {
+        InitializeComponents();
+        InitializeImageData();
+        SetupEventListeners();
+    }
+    
+    private void InitializeComponents()
     {
         // 컴포넌트 자동 할당
         if (targetButton == null)
             targetButton = GetComponent<Button>();
-        
-        // 이미지 데이터 초기화
-        InitializeImageData();
-        
-        // 버튼 이벤트 연결
-        if (targetButton != null)
-            targetButton.onClick.AddListener(OnButtonClick);
     }
     
     private void InitializeImageData()
     {
+        // 이미지 데이터 초기화 및 유효한 데이터만 캐시
+        validImageData.Clear();
+        
         for (int i = 0; i < imageDataList.Count; i++)
         {
             var data = imageDataList[i];
+            data.Initialize(globalChangeDuration);
             
-            // 원본 스프라이트 자동 할당
-            if (data.targetImage != null && data.originalSprite == null)
+            if (data.IsValid)
             {
-                data.originalSprite = data.targetImage.sprite;
-            }
-            
-            // 글로벌 duration 사용 설정
-            if (data.useGlobalDuration)
-            {
-                data.changeDuration = globalChangeDuration;
+                validImageData.Add(data);
             }
         }
+    }
+    
+    private void SetupEventListeners()
+    {
+        // 버튼 이벤트 연결
+        if (targetButton != null)
+            targetButton.onClick.AddListener(OnButtonClick);
+            
+        // Gold 영역 사람 수 추적 시작
+        if (useGoldAreaCount)
+        {
+            SubscribeToGoldAreaEvents();
+        }
+    }
+    
+    private void SubscribeToGoldAreaEvents()
+    {
+        if (isSubscribedToGoldAreaEvents || PeopleManager.Instance == null) return;
+        
+        PeopleManager.Instance.OnAreaPeopleCountChanged += UpdateImagesByGoldAreaCount;
+        isSubscribedToGoldAreaEvents = true;
+        UpdateImagesByGoldAreaCount(); // 초기 상태 설정
+    }
+    
+    private void UnsubscribeFromGoldAreaEvents()
+    {
+        if (!isSubscribedToGoldAreaEvents || PeopleManager.Instance == null) return;
+        
+        PeopleManager.Instance.OnAreaPeopleCountChanged -= UpdateImagesByGoldAreaCount;
+        isSubscribedToGoldAreaEvents = false;
     }
     
     private void OnDestroy()
     {
-        // 메모리 누수 방지를 위한 이벤트 해제
+        // 실행 중인 코루틴 정리
+        StopAllActiveCoroutines();
+        
+        // 이벤트 해제
         if (targetButton != null)
             targetButton.onClick.RemoveListener(OnButtonClick);
+            
+        UnsubscribeFromGoldAreaEvents();
+    }
+    
+    private void StopAllActiveCoroutines()
+    {
+        for (int i = 0; i < activeCoroutines.Count; i++)
+        {
+            if (activeCoroutines[i] != null)
+                StopCoroutine(activeCoroutines[i]);
+        }
+        activeCoroutines.Clear();
+        
+        // 모든 이미지의 변경 상태 초기화
+        for (int i = 0; i < validImageData.Count; i++)
+        {
+            validImageData[i].isChanging = false;
+        }
     }
     
     public void OnButtonClick()
     {
-        if (changeAllSimultaneously)
+        // 이미 실행 중인 애니메이션이 있다면 중단
+        if (activeCoroutines.Count > 0)
         {
-            StartCoroutine(ChangeAllImagesSimultaneously());
+            StopAllActiveCoroutines();
+        }
+        
+        if (useGoldAreaCount)
+        {
+            // Gold 영역 모드: 활성화된 이미지만 변경
+            UpdateActiveImageDataCache();
+            if (changeAllSimultaneously)
+            {
+                var coroutine = StartCoroutine(ChangeImagesSimultaneously(activeImageData));
+                activeCoroutines.Add(coroutine);
+            }
+            else
+            {
+                var coroutine = StartCoroutine(ChangeImagesSequentially(activeImageData));
+                activeCoroutines.Add(coroutine);
+            }
         }
         else
         {
-            StartCoroutine(ChangeImagesSequentially());
+            // 기본 모드: 유효한 모든 이미지 변경
+            if (changeAllSimultaneously)
+            {
+                var coroutine = StartCoroutine(ChangeImagesSimultaneously(validImageData));
+                activeCoroutines.Add(coroutine);
+            }
+            else
+            {
+                var coroutine = StartCoroutine(ChangeImagesSequentially(validImageData));
+                activeCoroutines.Add(coroutine);
+            }
         }
     }
     
-    private IEnumerator ChangeAllImagesSimultaneously()
+    private void UpdateActiveImageDataCache()
     {
-        List<Coroutine> runningCoroutines = new List<Coroutine>();
-        
-        // 모든 이미지 동시에 변경 시작
-        foreach (var data in imageDataList)
+        activeImageData.Clear();
+        for (int i = 0; i < validImageData.Count; i++)
         {
-            if (data.targetImage != null && data.changedSprite != null && !data.isChanging)
+            var data = validImageData[i];
+            if (data.targetImage != null && data.targetImage.gameObject.activeInHierarchy)
             {
-                runningCoroutines.Add(StartCoroutine(ChangeImageTemporarily(data)));
+                activeImageData.Add(data);
+            }
+        }
+    }
+    
+    private IEnumerator ChangeImagesSimultaneously(List<ImageSpriteData> targetImages)
+    {
+        var runningCoroutines = new List<Coroutine>();
+        
+        // 모든 유효한 이미지를 동시에 변경 시작
+        for (int i = 0; i < targetImages.Count; i++)
+        {
+            var data = targetImages[i];
+            if (!data.isChanging)
+            {
+                var coroutine = StartCoroutine(ChangeImageTemporarily(data));
+                runningCoroutines.Add(coroutine);
+                activeCoroutines.Add(coroutine);
             }
         }
         
         // 모든 코루틴이 완료될 때까지 대기
-        foreach (var coroutine in runningCoroutines)
+        for (int i = 0; i < runningCoroutines.Count; i++)
         {
-            yield return coroutine;
+            yield return runningCoroutines[i];
+            activeCoroutines.Remove(runningCoroutines[i]);
         }
     }
     
-    private IEnumerator ChangeImagesSequentially()
+    private IEnumerator ChangeImagesSequentially(List<ImageSpriteData> targetImages)
     {
-        // 하나씩 순차적으로 변경
-        foreach (var data in imageDataList)
+        // 순차적으로 변경
+        for (int i = 0; i < targetImages.Count; i++)
         {
-            if (data.targetImage != null && data.changedSprite != null && !data.isChanging)
+            var data = targetImages[i];
+            if (!data.isChanging)
             {
-                yield return StartCoroutine(ChangeImageTemporarily(data));
+                var coroutine = StartCoroutine(ChangeImageTemporarily(data));
+                activeCoroutines.Add(coroutine);
+                yield return coroutine;
+                activeCoroutines.Remove(coroutine);
             }
         }
     }
     
     private IEnumerator ChangeImageTemporarily(ImageSpriteData data)
     {
-        if (data.targetImage == null || data.changedSprite == null || data.isChanging)
+        if (!data.IsValid || data.isChanging)
             yield break;
         
         data.isChanging = true;
         
-        // 원본 스프라이트 백업 (초기화에서 설정되지 않은 경우)
+        // 원본 스프라이트 백업 (필요한 경우)
         if (data.originalSprite == null)
             data.originalSprite = data.targetImage.sprite;
         
         // 스프라이트 변경
         data.targetImage.sprite = data.changedSprite;
         
-        // 지정된 시간만큼 대기 (개별 설정 또는 글로벌 설정)
+        // 지정된 시간만큼 대기
         float duration = data.useGlobalDuration ? globalChangeDuration : data.changeDuration;
         yield return new WaitForSeconds(duration);
         
         // 원본 스프라이트로 복원
-        data.targetImage.sprite = data.originalSprite;
+        if (data.targetImage != null && data.originalSprite != null)
+        {
+            data.targetImage.sprite = data.originalSprite;
+        }
         
         data.isChanging = false;
     }
     
-    // 외부에서 호출 가능한 메서드들
+    // Gold 영역 사람 수에 따른 이미지 활성화 업데이트
+    private void UpdateImagesByGoldAreaCount()
+    {
+        if (!useGoldAreaCount || PeopleManager.Instance == null) return;
+        
+        int goldAreaPeopleCount = PeopleManager.Instance.Count(AreaType.Gold);
+        
+        // 값이 변경되지 않았다면 업데이트 생략 (최적화)
+        if (goldAreaPeopleCount == lastGoldAreaCount) return;
+        lastGoldAreaCount = goldAreaPeopleCount;
+        
+        // 캐시된 유효한 이미지 데이터 사용
+        int maxCount = Mathf.Min(goldAreaPeopleCount, validImageData.Count);
+        
+        // 모든 이미지를 먼저 비활성화
+        for (int i = 0; i < validImageData.Count; i++)
+        {
+            validImageData[i].targetImage.gameObject.SetActive(false);
+        }
+        
+        // 사람 수만큼 이미지를 순차적으로 활성화
+        for (int i = 0; i < maxCount; i++)
+        {
+            validImageData[i].targetImage.gameObject.SetActive(true);
+        }
+    }
+    
+    // 외부에서 호출 가능한 메서드들 (최적화됨)
     public void SetGlobalChangeDuration(float duration)
     {
         globalChangeDuration = duration;
         
         // 글로벌 duration을 사용하는 데이터들 업데이트
-        foreach (var data in imageDataList)
+        for (int i = 0; i < validImageData.Count; i++)
         {
-            if (data.useGlobalDuration)
+            if (validImageData[i].useGlobalDuration)
             {
-                data.changeDuration = globalChangeDuration;
+                validImageData[i].changeDuration = globalChangeDuration;
             }
         }
     }
@@ -169,6 +330,12 @@ public class ButtonImageChanger : MonoBehaviour
         };
         
         imageDataList.Add(newData);
+        newData.Initialize(globalChangeDuration);
+        
+        if (newData.IsValid)
+        {
+            validImageData.Add(newData);
+        }
     }
     
     public void RemoveImageData(Image image)
@@ -177,6 +344,7 @@ public class ButtonImageChanger : MonoBehaviour
         {
             if (imageDataList[i].targetImage == image)
             {
+                validImageData.Remove(imageDataList[i]);
                 imageDataList.RemoveAt(i);
                 break;
             }
@@ -185,7 +353,10 @@ public class ButtonImageChanger : MonoBehaviour
     
     public void ClearAllImageData()
     {
+        StopAllActiveCoroutines();
         imageDataList.Clear();
+        validImageData.Clear();
+        activeImageData.Clear();
     }
     
     public void SetChangeMode(bool simultaneous)
@@ -195,18 +366,23 @@ public class ButtonImageChanger : MonoBehaviour
     
     public void ChangeSpecificImage(int index)
     {
-        if (index >= 0 && index < imageDataList.Count)
+        if (index >= 0 && index < validImageData.Count && !validImageData[index].isChanging)
         {
-            StartCoroutine(ChangeImageTemporarily(imageDataList[index]));
+            var coroutine = StartCoroutine(ChangeImageTemporarily(validImageData[index]));
+            activeCoroutines.Add(coroutine);
         }
     }
     
     public void ChangeSpecificImage(Image targetImage)
     {
-        var data = imageDataList.Find(d => d.targetImage == targetImage);
-        if (data != null)
+        for (int i = 0; i < validImageData.Count; i++)
         {
-            StartCoroutine(ChangeImageTemporarily(data));
+            if (validImageData[i].targetImage == targetImage && !validImageData[i].isChanging)
+            {
+                var coroutine = StartCoroutine(ChangeImageTemporarily(validImageData[i]));
+                activeCoroutines.Add(coroutine);
+                break;
+            }
         }
     }
     
@@ -220,5 +396,40 @@ public class ButtonImageChanger : MonoBehaviour
         targetButton = button;
         if (targetButton != null)
             targetButton.onClick.AddListener(OnButtonClick);
+    }
+    
+    public void SetUseGoldAreaCount(bool enabled)
+    {
+        if (useGoldAreaCount == enabled) return; // 이미 같은 상태면 무시
+        
+        useGoldAreaCount = enabled;
+        
+        if (enabled)
+        {
+            SubscribeToGoldAreaEvents();
+        }
+        else
+        {
+            UnsubscribeFromGoldAreaEvents();
+            // Gold 영역 모드 해제 시 모든 유효한 이미지 활성화
+            for (int i = 0; i < validImageData.Count; i++)
+            {
+                validImageData[i].targetImage.gameObject.SetActive(true);
+            }
+            lastGoldAreaCount = -1; // 캐시 초기화
+        }
+    }
+    
+    // 디버그/정보 제공용 메서드들
+    public int GetActiveCoroutineCount() => activeCoroutines.Count;
+    public int GetValidImageCount() => validImageData.Count;
+    public bool IsGoldAreaModeEnabled() => useGoldAreaCount;
+    public bool IsAnyImageChanging()
+    {
+        for (int i = 0; i < validImageData.Count; i++)
+        {
+            if (validImageData[i].isChanging) return true;
+        }
+        return false;
     }
 }
