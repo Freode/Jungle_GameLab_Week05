@@ -10,23 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2115852e50bc17549bd2f6c03796f836, type: 3}
-  m_Name: TechData_Structure_Lv6_Pyramid
+  m_Name: TechData_Structure_Lv7_Clear
   m_EditorClassIdentifier: 
   techKind: 1
-  areaType: 7
-  techName: "\uD53C\uB77C\uBBF8\uB4DC \uBC1C\uC804"
+  areaType: 8
+  techName: "\uAC8C\uC784 \uD074\uB9AC\uC5B4"
   techNamePrint: 
-  techDescription: "\uD53C\uB77C\uBBF8\uB4DC \uBC1C\uC804"
+  techDescription: "\uAC8C\uC784  \uD074\uB9AC\uC5B4"
   techIcon: {fileID: 21300000, guid: 6ccd7936efd7e1840b2e4f674cfe1aff, type: 3}
-  baseRequiredGold: 50000
-  increaseGoldValue: 50000
-  maxLevel: 50
+  baseRequiredGold: 1
+  increaseGoldValue: 1
+  maxLevel: 0
   baseCapacity: 0
   isUsingLevel: 1
-  isClearTech: 0
+  isClearTech: 1
   localPos: {x: 0, y: 60, z: 0}
   preTeches:
-  - {fileID: 11400000, guid: b162c7d16430c5f47a5948cccf26f98b, type: 2}
-  postTeches:
-  - {fileID: 11400000, guid: efdb2ee6329037348ab5d0d0d919752b, type: 2}
-  effects: []
+  - {fileID: 11400000, guid: 351780dd5029a354eaf654a40afba13e, type: 2}
+  postTeches: []
+  effects:
+  - {fileID: 11400000, guid: 54a79df511907934b82b84b90435314c, type: 2}
