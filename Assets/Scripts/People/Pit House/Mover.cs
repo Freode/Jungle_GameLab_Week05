@@ -247,15 +247,13 @@ public class Mover : MonoBehaviour
 
         CarrierItem carrierItem = peopleActor.CarrierItem;
 
-
         bool isStoneCarve = PeopleManager.Instance.checkUnlockStructures.ContainsKey(AreaType.StoneCarving);
+        Debug.Log(isStoneCarve + "is stone carve");
         bool isArchitect = PeopleManager.Instance.checkUnlockStructures.ContainsKey(AreaType.Architect);
-
 
         switch (carrierItem)
         {
             case CarrierItem.None:
-                peopleActor.SetCarrierItem(CarrierItem.Stone);
                 PeopleManager.Instance.SetAreaLock(this.gameObject, AreaType.Mine);
                 isCarring = true;
                 break;
@@ -263,7 +261,6 @@ public class Mover : MonoBehaviour
                 if (isStoneCarve)
                 {
                     PeopleManager.Instance.SetAreaLock(this.gameObject, AreaType.StoneCarving);
-                    peopleActor.SetCarrierItem(CarrierItem.CarvedStone);
                     isCarring = true;
                 }
                 break;
@@ -271,7 +268,6 @@ public class Mover : MonoBehaviour
                 if (isArchitect)
                 {
                     PeopleManager.Instance.SetAreaLock(this.gameObject, AreaType.Architect);
-                    peopleActor.SetCarrierItem(CarrierItem.None);
                     isCarring = true;
                 }
                 break;
@@ -298,6 +294,24 @@ public class Mover : MonoBehaviour
     {
         currentState = MoveState.Dwelling;
         dwellTimer = Random.Range(dwellTimeMin, dwellTimeMax);
+
+        // 만약 운송자면 도착시 아이템 정보 갱신
+        if (peopleActor.Job == JobType.Carrier)
+        {
+            AreaType destinationArea = lockedArea.areaType;
+            switch (destinationArea)
+            {
+                case (AreaType.Mine):
+                    peopleActor.SetCarrierItem(CarrierItem.Stone);
+                    break;
+                case (AreaType.StoneCarving):
+                    peopleActor.SetCarrierItem(CarrierItem.CarvedStone);
+                    break;
+                case (AreaType.Architect):
+                    peopleActor.SetCarrierItem(CarrierItem.None);
+                    break;
+            }
+        }
 
         DecideDwellAnimation();
     }
