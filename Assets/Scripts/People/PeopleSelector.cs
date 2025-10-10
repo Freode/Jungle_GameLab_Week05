@@ -7,6 +7,7 @@ public class PeopleSelector : MonoBehaviour
     // 인스펙터에서 방송을 보낼 채널을 연결할 슬롯
     public PeopleActorEventChannelSO OnPeopleSelectedChannel;
     public VoidEventChannelSO OnDeselectedChannel;
+    public DraggableSkullEventChannelSO OnSkullSelectedChannel;
 
     private Camera mainCamera;
 
@@ -25,27 +26,29 @@ public class PeopleSelector : MonoBehaviour
                 return;
             }
             RaycastHit2D hit = Physics2D.GetRayIntersection(mainCamera.ScreenPointToRay(Input.mousePosition));
-
-            PeopleActor actor = null;
+           // ★ 선택 로직 확장
             if (hit.collider != null)
             {
-                // 부딪힌 오브젝트에서 PeopleActor 컴포넌트를 일단 찾아봅니다.
-                actor = hit.collider.GetComponent<PeopleActor>();
+                // 1. 살아있는 백성을 먼저 확인
+                PeopleActor actor = hit.collider.GetComponent<PeopleActor>();
+                if (actor != null)
+                {
+                    OnPeopleSelectedChannel.RaiseEvent(actor);
+                    return; // 보고했으니 임무 종료
+                }
+
+                // 2. 백성이 아니라면, 유골인지 확인
+                DraggableSkull skull = hit.collider.GetComponent<DraggableSkull>();
+                if (skull != null)
+                {
+                    OnSkullSelectedChannel.RaiseEvent(skull);
+                    return; // 보고했으니 임무 종료
+                }
             }
 
-            // ★ 로직 변경 ★
-            // 만약 actor를 성공적으로 찾았다면 (사람을 클릭했다면)
-            if (actor != null)
-            {
-                // '선택됨' 채널에 방송
-                OnPeopleSelectedChannel.RaiseEvent(actor);
-            }
-            // 그게 아니라면 (땅, 빈 곳, 사람이 아닌 것을 클릭했다면)
-            else
-            {
-                // '선택 해제됨' 채널에 방송
-                OnDeselectedChannel.RaiseEvent();
-            }
+            // 3. 아무것도 해당되지 않으면 선택 해제 방송
+            OnDeselectedChannel.RaiseEvent();
         }
     }
+
 }

@@ -1783,6 +1783,7 @@ MonoBehaviour:
   OnPeopleSelectedChannel: {fileID: 11400000, guid: 9c85e2194ab112645a8ef560d79262dc, type: 2}
   OnDeselectedChannel: {fileID: 11400000, guid: 7515757cc825c2849b5d28c43e945ed9, type: 2}
   OnYearPassedChannel: {fileID: 11400000, guid: f6f3db6cdae3de645912ac32889e7835, type: 2}
+  OnSkullSelectedChannel: {fileID: 11400000, guid: beb286f048327f04d885aa95f0cc9d14, type: 2}
   infoPanel: {fileID: 1855839585950276556}
   nameText: {fileID: 5333317554893133385}
   ageText: {fileID: 8517230640920887477}
@@ -1813,6 +1814,7 @@ MonoBehaviour:
   - job: 1
     portrait: {fileID: 0}
     video: {fileID: 32900000, guid: c8385fd083ef8c747b2fbfb60d24b987, type: 3}
+  skullSprite: {fileID: 0}
 --- !u!1 &8823053934126473469
 GameObject:
   m_ObjectHideFlags: 0

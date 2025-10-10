@@ -242,6 +242,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e4cff6c0a894f442a5b945363a2bc59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  skullPrefab: {fileID: 2804783601361070082, guid: 49d51ab5821182d4ebd84849750bce76, type: 3}
+  OnActorDiedChannel: {fileID: 11400000, guid: 007c28acfb971a94783e02d090b87c26, type: 2}
   id: 0
   age: 0
   loyalty: 0
@@ -281,6 +283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OnYearPassedChannel: {fileID: 11400000, guid: f6f3db6cdae3de645912ac32889e7835, type: 2}
+  survivalProfile: {fileID: 11400000, guid: a414ca916988f744ca163aa6c72e26d2, type: 2}
 --- !u!1001 &2137918468979866047
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -20,6 +20,7 @@ public class PeopleInfoUI : MonoBehaviour
     public PeopleActorEventChannelSO OnPeopleSelectedChannel;
     public VoidEventChannelSO OnDeselectedChannel;
     public VoidEventChannelSO OnYearPassedChannel; 
+    public DraggableSkullEventChannelSO OnSkullSelectedChannel;
 
     [Header("UI Components")]
     public GameObject infoPanel;
@@ -38,6 +39,8 @@ public class PeopleInfoUI : MonoBehaviour
 
     [Header("Job Visuals Data")]
     public JobVisual[] jobVisuals;
+    // ★ 유골 전용 초상화 추가
+    public Sprite skullSprite;
 
     // 현재 UI에 정보를 표시하고 있는 Actor를 저장하는 변수
     private PeopleActor currentActor;
@@ -46,6 +49,7 @@ public class PeopleInfoUI : MonoBehaviour
         OnPeopleSelectedChannel.OnEventRaised += OnPeopleSelected;
         OnDeselectedChannel.OnEventRaised += HideUI;
         OnYearPassedChannel.OnEventRaised += OnYearPassed;
+        OnSkullSelectedChannel.OnEventRaised += OnSkullSelected;
     }
 
     private void OnDisable()
@@ -53,6 +57,7 @@ public class PeopleInfoUI : MonoBehaviour
         OnPeopleSelectedChannel.OnEventRaised -= OnPeopleSelected;
         OnDeselectedChannel.OnEventRaised -= HideUI;
         OnYearPassedChannel.OnEventRaised -= OnYearPassed;
+        OnSkullSelectedChannel.OnEventRaised -= OnSkullSelected;
     }
     // '1년 지남' 방송을 받으면 호출되는 함수 (수정됨)
     private void OnYearPassed()
@@ -62,6 +67,27 @@ public class PeopleInfoUI : MonoBehaviour
         {
             StartCoroutine(RefreshAgeAfterDelay());
         }
+    }
+    // ★ 유골이 선택되었을 때 호출될 새 함수
+    private void OnSkullSelected(DraggableSkull skull)
+    {
+        currentActor = null; // 유골은 살아있는 Actor가 아니므로 null로 설정
+        infoPanel.SetActive(true);
+
+        // 유골의 정보로 UI 텍스트 업데이트
+        nameText.text = $"이름: {skull.DeceasedName} (故)";
+        ageText.text = $"향년: {skull.AgeAtDeath}";
+        jobText.text = $"생전 직업: {skull.JobAtDeath}";
+        loyaltyText.text = $"생전 충성도: {skull.LoyaltyAtDeath}";
+
+        // 비주얼을 해골 초상화로 고정
+        videoPlayer.enabled = false;
+        portraitOrVideoImage.enabled = true;
+        portraitOrVideoImage.texture = skullSprite.texture;
+
+        // 유골은 이름을 변경할 수 없으므로, 무조건 보기 모드로 설정
+        displayGroup.SetActive(true);
+        editGroup.SetActive(false);
     }
     
     // ★ 새로 추가된 지연 함수 (코루틴)
