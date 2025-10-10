@@ -1,6 +1,13 @@
 using UnityEngine;
 
-public enum JobType { None }
+public enum JobType { None, Worker, Miner, Carver, Carrier, Architect }
+
+public enum CarrierItem
+{
+    None,
+    Stone,
+    CarvedStone,
+}
 
 
 
@@ -22,6 +29,8 @@ public class PeopleProfile : ScriptableObject
     [Header("Job")]
     public JobType defaultJob = JobType.None;
 
+    [Header("Carring Item")]
+    public CarrierItem defaultCarrier = CarrierItem.None;
     
 
     [Header("Name")]
@@ -96,4 +105,5 @@ public class PeopleValue
     public int loyalty; // 0~100
     public string name;
     public JobType job;
+    public CarrierItem carrier;
 }

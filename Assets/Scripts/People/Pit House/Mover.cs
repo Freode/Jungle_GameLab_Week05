@@ -230,7 +230,7 @@ public class Mover : MonoBehaviour
 
         if (targetArea != null)
         {
-            if (TrySuddenDeath()) return;
+            //if (TrySuddenDeath()) return; // 일단 안죽음
 
             currentState = MoveState.Wandering;
             targetPosition = targetArea.GetRandomPointInside();

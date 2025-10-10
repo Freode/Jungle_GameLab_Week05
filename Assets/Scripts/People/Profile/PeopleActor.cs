@@ -9,12 +9,14 @@ public class PeopleActor : MonoBehaviour
     [SerializeField, Range(0, 100)] private int loyalty;
     [SerializeField] private string displayName;
     [SerializeField] private JobType job;
+    [SerializeField] private CarrierItem carrierItem;
 
     public int Id => id;
     public int Age => age;
     public int Loyalty => loyalty;
     public string DisplayName => displayName;
     public JobType Job => job;
+    public CarrierItem CarrierItem => carrierItem;
 
     void OnEnable()
     {
@@ -29,6 +31,13 @@ public class PeopleActor : MonoBehaviour
         loyalty = Mathf.Clamp(v.loyalty, 0, 100);
         displayName = string.IsNullOrWhiteSpace(v.name) ? "NPC" : v.name;
         job = v.job;
+        carrierItem = v.carrier;
+    }
+
+    public void ApplyJop(JobType _job)
+    {
+        job = _job;
+        return;
     }
 
     void OnDisable()
@@ -41,5 +50,6 @@ public class PeopleActor : MonoBehaviour
         loyalty = 0;
         displayName = null;
         job = JobType.None;
+        carrierItem = CarrierItem.None;
     }
 }
