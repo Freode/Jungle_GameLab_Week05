@@ -16,7 +16,7 @@ public class TechInfo : MonoBehaviour
     {
         gameObject.SetActive(false);
 
-        modifyX = infoTranform.rect.width / 2f + 20f;
+        modifyX = infoTranform.rect.width / 2f;
         modifyY = infoTranform.rect.height / 2f;
     }
 
@@ -51,6 +51,21 @@ public class TechInfo : MonoBehaviour
         // 5. 최종 계산된 위치를 적용합니다.
         gameObject.transform.position = desiredPos;
         gameObject.SetActive(true);
+    }
+
+    // 더 다양한 Info 출력
+    public void OnActiveInfo(AreaType areaType, int currentLevel, int finalLevel, Sprite icon, Vector3 loc)
+    {
+        IncreaseInfo increaseInfo = GameManager.instance.GetIncreaseGoldInfo(areaType);
+
+        string name = FuncSystem.GetStructureName(areaType);
+
+        long linearAmount = increaseInfo.clickLinear * (100 + increaseInfo.clickRate) / 100;
+        long periodAmount = increaseInfo.periodLinear * (100 + increaseInfo.periodRate) / 100;
+
+        string description = FuncSystem.GetStructureDescription(areaType, linearAmount, periodAmount, currentLevel, finalLevel);
+
+        OnActiveInfo(name, description, icon, loc);
     }
 
     // 테크 정보 비활성화
