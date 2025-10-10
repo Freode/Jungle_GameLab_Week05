@@ -1,5 +1,6 @@
 // 파일 이름: PeopleSelector.cs
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PeopleSelector : MonoBehaviour
 {
@@ -18,6 +19,11 @@ public class PeopleSelector : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                // 만약 UI 위에 있다면, 아무것도 하지 않고 함수를 즉시 종료.
+                return;
+            }
             RaycastHit2D hit = Physics2D.GetRayIntersection(mainCamera.ScreenPointToRay(Input.mousePosition));
 
             PeopleActor actor = null;

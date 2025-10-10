@@ -40,6 +40,15 @@ public class PeopleActor : MonoBehaviour
         return;
     }
 
+    public void ChangeName(string newName)
+    {
+        // 이름이 비어있거나 공백뿐인 경우는 무시하고, 아니라면 displayName을 변경
+        if (!string.IsNullOrWhiteSpace(newName))
+        {
+            displayName = newName;
+        }
+    }
+
     void OnDisable()
     {
         // 다음 스폰 시 새 ID를 받게 하려면 0으로 리셋
