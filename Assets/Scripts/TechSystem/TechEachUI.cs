@@ -165,6 +165,10 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 레벨업 
     private void OperateTechLevelUp()
     {
+        // 게임 클리어 버튼 누르면, 더 이상 작동 x
+        if (techState.techData.isClearTech)
+            buttonBG.interactable = false;
+
         int minusAmount = -1 * techState.requaireAmount;
         techState.LevelUp();
 

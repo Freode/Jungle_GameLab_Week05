@@ -56,6 +56,8 @@ public class TechInfo : MonoBehaviour
     // 더 다양한 Info 출력
     public void OnActiveInfo(AreaType areaType, int currentLevel, int finalLevel, Sprite icon, Vector3 loc)
     {
+        if (areaType == AreaType.Clear) return;
+
         IncreaseInfo increaseInfo = GameManager.instance.GetIncreaseGoldInfo(areaType);
 
         string name = FuncSystem.GetStructureName(areaType);

@@ -30,6 +30,7 @@ public class TechData : ScriptableObject
     public int maxLevel;                    // 최대 레벨 - 변경 불가능
     public int baseCapacity;                // 기본 수용량 (레벨 1)
     public bool isUsingLevel;               // 레벨을 사용하는지 여부
+    public bool isClearTech;                // 클리어 테크
     public Vector3 localPos;                // 연구 위치
     public List<TechData> preTeches;        // 선행 기술 목록
     public List<TechData> postTeches;       // 다음 기술 목록
