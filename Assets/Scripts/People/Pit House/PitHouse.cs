@@ -34,6 +34,7 @@ public class PitHouse : MonoBehaviour
     void Start()
     {
         GameManager.instance.OnModifyRespawnUselessPeople += ModifyRespawnUselessPeople;
+        GameManager.instance.OnGetRespawnTime += GetRespawnInterval;
 
         if (!spawner) spawner = FindFirstObjectByType<PeopleSpawner>();
         if (!spawnPoint) spawnPoint = transform;
@@ -45,6 +46,7 @@ public class PitHouse : MonoBehaviour
     private void OnDestroy()
     {
         GameManager.instance.OnModifyRespawnUselessPeople -= ModifyRespawnUselessPeople;
+        GameManager.instance.OnGetRespawnTime -= GetRespawnInterval;
     }
 
     void Update()
@@ -140,6 +142,12 @@ public class PitHouse : MonoBehaviour
     private void ModifyRespawnUselessPeople(float amount)
     {
         respawnInterval = Mathf.Max(respawnInterval + amount, minRespawnInterval);
+    }
+
+    // 리스폰 시간 반환
+    public float GetRespawnInterval()
+    {
+        return respawnInterval;
     }
 
     // 런타임에 설정 변경용 간단 API

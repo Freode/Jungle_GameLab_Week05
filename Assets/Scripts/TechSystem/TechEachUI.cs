@@ -62,7 +62,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         StartCoroutine(CheckUnlock());
 
         // === 수정 필요 ===
-        if (techState.techData.areaType != AreaType.Normal)
+        if (techState.techData.techKind == TechKind.Job)
             PeopleManager.Instance.OnAreaPeopleCountChanged += CurrentCapacityChange;
     }
 
@@ -80,7 +80,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         GameManager.instance.OnCurrentGoldAmountChanged -= OnCheckTechActive;
 
         // === 수정 필요 ===
-        if (techState.techData.areaType != AreaType.Normal)
+        if (techState.techData.techKind == TechKind.Job)
             PeopleManager.Instance.OnAreaPeopleCountChanged -= CurrentCapacityChange;
 
         techState = null;
@@ -189,6 +189,10 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             TechViewer.instance.CheckUnlockPreTech(nextTech);
         }
+
+        // 구조물 정보 업데이트
+        if (techState.techData.techKind == TechKind.Structure)
+            TechViewer.instance.ActiveStructureInfo(techState);
     }
 
     // 업그레이드 비용 출력
@@ -216,13 +220,21 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             leftX = corners[1].x;
         }
 
+        // 테크 정보 출력
         Vector3 loc = new Vector3(leftX, upperY, 0);
         OnActiveInfo?.Invoke(techState.techData.techName, techState.techData.techDescription, techState.techData.techIcon, loc);
+
+        // 구조물 정보 출력
+        if (techState.techData.techKind == TechKind.Structure)
+            TechViewer.instance.ActiveStructureInfo(techState);
     }
 
     // 마우스가 빠져 나감
     public void OnPointerExit(PointerEventData eventData)
     {
         OnInactiveInfo?.Invoke();
+
+        if (techState.techData.techKind == TechKind.Structure)
+            TechViewer.instance.InactiveStructureInfo();
     }
 }

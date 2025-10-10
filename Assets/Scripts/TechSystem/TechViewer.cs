@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -7,6 +8,7 @@ public class TechViewer : MonoBehaviour
 {
     public static TechViewer instance;
     public GameObject techInfo;
+    public GameObject strcutureInfo;
     public TextMeshProUGUI textPeopleCount;
     public TextMeshProUGUI textTabName;                     // Tab 이름 변경
     public int maxTechUIsCount = 9;                         // Tech UI가 출력될 총 칸 수
@@ -50,13 +52,12 @@ public class TechViewer : MonoBehaviour
         if (curTechKind != techData.techKind)
             return;
 
-        foreach(var preTech in techData.preTeches)
+        foreach (var preTech in techData.preTeches)
         {
             if (techStates[preTech.techKind][preTech].lockState != LockState.Complete)
                 return;
         }
 
-        Debug.Log(techData);
         // 해금 가능하다고 업데이트
         TechState changeTechState = techStates[techData.techKind][techData];
         techEachUIs[changeTechState.curTechUIIdx].SetTechUnlock();
@@ -86,7 +87,7 @@ public class TechViewer : MonoBehaviour
     void InitTechData()
     {
         int idx = 0;
-        foreach(var techInfo in techInfoes)
+        foreach (var techInfo in techInfoes)
         {
             // 유형을 먼저 추가
             TechKind techKind = techInfo.techKind;
@@ -113,7 +114,7 @@ public class TechViewer : MonoBehaviour
         curTechKind = techKind;
         int activeNum = techStates[techKind].Count;
         int kindIdx = techKindIdx[techKind];
-        for(int i = 0; i < maxTechUIsCount; i++)
+        for (int i = 0; i < maxTechUIsCount; i++)
         {
             techEachUIs[i].RemoveState();
             // 활성화
@@ -190,7 +191,7 @@ public class TechViewer : MonoBehaviour
     // 탭 이름 출력
     void SetTabName(TechKind techKind)
     {
-        switch(techKind)
+        switch (techKind)
         {
             case TechKind.None:
                 textTabName.text = "없음";
@@ -204,5 +205,26 @@ public class TechViewer : MonoBehaviour
                 textTabName.text = "징집";
                 break;
         }
+    }
+
+    // 구조물 정보 UI 출력
+    public void ActiveStructureInfo(TechState techState)
+    {
+        strcutureInfo.TryGetComponent(out TechInfo techInfo);
+        if (techInfo == null) return;
+
+        int currentLevel = techState.currentLevel;
+        int finalLevel = techState.techData.maxLevel;
+
+        techInfo.OnActiveInfo(techState.techData.areaType, currentLevel, finalLevel, null, new Vector3(1920f, 0f, 0f));
+    }
+
+    // 구조물 정보 UI 비출력
+    public void InactiveStructureInfo()
+    {
+        strcutureInfo.TryGetComponent(out TechInfo techInfo);
+        if (techInfo == null) return;
+
+        techInfo.OnInactiveInfo();
     }
 }

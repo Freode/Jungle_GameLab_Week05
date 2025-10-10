@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public event Action<TechData, int> OnModifyStructureLevel;      // 테크의 레벨이 변경되어 구조체 외형 변경을 호출
     public event Action<float> OnModifyRespawnUselessPeople;        // 테크 레벨에 따라 백수 생성 주기 조정
     public event Action<AreaType> OnUnlockStructure;                // 해당 구조물이 처음으로 열렸는지, 확인
+    public event Func<float> OnGetRespawnTime;                      // 잉여 인력 리스폰 시간 가져오기
 
     [SerializeField] long currentGoldAmount = 0;             // 현재 소지하고 있는 금의 양
     [SerializeField] long clickIncreaseGoldAmountLinear = 1; // 클릭 한 번 시, 획득하는 금의 선형적인 양
@@ -240,7 +241,15 @@ public class GameManager : MonoBehaviour
     //                            Getter
     // ==========================================================
 
-    public Dictionary<AreaType, IncreaseInfo> GetIncreaseGoldAmounts() { return increaseGoldAmounts; }
+    public IncreaseInfo GetIncreaseGoldInfo(AreaType areaType) 
+    {
+        if (increaseGoldAmounts.ContainsKey(areaType) == false)
+            increaseGoldAmounts.Add(areaType, new IncreaseInfo());
+
+        return increaseGoldAmounts[areaType]; 
+    }
+
+    public float GetRespawnTime() { return OnGetRespawnTime.Invoke(); }
 
     public long GetCurrentGoldAmount() { return currentGoldAmount; }
 

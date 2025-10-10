@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TechData_Structure_Lv4_Granary
   m_EditorClassIdentifier: 
   techKind: 1
-  areaType: 0
+  areaType: 2
   techName: "\uC6B4\uBC18\uC18C \uAC1C\uBC1C"
   techNamePrint: 
   techDescription: "\uC6B4\uBC18\uC18C \uBC1C\uC804\\n\uC6B4\uBC18\uC790 \uBC30\uCE58

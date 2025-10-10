@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class StructureApperance : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class StructureApperance : MonoBehaviour
 {
     public AreaType areaType;
     public LevelAppearance[] levelAppearances;
@@ -9,6 +9,7 @@ public class StructureApperance : MonoBehaviour, IPointerEnterHandler, IPointerE
     public GameObject InfoUI;
 
     private SpriteRenderer spriteRenderer;
+    private int currentLevel = 0;
     private int finalLevel = 0;
 
     void Start()
@@ -25,10 +26,11 @@ public class StructureApperance : MonoBehaviour, IPointerEnterHandler, IPointerE
     // 레벨에 따른 외형 변경
     public void UpdateApperanceByLevel(int level)
     {
+        currentLevel = level;
         // 클리어 구조체를 모두 완성한 경우
         if (isClearStructure && level >= finalLevel)
         {
-            GameManager.instance.SetIsGameOver(true);
+            // GameManager.instance.SetIsGameOver(true);
         }
 
         for (int i = levelAppearances.Length - 1; i >= 0; i--)
@@ -43,34 +45,16 @@ public class StructureApperance : MonoBehaviour, IPointerEnterHandler, IPointerE
     }
 
     // 마우스 올려 놓기
-    public void OnPointerEnter(PointerEventData eventData)
+    private void OnMouseEnter()
     {
-        IncreaseInfo increaseInfo = GameManager.instance.GetIncreaseGoldAmounts()[areaType];
-
-        string description = $"클릭 당 얻는 세금 양 : +{FuncSystem.Format(increaseInfo.clickLinear)}\n" +
-            $"클릭 당 얻는 세금 추가 비율 : +{FuncSystem.Format(increaseInfo.clickRate)}%\n" +
-            $"1초 당 얻는 세금 양 : +{FuncSystem.Format(increaseInfo.periodLinear)}%\n" +
-            $"1초 당 얻는 세금 추가 비율 : +{FuncSystem.Format(increaseInfo.periodRate)}%\n";
-
         InfoUI.TryGetComponent(out TechInfo techInfo);
         if (techInfo == null) return;
 
-        techInfo.OnActiveInfo("테스트", description, null, Vector3.zero);
-        //// 위치 초기화가 되지 않았을 때만 진행
-        //if (upperY == 5000f)
-        //{
-        //    Vector3[] corners = new Vector3[4];
-        //    totalRectTransform.GetWorldCorners(corners);
-        //    upperY = corners[1].y;
-        //    leftX = corners[1].x;
-        //}
-
-        //Vector3 loc = new Vector3(leftX, upperY, 0);
-        //OnActiveInfo?.Invoke(techState.techData.techName, techState.techData.techDescription, techState.techData.techIcon, loc);
+        techInfo.OnActiveInfo(areaType, currentLevel, finalLevel, null, new Vector3(1920f, 0f, 0f));
     }
 
     // 마우스가 빠져 나감
-    public void OnPointerExit(PointerEventData eventData)
+    private void OnMouseExit()
     {
         InfoUI.TryGetComponent(out TechInfo techInfo);
         if (techInfo == null) return;

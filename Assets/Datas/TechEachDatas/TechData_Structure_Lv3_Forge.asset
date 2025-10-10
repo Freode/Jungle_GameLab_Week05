@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TechData_Structure_Lv3_Forge
   m_EditorClassIdentifier: 
   techKind: 1
-  areaType: 0
+  areaType: 4
   techName: "\uC138\uACF5\uC18C \uAC1C\uBC1C "
   techNamePrint: 
   techDescription: "\uC138\uACF5\uC18C \uBC1C\uC804\\n\uC138\uACF5\uC0AC \uBC30\uCE58
