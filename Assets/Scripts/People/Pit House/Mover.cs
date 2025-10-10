@@ -246,11 +246,11 @@ public class Mover : MonoBehaviour
         }
 
         CarrierItem carrierItem = peopleActor.CarrierItem;
-        
+
 
         bool isStoneCarve = PeopleManager.Instance.checkUnlockStructures.ContainsKey(AreaType.StoneCarving);
         bool isArchitect = PeopleManager.Instance.checkUnlockStructures.ContainsKey(AreaType.Architect);
-        
+
 
         switch (carrierItem)
         {
@@ -307,6 +307,26 @@ public class Mover : MonoBehaviour
         currentDwellAnimation = null; // 기본값으로 초기화
         AreaZone targetArea = lockedArea != null ? lockedArea : currentArea;
         if (targetArea == null) return;
+
+        // 운송자는 다른 애니메이션으로 변경
+        if (peopleActor.Job == JobType.Carrier)
+        {
+            CarrierItem carrierItem = peopleActor.CarrierItem;
+
+            switch (carrierItem)
+            {
+                case CarrierItem.None:
+                    currentDwellAnimation = "IsCarrying";
+                    break;
+                case CarrierItem.Stone:
+                    currentDwellAnimation = "IsCarryingRock";
+                    break;
+                case CarrierItem.CarvedStone:
+                    currentDwellAnimation = "IsCarryingBlock";
+                    break;
+            }
+            return;
+        }
 
         switch (targetArea.areaType)
         {
@@ -424,15 +444,32 @@ public class Mover : MonoBehaviour
 
         ResetAnimationBools();
 
+
+
         bool isMoving = currentState == MoveState.Wandering || currentState == MoveState.Returning;
 
         AreaZone targetArea = lockedArea != null ? lockedArea : currentArea;
 
+
         if (isMoving)
         {
-            if (targetArea != null && targetArea.areaType == AreaType.Carrier)
+            if (targetArea != null && peopleActor.Job == JobType.Carrier)
             {
-                animator.SetBool("IsCarrying", true);
+                CarrierItem carrierItem = peopleActor.CarrierItem;
+
+                switch (carrierItem)
+                {
+                    case CarrierItem.None:
+                        animator.SetBool("IsCarrying", true);
+                        break;
+                    case CarrierItem.Stone:
+                        animator.SetBool("IsCarryingRock", true);
+                        break;
+                    case CarrierItem.CarvedStone:
+                        animator.SetBool("IsCarryingBlock", true);
+                        break;
+                }
+
             }
             else
             {
@@ -447,6 +484,7 @@ public class Mover : MonoBehaviour
                 animator.SetBool(currentDwellAnimation, true);
             }
         }
+
     }
 
     /// <summary>
