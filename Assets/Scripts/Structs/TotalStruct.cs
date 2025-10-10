@@ -5,10 +5,10 @@ using UnityEngine;
 // 증가량 구조체
 class IncreaseInfo
 {
-    public int clickLinear = 0;
-    public int clickRate = 0;
-    public int periodLinear = 0;
-    public int periodRate = 0;
+    public long clickLinear = 0;
+    public long clickRate = 0;
+    public long periodLinear = 0;
+    public long periodRate = 0;
 };
 
 // 구조체 레벨에 따른 변화

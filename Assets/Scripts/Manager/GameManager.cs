@@ -14,23 +14,23 @@ public class GameManager : MonoBehaviour
     public event Action OnCurrentGoldAmountChanged;                 // 현재 금 소지량 변경 시, 모두 호출
     public event Action OnClickIncreaseTotalAmountChanged;          // 현재 한 번 클릭할 때, 얻는 금의 양 변경 시, 모두 호출
     public event Action OnPeriodIncreaseAmountChanged;              // 주기적으로 얻는 금의 양이 변화했을 때, 모두 호출
-    public event Action<int, Color> OnClickIncreaseGoldAmount;      // 현재 클릭으로 금의 양을 새롭게 얻었다고 호출
+    public event Action<long, Color> OnClickIncreaseGoldAmount;      // 현재 클릭으로 금의 양을 새롭게 얻었다고 호출
     public event Action<TechData, int> OnMaxCapacityUpgrade;        // 다른 테크의 최대 수용량 업그레이드 시, 호출
     public event Action<TechData, int> OnCurrentCapacityChanged;    // 다른 테크의 현재 수용량 변동 시, 호출
     public event Action<TechData, int> OnModifyStructureLevel;      // 테크의 레벨이 변경되어 구조체 외형 변경을 호출
     public event Action<float> OnModifyRespawnUselessPeople;        // 테크 레벨에 따라 백수 생성 주기 조정
 
-    [SerializeField] int currentGoldAmount = 0;             // 현재 소지하고 있는 금의 양
-    [SerializeField] int clickIncreaseGoldAmountLinear = 1; // 클릭 한 번 시, 획득하는 금의 선형적인 양
-    [SerializeField] int periodIncreaseGoldAmountLinear = 0;// 주기적으로 얻는 금의 양이 선형적으로 증가
-    [SerializeField] int clickIncreaseGoldAmountRate = 0;   // 클릭 한 번 시, 획득하는 금의 비율 증가 양
-    [SerializeField] int periodIncreaseGoldAmountRate = 0;  // 주기적으로 얻는 금의 양이 비율적으로 증가
+    [SerializeField] long currentGoldAmount = 0;             // 현재 소지하고 있는 금의 양
+    [SerializeField] long clickIncreaseGoldAmountLinear = 1; // 클릭 한 번 시, 획득하는 금의 선형적인 양
+    [SerializeField] long periodIncreaseGoldAmountLinear = 0;// 주기적으로 얻는 금의 양이 선형적으로 증가
+    [SerializeField] long clickIncreaseGoldAmountRate = 0;   // 클릭 한 번 시, 획득하는 금의 비율 증가 양
+    [SerializeField] long periodIncreaseGoldAmountRate = 0;  // 주기적으로 얻는 금의 양이 비율적으로 증가
     // Ending
     [SerializeField] GameObject fadeOutImage;
 
     private bool isGameOver = false;                        // 게임 종료 여부
-    private int clickIncreaseTotalAmount = 0;               // 클릭 한 번 시, 획득하는 양
-    private int periodIncreaseTotalAmount = 0;              // 주기적으로 획득하는 총 양
+    private long clickIncreaseTotalAmount = 0;               // 클릭 한 번 시, 획득하는 양
+    private long periodIncreaseTotalAmount = 0;              // 주기적으로 획득하는 총 양
 
     private Dictionary<AreaType, IncreaseInfo> increaseGoldAmounts;
 
@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
     }
 
     // 한 번 클릭했을 때, 금의 양을 업데이트하라고 호출
-    public void IncreaseGoldAmountWhenClicked(int amount, Color color)
+    public void IncreaseGoldAmountWhenClicked(long amount, Color color)
     {
         OnClickIncreaseGoldAmount?.Invoke(amount, color);
         AddCurrentGoldAmount(amount);
@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
     // ==========================================================
 
     // 현재 소지하고 있는 금의 양 변화
-    public void AddCurrentGoldAmount(int amount)
+    public void AddCurrentGoldAmount(long amount)
     {
         currentGoldAmount += amount;
         // 현재 소유하고 있는 금의 양이 변경되었다고 알림
@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
     }
 
     // 한 번 클릭할 때, 얻는 금의 양에 대한 선형적 변화
-    public void AddClickIncreaseGoldAmountLinear(AreaType type, int amount)
+    public void AddClickIncreaseGoldAmountLinear(AreaType type, long amount)
     {
         if (increaseGoldAmounts.ContainsKey(type) == false)
             increaseGoldAmounts.Add(type, new IncreaseInfo());
@@ -124,7 +124,7 @@ public class GameManager : MonoBehaviour
     }
 
     // 한 번 클릭할 때, 얻는 금의 양에 대한 비율 변화
-    public void AddClickIncreaseGoldAmountRate(AreaType type, int amount)
+    public void AddClickIncreaseGoldAmountRate(AreaType type, long amount)
     {
         if (increaseGoldAmounts.ContainsKey(type) == false)
             increaseGoldAmounts.Add(type, new IncreaseInfo());
@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour
     }
 
     // 주기적으로 얻는 금의 선형적 수 변화
-    public void AddPeriodIncreaseGoldAmountLinear(AreaType type, int amount)
+    public void AddPeriodIncreaseGoldAmountLinear(AreaType type, long amount)
     {
         if (increaseGoldAmounts.ContainsKey(type) == false)
             increaseGoldAmounts.Add(type, new IncreaseInfo());
@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour
     }
 
     // 주기적으로 얻는 금의 비율 변화
-    public void AddPeriodIncreaseGoldAmountRate(AreaType type, int amount)
+    public void AddPeriodIncreaseGoldAmountRate(AreaType type, long amount)
     {
         if (increaseGoldAmounts.ContainsKey(type) == false)
             increaseGoldAmounts.Add(type, new IncreaseInfo());
@@ -227,19 +227,19 @@ public class GameManager : MonoBehaviour
     //                            Getter
     // ==========================================================
 
-    public int GetCurrentGoldAmount() { return currentGoldAmount; }
+    public long GetCurrentGoldAmount() { return currentGoldAmount; }
 
-    public int GetClickIncreaseGoldAmountLinear() { return clickIncreaseGoldAmountLinear; }
+    public long GetClickIncreaseGoldAmountLinear() { return clickIncreaseGoldAmountLinear; }
 
-    public int GetPeriodIncreaseGoldAmountLinear() { return periodIncreaseGoldAmountLinear; }
+    public long GetPeriodIncreaseGoldAmountLinear() { return periodIncreaseGoldAmountLinear; }
 
-    public int GetClickIncreaseGoldAmountRate() { return clickIncreaseGoldAmountRate; }
+    public long GetClickIncreaseGoldAmountRate() { return clickIncreaseGoldAmountRate; }
 
-    public int GetPeriodIncreaseGoldAmountRate() { return periodIncreaseGoldAmountRate; }
+    public long GetPeriodIncreaseGoldAmountRate() { return periodIncreaseGoldAmountRate; }
 
-    public int GetClickIncreaseTotalAmount() { return clickIncreaseTotalAmount; }
+    public long GetClickIncreaseTotalAmount() { return clickIncreaseTotalAmount; }
 
-    public int GetPeriodIncreaseTotalAmount() { return periodIncreaseTotalAmount; }
+    public long GetPeriodIncreaseTotalAmount() { return periodIncreaseTotalAmount; }
 
     public bool GetIsGameOver() { return isGameOver; }
 }
