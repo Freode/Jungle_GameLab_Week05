@@ -304,6 +304,8 @@ MonoBehaviour:
     sprite: {fileID: -2263264567363676519, guid: ee0621a419992b74fa554a3a07faa09f, type: 3}
     scale: {x: 0.75, y: 0.75, z: 1}
   isClearStructure: 0
+  OnStructureInfoActive: {fileID: 0}
+  OnStructureInfoInactive: {fileID: 0}
 --- !u!4 &301884181 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4100778269620513023, guid: ecf94dc418cc9dc4e996af02a838d8f4, type: 3}
