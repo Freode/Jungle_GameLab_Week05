@@ -1,9 +1,13 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class StructureApperance : MonoBehaviour
+public class StructureApperance : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public LevelAppearance[] levelAppearances;
     public bool isClearStructure = false;
+
+    [SerializeField] private VoidEventChannelSO OnStructureInfoActive;
+    [SerializeField] private VoidEventChannelSO OnStructureInfoInactive;
 
     private SpriteRenderer spriteRenderer;
     private int finalLevel = 0;
@@ -37,5 +41,27 @@ public class StructureApperance : MonoBehaviour
             transform.localScale = levelAppearances[i].scale;
             break;
         }
+    }
+
+    // 마우스 올려 놓기
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        //// 위치 초기화가 되지 않았을 때만 진행
+        //if (upperY == 5000f)
+        //{
+        //    Vector3[] corners = new Vector3[4];
+        //    totalRectTransform.GetWorldCorners(corners);
+        //    upperY = corners[1].y;
+        //    leftX = corners[1].x;
+        //}
+
+        //Vector3 loc = new Vector3(leftX, upperY, 0);
+        //OnActiveInfo?.Invoke(techState.techData.techName, techState.techData.techDescription, techState.techData.techIcon, loc);
+    }
+
+    // 마우스가 빠져 나감
+    public void OnPointerExit(PointerEventData eventData)
+    {
+       // OnInactiveInfo?.Invoke();
     }
 }

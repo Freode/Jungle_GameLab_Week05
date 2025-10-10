@@ -48,6 +48,10 @@ public class PeopleActor : MonoBehaviour
             displayName = newName;
         }
     }
+    public void AddAge(int amount)
+    {
+        age += amount;
+    }
 
     void OnDisable()
     {

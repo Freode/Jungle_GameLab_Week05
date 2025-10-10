@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public event Action<TechData, int> OnCurrentCapacityChanged;    // 다른 테크의 현재 수용량 변동 시, 호출
     public event Action<TechData, int> OnModifyStructureLevel;      // 테크의 레벨이 변경되어 구조체 외형 변경을 호출
     public event Action<float> OnModifyRespawnUselessPeople;        // 테크 레벨에 따라 백수 생성 주기 조정
+    public event Action<AreaType> OnUnlockStructure;                // 해당 구조물이 처음으로 열렸는지, 확인
 
     [SerializeField] long currentGoldAmount = 0;             // 현재 소지하고 있는 금의 양
     [SerializeField] long clickIncreaseGoldAmountLinear = 1; // 클릭 한 번 시, 획득하는 금의 선형적인 양
@@ -33,6 +34,7 @@ public class GameManager : MonoBehaviour
     private long periodIncreaseTotalAmount = 0;              // 주기적으로 획득하는 총 양
 
     private Dictionary<AreaType, IncreaseInfo> increaseGoldAmounts;
+    private Dictionary<AreaType, bool> checkUnlockStructures;       // 이미 처음으로 열린 구조물 효과인지 확인
 
 
     private void Awake()
@@ -40,6 +42,7 @@ public class GameManager : MonoBehaviour
         instance = this;
         Screen.SetResolution(1920, 1080, false);
         increaseGoldAmounts = new Dictionary<AreaType, IncreaseInfo>();
+        checkUnlockStructures = new Dictionary<AreaType, bool>();
     }
 
     private void Start()
@@ -99,6 +102,16 @@ public class GameManager : MonoBehaviour
 
         targetObject.SetActive(true);
         dropGoldComp.StartGoldDrop();
+    }
+
+    // 처음으로 구조물이 열릴 때, 발생할 효과
+    public void UnlockStructure(AreaType areaType)
+    {
+        if (checkUnlockStructures.ContainsKey(areaType))
+            return;
+
+        checkUnlockStructures.Add(areaType, true);
+        OnUnlockStructure?.Invoke(areaType);
     }
 
     // ==========================================================
