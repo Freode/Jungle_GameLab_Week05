@@ -10,7 +10,7 @@ public enum MoveState { Returning, Wandering, Dwelling }
 public class Mover : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float moveSpeed = 3f;
+    public float moveSpeed = 0.5f;
     [SerializeField] private float dwellTimeMin = 1f;
     [SerializeField] private float dwellTimeMax = 3f;
     [SerializeField] private float arrivalDistance = 0.1f;
@@ -230,7 +230,7 @@ public class Mover : MonoBehaviour
 
         if (targetArea != null)
         {
-            if (TrySuddenDeath()) return;
+            //if (TrySuddenDeath()) return; // 일단 안죽음
 
             currentState = MoveState.Wandering;
             targetPosition = targetArea.GetRandomPointInside();
