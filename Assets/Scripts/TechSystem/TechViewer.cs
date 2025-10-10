@@ -107,7 +107,7 @@ public class TechViewer : MonoBehaviour
     }
 
     // 현재 탭에 대한 테크들만 출력
-    void ChangeTechTab(TechKind techKind)
+    public void ChangeTechTab(TechKind techKind)
     {
         SetTabName(techKind);
         curTechKind = techKind;
