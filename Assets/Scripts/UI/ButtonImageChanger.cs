@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 
 [System.Serializable]
 public class ImageSpriteData
@@ -13,8 +14,11 @@ public class ImageSpriteData
     public Sprite originalSprite;
     public Sprite changedSprite;
     
+    [Header("Critical Sprite Settings")]
+    public Sprite criticalSprite;
+    
     [Header("Individual Settings")]
-    public float changeDuration = 0.5f;
+    public float changeDuration = 0.2f;
     public bool useGlobalDuration = true;
     
     [HideInInspector]
@@ -54,8 +58,14 @@ public class ButtonImageChanger : MonoBehaviour
     [SerializeField] private bool changeAllSimultaneously = true;
     
     [Header("Gold Area People Count Settings")]
-    [SerializeField] private bool useGoldAreaCount = false;
+    [SerializeField] private bool useGoldAreaCount = true;
     [Tooltip("Gold 영역 사람 수에 따라 이미지를 순차적으로 활성화합니다")]
+    
+    [Header("Critical Settings")]
+    [SerializeField] private bool enableCriticalImages = true;
+    [Tooltip("크리티컬 발생 시 크리티컬 이미지로 변경")]
+    [SerializeField] private ClickThrottle clickThrottle;
+    [Tooltip("크리티컬 감지를 위한 ClickThrottle 참조")]
     
     // 최적화를 위한 캐시
     private readonly List<Coroutine> activeCoroutines = new List<Coroutine>();
@@ -67,6 +77,10 @@ public class ButtonImageChanger : MonoBehaviour
     
     // 마지막으로 확인한 Gold 영역 사람 수 (불필요한 업데이트 방지)
     private int lastGoldAreaCount = -1;
+    
+    // 크리티컬 감지를 위한 변수들
+    private bool isCriticalMode = false;
+    private Coroutine criticalResetCoroutine;
     
     private void Start()
     {
@@ -80,6 +94,10 @@ public class ButtonImageChanger : MonoBehaviour
         // 컴포넌트 자동 할당
         if (targetButton == null)
             targetButton = GetComponent<Button>();
+            
+        // ClickThrottle 자동 할당 (같은 게임오브젝트에서 찾기)
+        if (clickThrottle == null && enableCriticalImages)
+            clickThrottle = GetComponent<ClickThrottle>();
     }
     
     private void InitializeImageData()
@@ -110,6 +128,12 @@ public class ButtonImageChanger : MonoBehaviour
         {
             SubscribeToGoldAreaEvents();
         }
+        
+        // 크리티컬 이벤트 구독
+        if (enableCriticalImages)
+        {
+            ClickThrottle.OnCriticalHit += OnCriticalHit;
+        }
     }
     
     private void SubscribeToGoldAreaEvents()
@@ -139,6 +163,18 @@ public class ButtonImageChanger : MonoBehaviour
             targetButton.onClick.RemoveListener(OnButtonClick);
             
         UnsubscribeFromGoldAreaEvents();
+        
+        // 크리티컬 이벤트 해제
+        ClickThrottle.OnCriticalHit -= OnCriticalHit;
+    }
+    
+    // 크리티컬 이벤트 핸들러
+    private void OnCriticalHit()
+    {
+        if (enableCriticalImages)
+        {
+            TriggerCriticalMode();
+        }
     }
     
     private void StopAllActiveCoroutines()
@@ -194,6 +230,31 @@ public class ButtonImageChanger : MonoBehaviour
                 activeCoroutines.Add(coroutine);
             }
         }
+    }
+    
+    // 크리티컬 모드 활성화
+    public void TriggerCriticalMode()
+    {
+        if (!enableCriticalImages) return;
+        
+        isCriticalMode = true;
+        
+        // 기존 크리티컬 리셋 코루틴이 있다면 중단
+        if (criticalResetCoroutine != null)
+        {
+            StopCoroutine(criticalResetCoroutine);
+        }
+        
+        // 크리티컬 모드 자동 해제 (일정 시간 후)
+        criticalResetCoroutine = StartCoroutine(ResetCriticalModeAfterDelay());
+    }
+    
+    // 크리티컬 모드 해제
+    private IEnumerator ResetCriticalModeAfterDelay()
+    {
+        yield return new WaitForSeconds(globalChangeDuration + 0.5f);
+        isCriticalMode = false;
+        criticalResetCoroutine = null;
     }
     
     private void UpdateActiveImageDataCache()
@@ -260,8 +321,19 @@ public class ButtonImageChanger : MonoBehaviour
         if (data.originalSprite == null)
             data.originalSprite = data.targetImage.sprite;
         
+        // 사용할 스프라이트 결정 (크리티컬 모드인지 확인)
+        Sprite spriteToUse;
+        if (isCriticalMode && data.criticalSprite != null)
+        {
+            spriteToUse = data.criticalSprite;
+        }
+        else
+        {
+            spriteToUse = data.changedSprite;
+        }
+        
         // 스프라이트 변경
-        data.targetImage.sprite = data.changedSprite;
+        data.targetImage.sprite = spriteToUse;
         
         // 지정된 시간만큼 대기
         float duration = data.useGlobalDuration ? globalChangeDuration : data.changeDuration;
@@ -325,6 +397,27 @@ public class ButtonImageChanger : MonoBehaviour
             targetImage = image,
             originalSprite = image?.sprite,
             changedSprite = changedSprite,
+            changeDuration = duration > 0 ? duration : globalChangeDuration,
+            useGlobalDuration = duration <= 0
+        };
+        
+        imageDataList.Add(newData);
+        newData.Initialize(globalChangeDuration);
+        
+        if (newData.IsValid)
+        {
+            validImageData.Add(newData);
+        }
+    }
+    
+    public void AddImageData(Image image, Sprite changedSprite, Sprite criticalSprite, float duration = -1f)
+    {
+        var newData = new ImageSpriteData
+        {
+            targetImage = image,
+            originalSprite = image?.sprite,
+            changedSprite = changedSprite,
+            criticalSprite = criticalSprite,
             changeDuration = duration > 0 ? duration : globalChangeDuration,
             useGlobalDuration = duration <= 0
         };
@@ -420,10 +513,61 @@ public class ButtonImageChanger : MonoBehaviour
         }
     }
     
+    // 크리티컬 관련 외부 제어 메서드들
+    public void SetEnableCriticalImages(bool enabled)
+    {
+        if (enableCriticalImages == enabled) return; // 이미 같은 상태면 무시
+        
+        enableCriticalImages = enabled;
+        
+        if (enabled)
+        {
+            ClickThrottle.OnCriticalHit += OnCriticalHit;
+        }
+        else
+        {
+            ClickThrottle.OnCriticalHit -= OnCriticalHit;
+            isCriticalMode = false;
+            if (criticalResetCoroutine != null)
+            {
+                StopCoroutine(criticalResetCoroutine);
+                criticalResetCoroutine = null;
+            }
+        }
+    }
+    
+    public void SetClickThrottle(ClickThrottle throttle)
+    {
+        clickThrottle = throttle;
+    }
+    
+    public void ForceCriticalMode(bool enabled)
+    {
+        if (!enableCriticalImages) return;
+        
+        isCriticalMode = enabled;
+        
+        if (enabled && criticalResetCoroutine != null)
+        {
+            StopCoroutine(criticalResetCoroutine);
+            criticalResetCoroutine = null;
+        }
+    }
+    
+    public void AddCriticalSpriteToImageData(int index, Sprite criticalSprite)
+    {
+        if (index >= 0 && index < imageDataList.Count)
+        {
+            imageDataList[index].criticalSprite = criticalSprite;
+        }
+    }
+    
     // 디버그/정보 제공용 메서드들
     public int GetActiveCoroutineCount() => activeCoroutines.Count;
     public int GetValidImageCount() => validImageData.Count;
     public bool IsGoldAreaModeEnabled() => useGoldAreaCount;
+    public bool IsCriticalModeEnabled() => enableCriticalImages;
+    public bool IsCriticalMode() => isCriticalMode;
     public bool IsAnyImageChanging()
     {
         for (int i = 0; i < validImageData.Count; i++)

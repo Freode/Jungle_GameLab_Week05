@@ -20,6 +20,7 @@ public class PeopleTechEffect : BaseTechEffect
                 PeopleManager.Instance.MoveToArea(obj, AreaType.Mine, JobType.Miner);
                 break;
             case AreaType.Carrier:
+                PeopleManager.Instance.CheckUnlockArea();
                 PeopleManager.Instance.MoveToArea(obj, AreaType.Carrier, JobType.Carrier);
                 break;
             case AreaType.Architect:

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TechData_Structure_Lv1_Hut
   m_EditorClassIdentifier: 
   techKind: 1
-  areaType: 0
+  areaType: 5
   techName: "\uC6C0\uC9D1"
   techNamePrint: 
   techDescription: "\uC6C0\uC9D1 \uAC1C\uBC1C\\n\uD074\uB9AD \uC2DC, \uC5BB\uB294

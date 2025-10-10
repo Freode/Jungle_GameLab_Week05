@@ -5,6 +5,7 @@ using UnityEngine;
 public class PeopleManager : MonoBehaviour
 {
     public static PeopleManager Instance { get; private set; }
+    public Dictionary<AreaType, bool> checkUnlockStructures;
 
     // 영역별 인원 목록
     private readonly Dictionary<AreaType, HashSet<PeopleActor>> _areaSets =
@@ -93,6 +94,33 @@ public class PeopleManager : MonoBehaviour
         mover.LockToArea(areaZone);
         SetParentToNewAnchor(obj, newArea);
         NotifyAreaChanged(actor);
+    }
+
+    public void SetAreaLock(GameObject obj, AreaType newArea)
+    {
+        AreaZone areaZone = null;
+        for (int i = 0; i < AreaZones.Length; i++)
+        {
+
+            if (AreaZones[i].areaType == newArea)
+            {
+
+                areaZone = AreaZones[i];
+                break;
+            }
+        }
+        var actor = obj.GetComponent<PeopleActor>();
+        var mover = obj.GetComponent<Mover>();
+        if (!actor || !mover || !areaZone) return;
+        mover.LockToArea(areaZone);
+    }
+
+    public void CheckUnlockArea()
+    {
+        if (checkUnlockStructures == null)
+        {
+            checkUnlockStructures = GameManager.instance.GetCheckUnlockStructures();
+        }
     }
 
     public GameObject SelectOnePerson(AreaType type)

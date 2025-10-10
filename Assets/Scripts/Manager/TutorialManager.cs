@@ -129,9 +129,8 @@ public class TutorialManager : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         tutorialPanel.SetActive(false);
-        // highlightHole도 비활성화해야 함
         highlightHole.gameObject.SetActive(false);
-        PlayerPrefs.SetInt("TutorialCompleted", 1);
+        //PlayerPrefs.SetInt("TutorialCompleted", 1); // 나중에 추가
         Debug.Log("Tutorial Finished!");
     }
 }

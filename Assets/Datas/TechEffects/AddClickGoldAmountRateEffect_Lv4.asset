@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 884b43905a31e2e4c9235dc5e6ebd6c8, type: 3}
   m_Name: AddClickGoldAmountRateEffect_Lv4
   m_EditorClassIdentifier: 
-  type: 2
-  amount: 225
+  type: 4
+  amount: 100
