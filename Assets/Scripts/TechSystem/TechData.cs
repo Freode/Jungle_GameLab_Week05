@@ -87,30 +87,24 @@ public class TechState
     }
 
     // 다음 단계가 적용된 효과 계산
-    public (long nextClickAmount, long nextPeriodAmount, float nextRespawnTime) CalculateNextEffectAmount(IncreaseInfo increaseInfo)
+    public TechTotalUpgradeAmount CalculateNextEffectAmount(IncreaseInfo increaseInfo)
     {
-        long clickLinearAmount = 0;
-        long clickRateAmount = 0;
-        long periodLinearAmount = 0;
-        long periodRateAmount = 0;
-        float respawnTime = 0f;
+        TechTotalUpgradeAmount amount = default;
+
         foreach(BaseTechEffect effect in techData.effects)
         {
             if (effect is AddPeriodIncreaseGoldAmountLinearEffect periodLinearEffect)
-                periodLinearAmount += periodLinearEffect.amount;
+                amount.periodLinearAmount += periodLinearEffect.amount;
             else if (effect is AddPeriodIncreaseGoldAmountRateEffect periodRateEffect)
-                periodRateAmount += periodRateEffect.amount;
+                amount.periodRateAmount += periodRateEffect.amount;
             else if (effect is AddClickIncreaseGoldAmountLinearEffect clickLinearEffect)
-                clickLinearAmount += clickLinearEffect.amount;
+                amount.clickLinearAmount += clickLinearEffect.amount;
             else if (effect is AddClickIncreaseGoldAmountRateEffect clickRateEffect)
-                clickRateAmount += clickRateEffect.amount;
+                amount.clickRateAmount += clickRateEffect.amount;
             else if (effect is AddRespawnUselessPeopleEffect respawnPeopleEffect)
-                respawnTime = GameManager.instance.GetNextRespwanTime(respawnPeopleEffect.amount);
+                amount.respawnTime = GameManager.instance.GetNextRespwanTime(respawnPeopleEffect.amount);
         }
 
-        long resultClickAmount = (increaseInfo.clickLinear + clickLinearAmount) * (100 + increaseInfo.clickRate + clickRateAmount) / 100;
-        long resultPeriodAmount = (increaseInfo.periodLinear + periodLinearAmount) * (100 + increaseInfo.periodRate + periodRateAmount) / 100;
-
-        return (resultClickAmount, resultPeriodAmount, respawnTime);
+        return amount;
     }
 }

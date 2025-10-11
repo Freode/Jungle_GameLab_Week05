@@ -40,6 +40,18 @@ public struct TechKindInfo
 [System.Serializable]
 public struct TechPrintUpgradeKind
 {
-    public bool isAcquireGold;
+    public bool isAcquireClickGold;
+    public bool isAcquirePeriodGold;
     public bool isReducePeoplePeriod;
+}
+
+// 테크 효과 값이 담긴 구조체
+[System.Serializable]
+public struct TechTotalUpgradeAmount
+{
+    public long clickLinearAmount;
+    public long clickRateAmount;
+    public long periodLinearAmount;
+    public long periodRateAmount;
+    public float respawnTime;
 }
