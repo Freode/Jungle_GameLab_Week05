@@ -19,7 +19,7 @@ MonoBehaviour:
   techDescription: "\uAC8C\uC784  \uD074\uB9AC\uC5B4"
   techIcon: {fileID: 21300000, guid: 6ccd7936efd7e1840b2e4f674cfe1aff, type: 3}
   baseRequiredGold: 1
-  increaseGoldValue: 1
+  increaseGoldValue: 1.15
   maxLevel: 0
   baseCapacity: 0
   isUsingLevel: 1
@@ -30,3 +30,6 @@ MonoBehaviour:
   postTeches: []
   effects:
   - {fileID: 11400000, guid: 54a79df511907934b82b84b90435314c, type: 2}
+  printTech:
+    isAcquireGold: 0
+    isReducePeoplePeriod: 0
