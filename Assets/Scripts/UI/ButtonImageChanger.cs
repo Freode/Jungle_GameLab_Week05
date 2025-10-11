@@ -75,6 +75,10 @@ public class ButtonImageChanger : MonoBehaviour
     [Tooltip("크리티컬 발생 시 크리티컬 이미지로 변경")]
     [SerializeField] private ClickThrottle clickThrottle;
     [Tooltip("크리티컬 감지를 위한 ClickThrottle 참조")]
+
+        [Header("Effect UI Settings")]
+        [SerializeField] private GameObject effectUI;
+        [SerializeField] private float effectUIDuration = 1.0f;
     
     // 최적화를 위한 캐시
     private readonly List<Coroutine> activeCoroutines = new List<Coroutine>();
@@ -209,7 +213,13 @@ public class ButtonImageChanger : MonoBehaviour
         {
             StopAllActiveCoroutines();
         }
-        
+
+        // 광부가 있을 때 Effect UI 활성화
+        if (effectUI != null && PeopleManager.Instance != null && PeopleManager.Instance.Count(AreaType.Gold) > 0)
+        {
+            StartCoroutine(ShowEffectUICoroutine());
+        }
+
         if (useGoldAreaCount)
         {
             // Gold 영역 모드: 활성화된 이미지만 변경
@@ -239,6 +249,15 @@ public class ButtonImageChanger : MonoBehaviour
                 activeCoroutines.Add(coroutine);
             }
         }
+
+    }
+
+    // Effect UI를 일정 시간 활성화하는 코루틴
+    private IEnumerator ShowEffectUICoroutine()
+    {
+        effectUI.SetActive(true);
+        yield return new WaitForSeconds(effectUIDuration);
+        effectUI.SetActive(false);
     }
     
     // 크리티컬 모드 활성화
