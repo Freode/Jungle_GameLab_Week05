@@ -236,7 +236,8 @@ public class GameManager : MonoBehaviour
             if (increaseGoldAmounts.TryGetValue(area, out IncreaseInfo info))
             {
                 // 3. (백성 수 * 1인당 생산량) 만큼을 총 클릭 수입에 더합니다.
-                long areaIncome = peopleCount * (info.clickEachLinear * (100 + info.clickRate) / 100);
+                increaseGoldAmounts[area].clickTotalLinear = peopleCount * info.clickEachLinear;
+                long areaIncome = increaseGoldAmounts[area].clickTotalLinear * (100 + info.clickRate) / 100;
                 clickIncreaseTotalAmount += areaIncome;
             }
         }
