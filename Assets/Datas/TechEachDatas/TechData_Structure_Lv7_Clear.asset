@@ -34,3 +34,4 @@ MonoBehaviour:
     isAcquireClickGold: 0
     isAcquirePeriodGold: 0
     isReducePeoplePeriod: 0
+    isPyramid: 0
