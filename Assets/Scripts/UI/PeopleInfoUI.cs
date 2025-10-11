@@ -37,6 +37,10 @@ public class PeopleInfoUI : MonoBehaviour
     public GameObject editGroup;        // 이름 편집 그룹
     public TMP_InputField nameInputField; // 이름 입력창
 
+    [Header("Skull Specific UI")]
+    public GameObject preserveToggleObject; // 체크박스와 텍스트를 포함한 부모 오브젝트
+    public Toggle preserveToggle;           // 실제 Toggle 컴포넌트
+
     [Header("Job Visuals Data")]
     public JobVisual[] jobVisuals;
     // ★ 유골 전용 초상화 추가
@@ -44,6 +48,7 @@ public class PeopleInfoUI : MonoBehaviour
 
     // 현재 UI에 정보를 표시하고 있는 Actor를 저장하는 변수
     private PeopleActor currentActor;
+    private DraggableSkull currentSkull;
     private void OnEnable()
     {
         OnPeopleSelectedChannel.OnEventRaised += OnPeopleSelected;
@@ -72,6 +77,7 @@ public class PeopleInfoUI : MonoBehaviour
     private void OnSkullSelected(DraggableSkull skull)
     {
         currentActor = null; // 유골은 살아있는 Actor가 아니므로 null로 설정
+        currentSkull = skull;
         infoPanel.SetActive(true);
 
         // 유골의 정보로 UI 텍스트 업데이트
@@ -84,6 +90,9 @@ public class PeopleInfoUI : MonoBehaviour
         videoPlayer.enabled = false;
         portraitOrVideoImage.enabled = true;
         portraitOrVideoImage.texture = skullSprite.texture;
+
+        preserveToggleObject.SetActive(true);
+        preserveToggle.isOn = currentSkull.IsPreserved;
 
         // 유골은 이름을 변경할 수 없으므로, 무조건 보기 모드로 설정
         displayGroup.SetActive(true);
@@ -110,8 +119,10 @@ public class PeopleInfoUI : MonoBehaviour
     {
         // 현재 선택된 actor를 클래스 변수에 저장해서 다른 함수에서도 쓸 수 있게 함
         currentActor = selectedActor;
+        currentSkull = null;
 
         infoPanel.SetActive(true);
+        preserveToggleObject.SetActive(false);
 
         // 모든 UI 텍스트 정보 업데이트
         nameText.text = $"이름: {currentActor.DisplayName}";
@@ -125,9 +136,18 @@ public class PeopleInfoUI : MonoBehaviour
         // 이름 변경 중에 다른 사람을 선택했을 경우를 대비해, 기본 보기 모드로 전환
         ExitEditMode();
     }
+    public void OnPreserveToggleChanged()
+    {
+        // 현재 선택된 유골이 있을 때만 작동
+        if (currentSkull != null)
+        {
+            // 체크박스의 현재 상태(true/false)를 유골에게 전달
+            currentSkull.SetPreservation(preserveToggle.isOn);
+        }
+    }
     
     // --- 이름 변경 관련 함수들 ---
-    
+
     // '변경' 버튼을 누르면 호출 (인스펙터에서 연결)
     public void EnterEditMode()
     {
