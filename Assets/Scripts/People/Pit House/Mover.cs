@@ -10,7 +10,8 @@ public enum MoveState { Returning, Wandering, Dwelling, Carring }
 public class Mover : MonoBehaviour
 {
     [Header("Movement Settings")]
-    public float moveSpeed = 0.5f;
+    public static float moveSpeed = 0.5f;
+    public static float defaultMoveSpeed = 0.5f;
     [SerializeField] private float dwellTimeMin = 1f;
     [SerializeField] private float dwellTimeMax = 3f;
     [SerializeField] private float arrivalDistance = 0.1f;

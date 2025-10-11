@@ -11,6 +11,8 @@ public class AuthorityManager : MonoBehaviour
     public static AuthorityManager instance { get; private set; }
     #endregion
 
+    
+    
     [Header("Authority Settings")]
     [Tooltip("현재 권위 게이지. 상한 없이 계속 증가할 수 있습니다.")]
     public float authorityGauge = 0f;
@@ -29,6 +31,9 @@ public class AuthorityManager : MonoBehaviour
     // [Original: 0.1f] 스케일링 팩터를 줄여서 권위 증가량의 감소폭을 완만하게 수정.
     [Tooltip("증가량 감소에 영향을 미치는 스케일링 팩터입니다. 값이 클수록 증가량이 더 빠르게 줄어듭니다.")]
     public float scalingFactor = 0.05f;
+    
+    [Tooltip("게이지 수치에 따라 동적으로 변하는 배율입니다.")]
+    public float authorityMultiplier = 1f;
 
     // 마지막으로 권위가 증가한 시간을 추적합니다.
     private float timeSinceLastIncrease = 0f;
@@ -41,6 +46,7 @@ public class AuthorityManager : MonoBehaviour
     {
         if (instance != null && instance != this) { Destroy(gameObject); return; }
         instance = this;
+        UpdateAuthorityMultiplier();
     }
 
     private void Update()
@@ -56,6 +62,7 @@ public class AuthorityManager : MonoBehaviour
         {
             authorityGauge -= decayRate * Time.deltaTime;
             authorityGauge = Mathf.Max(authorityGauge, 0f); // 게이지가 0 밑으로 내려가지 않도록 합니다.
+            UpdateAuthorityMultiplier();
         }
     }
 
@@ -79,6 +86,8 @@ public class AuthorityManager : MonoBehaviour
 
         // 마지막 증가 시간을 초기화하여 감소를 막습니다.
         timeSinceLastIncrease = 0f;
+        
+        UpdateAuthorityMultiplier();
 
         Debug.Log($"Authority Increased by {amountToIncrease:F2}! Current Gauge: {authorityGauge:F2}");
 
@@ -101,8 +110,30 @@ public class AuthorityManager : MonoBehaviour
         
         authorityGauge = 0f;
         timeSinceLastIncrease = 0f; // 초기화 후 바로 감소하는 것을 방지합니다.
+        UpdateAuthorityMultiplier();
         _isGaugeFrozen = false;
         
         Debug.Log("권위가 0으로 초기화되었습니다.");
+    }
+
+    /// <summary>
+    /// 현재 권위 게이지에 따라 배율 변수를 업데이트합니다.
+    /// </summary>
+    private void UpdateAuthorityMultiplier()
+    {
+        if (authorityGauge <= 100f)
+        {
+            authorityMultiplier = 1f;
+            Mover.moveSpeed = Mover.defaultMoveSpeed;
+        }
+        else
+        {
+            // 100단위 레벨을 계산합니다.
+            // 예: 101~199 -> level 1, 200~299 -> level 2, ..., 500 -> level 5
+            int level = Mathf.FloorToInt(authorityGauge / 100);
+            // 기본 배율 1f에 레벨당 0.1f씩 더합니다.
+            authorityMultiplier = 1f + (level * 0.1f);
+            Mover.moveSpeed = Mover.defaultMoveSpeed * level;
+        }
     }
 }

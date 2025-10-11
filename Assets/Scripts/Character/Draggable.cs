@@ -35,8 +35,7 @@ public class Draggable : MonoBehaviour
     private Coroutine deathCoroutine;
     private Animator anim;
     private Mover spriteMover;
-
-    private float defaultMoverSpeed;
+    
 
     private float lastVelocityX = 0f;
     private float currentShakeEnergy = 0f;
@@ -47,7 +46,6 @@ public class Draggable : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         spriteMover = GetComponent<Mover>();
-        defaultMoverSpeed = spriteMover.moveSpeed;
     }
 
     void OnMouseDown()
@@ -118,7 +116,7 @@ public class Draggable : MonoBehaviour
         if (other.CompareTag("River"))
         {
             isOverRiver = false;
-            spriteMover.moveSpeed = defaultMoverSpeed;
+            Mover.moveSpeed = Mover.defaultMoveSpeed;
 
             if (anim != null)
             {

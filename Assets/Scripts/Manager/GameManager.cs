@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    [Header("Event Channels")]
+    public FloatEventChannelSO OnAuthorityChangedChannel;
 
     public GameObject canvasObject;                         // 캔버스 객체
 
@@ -33,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     private bool isGameOver = false;                        // 게임 종료 여부
     private long clickIncreaseTotalAmount = 0;               // 클릭 한 번 시, 획득하는 양
+    private float currentAuthority = 1f;
     private long periodIncreaseTotalAmount = 0;              // 주기적으로 획득하는 총 양
 
     private Dictionary<AreaType, IncreaseInfo> increaseGoldAmounts;
@@ -46,6 +49,32 @@ public class GameManager : MonoBehaviour
         increaseGoldAmounts = new Dictionary<AreaType, IncreaseInfo>();
         checkUnlockStructures = new Dictionary<AreaType, bool>();
     }
+    private void OnEnable()
+    {
+        if (OnAuthorityChangedChannel != null)
+        {
+            OnAuthorityChangedChannel.OnEventRaised += UpdateAuthority;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (OnAuthorityChangedChannel != null)
+        {
+            OnAuthorityChangedChannel.OnEventRaised -= UpdateAuthority;
+        }
+    }
+
+    // ★ 4. '권위 방송'을 받으면 호출될 함수
+    private void UpdateAuthority(float newAuthority)
+    {
+        // 권위는 1 이상이라는 법칙 적용
+        currentAuthority = Mathf.Max(1f, newAuthority);
+
+        // 권위가 바뀌었으니, UI에 표시되는 총 클릭 수입이 변경되었음을 알림
+        OnClickIncreaseTotalAmountChanged?.Invoke();
+    }
+
 
     private void Start()
     {
@@ -55,7 +84,7 @@ public class GameManager : MonoBehaviour
     public void RecalculateAllIncomes()
     {
         RecalculatePeriodIncreaseGoldAmount();
-        RecalculateClickIncreaseTotalAmount();
+        AddClickIncreaseTotalAmount();
     }
 
     // 주기적으로 값이 금이 추가
@@ -194,10 +223,23 @@ public class GameManager : MonoBehaviour
     public void AddClickIncreaseTotalAmount()
     {
         clickIncreaseTotalAmount = 0;
-        foreach (var data in increaseGoldAmounts)
+
+        // 왕국의 모든 지역(AreaType)을 순회합니다.
+        foreach (AreaType area in System.Enum.GetValues(typeof(AreaType)))
         {
-            clickIncreaseTotalAmount += data.Value.clickLinear * (100 + data.Value.clickRate) / 100;
+            // 1. 이 지역에서 일하는 백성이 몇 명인지 호조(PeopleManager)에게 묻습니다.
+            int peopleCount = PeopleManager.Instance.Count(area);
+
+            // 2. 이 지역의 기술 효과(1인당 생산량)가 얼마인지 자신의 장부에서 찾습니다.
+            if (increaseGoldAmounts.TryGetValue(area, out IncreaseInfo info))
+            {
+                // 3. (백성 수 * 1인당 생산량) 만큼을 총 클릭 수입에 더합니다.
+                long areaIncome = peopleCount * (info.clickLinear * (100 + info.clickRate) / 100);
+                clickIncreaseTotalAmount += areaIncome;
+            }
         }
+        
+        // 최종적으로 계산된 총 클릭 수입이 변경되었음을 왕국 전체에 알립니다.
         OnClickIncreaseTotalAmountChanged?.Invoke();
     }
 
@@ -327,7 +369,10 @@ public class GameManager : MonoBehaviour
 
     public long GetPeriodIncreaseGoldAmountRate() { return periodIncreaseGoldAmountRate; }
 
-    public long GetClickIncreaseTotalAmount() { return clickIncreaseTotalAmount; }
+    public long GetClickIncreaseTotalAmount() 
+    { 
+        return (long)(clickIncreaseTotalAmount * currentAuthority); 
+    }
 
     public long GetPeriodIncreaseTotalAmount() { return periodIncreaseTotalAmount; }
 
