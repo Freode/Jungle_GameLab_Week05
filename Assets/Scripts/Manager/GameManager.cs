@@ -168,14 +168,26 @@ public class GameManager : MonoBehaviour
         AddPeriodIncreaseGoldAmount();
     }
 
-    // 주기적으로 얻는 금의 총 변화
     public void AddPeriodIncreaseGoldAmount()
     {
         periodIncreaseTotalAmount = 0;
-        foreach (var data in increaseGoldAmounts)
+
+        // 왕국의 모든 지역(AreaType)을 순회합니다.
+        foreach (AreaType area in System.Enum.GetValues(typeof(AreaType)))
         {
-            periodIncreaseTotalAmount += data.Value.periodLinear * (100 + data.Value.periodRate) / 100;
+            // 1. 이 지역에서 일하는 백성이 몇 명인지 호조(PeopleManager)에게 묻습니다.
+            int peopleCount = PeopleManager.Instance.Count(area);
+
+            // 2. 이 지역의 기술 효과(기본 수입)가 얼마인지 자신의 장부에서 찾습니다.
+            if (increaseGoldAmounts.TryGetValue(area, out IncreaseInfo info))
+            {
+                // 3. (백성 수 * 기술 효과) 만큼을 총수입에 더합니다.
+                long areaIncome = peopleCount * (info.periodLinear * (100 + info.periodRate) / 100);
+                periodIncreaseTotalAmount += areaIncome;
+            }
         }
+        
+        // 최종적으로 계산된 총수입이 변경되었음을 왕국 전체에 알립니다.
         OnPeriodIncreaseAmountChanged?.Invoke();
     }
 
@@ -188,6 +200,44 @@ public class GameManager : MonoBehaviour
             clickIncreaseTotalAmount += data.Value.clickLinear * (100 + data.Value.clickRate) / 100;
         }
         OnClickIncreaseTotalAmountChanged?.Invoke();
+    }
+
+    public void SetPeriodIncreaseGoldAmountLinear(AreaType type, long amount)
+    {
+        if (increaseGoldAmounts.ContainsKey(type) == false)
+            increaseGoldAmounts.Add(type, new IncreaseInfo());
+
+        // += (누적) 대신 = (덮어쓰기)를 사용하여, 해당 지역의 '기본 생산량'을 설정합니다.
+        increaseGoldAmounts[type].periodLinear = amount;
+        
+        // 값이 바뀌었으니 총 수입을 다시 계산합니다.
+        RecalculatePeriodIncreaseGoldAmount();
+    }
+    public void RecalculatePeriodIncreaseGoldAmount()
+    {
+        periodIncreaseTotalAmount = 0;
+
+        foreach (AreaType area in System.Enum.GetValues(typeof(AreaType)))
+        {
+            int peopleCount = PeopleManager.Instance.Count(area);
+            if (increaseGoldAmounts.TryGetValue(area, out IncreaseInfo info))
+            {
+                long areaIncome = peopleCount * (info.periodLinear * (100 + info.periodRate) / 100);
+                periodIncreaseTotalAmount += areaIncome;
+            }
+        }
+        
+        OnPeriodIncreaseAmountChanged?.Invoke();
+    }
+
+    // 비율 설정 함수도 동일하게 만듭니다.
+    public void SetPeriodIncreaseGoldAmountRate(AreaType type, long amount)
+    {
+        if (increaseGoldAmounts.ContainsKey(type) == false)
+            increaseGoldAmounts.Add(type, new IncreaseInfo());
+
+        increaseGoldAmounts[type].periodRate = amount;
+        RecalculatePeriodIncreaseGoldAmount();
     }
 
     // ==========================================================
