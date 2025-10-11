@@ -12,6 +12,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public TextMeshProUGUI textCost;
     public TextMeshProUGUI textLevel;
     public RectTransform totalRectTransform;
+    public Color baseColor;             // 기본 색상
 
     public event System.Action<string, string, Sprite, Vector3> OnActiveInfo;
     public event System.Action OnInactiveInfo;
@@ -19,20 +20,11 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     private TechState techState;        // 데이터 원본과 상태 저장
     private float upperY = 5000f;
     private float leftX = 5000f;
-    private Color baseColor;            // 기본 색상
 
     private void Start()
     {
         leftX = gameObject.transform.position.x - totalRectTransform.rect.width / 2f - 5f;
         buttonBG.onClick.AddListener(CheckTechLevelUp);
-        baseColor = textCost.color;
-    }
-
-    // 0.1초 후에 재검사
-    IEnumerator CheckUnlock()
-    {
-        yield return new WaitForSeconds(0.05f);
-        TechViewer.instance.CheckUnlockPreTech(techState.techData);
     }
 
     private void OnDestroy()
@@ -59,11 +51,17 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         // 버튼 활성화 여부 설정
         GameManager.instance.OnCurrentGoldAmountChanged += OnCheckTechActive;
-        StartCoroutine(CheckUnlock());
 
         // === 수정 필요 ===
         if (techState.techData.techKind == TechKind.Job)
             PeopleManager.Instance.OnAreaPeopleCountChanged += CurrentCapacityChange;
+
+        // 아직 잠겨 있는 상태
+        if (techState.lockState == LockState.Block)
+            TechViewer.instance.CheckUnlockPreTech(techState.techData);
+        // 이미 열 수 있는 상태면, 바로 해제
+        else 
+            OnCheckTechActive();
     }
 
     // 상태 제거하는 함수

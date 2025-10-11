@@ -467,6 +467,7 @@ MonoBehaviour:
   textCost: {fileID: 7367110347829508918}
   textLevel: {fileID: 4348847343566952081}
   totalRectTransform: {fileID: 3749834689432487890}
+  baseColor: {r: 0.8666667, g: 0.77254903, b: 0.5529412, a: 1}
 --- !u!1 &8631489525637754526
 GameObject:
   m_ObjectHideFlags: 0
