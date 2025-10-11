@@ -35,6 +35,7 @@ public class TechData : ScriptableObject
     public List<TechData> preTeches;        // 선행 기술 목록
     public List<TechData> postTeches;       // 다음 기술 목록
     public List<BaseTechEffect> effects;    // 해금 시, 적용할 효과 목록
+    public TechPrintUpgradeKind printTech;  // 효과 출력할 테크 종류
 }
 
 // 상태를 저장하는 클래스
@@ -81,5 +82,33 @@ public class TechState
             return false;
 
         return curCapacity < maxCapacity;
+    }
+
+    // 다음 단계가 적용된 효과 계산
+    public (long nextClickAmount, long nextPeriodAmount, float nextRespawnTime) CalculateNextEffectAmount(IncreaseInfo increaseInfo)
+    {
+        long clickLinearAmount = 0;
+        long clickRateAmount = 0;
+        long periodLinearAmount = 0;
+        long periodRateAmount = 0;
+        float respawnTime = 0f;
+        foreach(BaseTechEffect effect in techData.effects)
+        {
+            if (effect is AddPeriodIncreaseGoldAmountLinearEffect periodLinearEffect)
+                periodLinearAmount += periodLinearEffect.amount;
+            else if (effect is AddPeriodIncreaseGoldAmountRateEffect periodRateEffect)
+                periodRateAmount += periodRateEffect.amount;
+            else if (effect is AddClickIncreaseGoldAmountLinearEffect clickLinearEffect)
+                clickLinearAmount += clickLinearEffect.amount;
+            else if (effect is AddClickIncreaseGoldAmountRateEffect clickRateEffect)
+                clickRateAmount += clickRateEffect.amount;
+            else if (effect is AddRespawnUselessPeopleEffect respawnPeopleEffect)
+                respawnTime = GameManager.instance.GetNextRespwanTime(respawnPeopleEffect.amount);
+        }
+
+        long resultClickAmount = (increaseInfo.clickLinear + clickLinearAmount) * (100 + increaseInfo.clickRate + clickRateAmount) / 100;
+        long resultPeriodAmount = (increaseInfo.periodLinear + periodLinearAmount) * (100 + increaseInfo.periodRate + periodRateAmount) / 100;
+
+        return (resultClickAmount, resultPeriodAmount, respawnTime);
     }
 }

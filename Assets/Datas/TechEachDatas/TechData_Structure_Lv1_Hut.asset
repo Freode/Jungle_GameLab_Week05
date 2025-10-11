@@ -24,6 +24,7 @@ MonoBehaviour:
   maxLevel: 0
   baseCapacity: 5
   isUsingLevel: 1
+  isClearTech: 0
   localPos: {x: 0, y: 402, z: 0}
   preTeches: []
   postTeches:
@@ -33,3 +34,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e561f5b8199ee59468da2bf8836bd5e8, type: 2}
   - {fileID: 11400000, guid: 70766b32f0f4248419e3713c0dbbbaa9, type: 2}
   - {fileID: 11400000, guid: 17a8995a5b049e74b81d4171c7d31c78, type: 2}
+  printTech:
+    isAcquireGold: 1
+    isReducePeoplePeriod: 1

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "BaseTechEffect", menuName = "Scriptable Objects/BaseTechEffect")]
 public abstract class BaseTechEffect : ScriptableObject
