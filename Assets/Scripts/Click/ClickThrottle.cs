@@ -85,11 +85,12 @@ public class ClickThrottle : MonoBehaviour
     }
 
     // 클릭 시, 금 획득
+    // 금 획득 시 공포 게이지 증가
     private void OnButtonGoldClick()
     {
         if (TryClick() == false)
             return;
-
+        AuthorityManager.instance.IncreaseAuthority();
         // 공식 : 선형 증가량 * 비율 증가량
         long totalAmount = GameManager.instance.GetClickIncreaseTotalAmount();
 
