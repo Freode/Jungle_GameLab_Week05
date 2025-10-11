@@ -5,9 +5,11 @@ using UnityEngine;
 // 증가량 구조체
 public class IncreaseInfo
 {
-    public long clickLinear = 0;
+    public long clickEachLinear = 0;        // 1인당 얻는 선형적임 세금
+    public long clickTotalLinear = 0;       // 총 얻는 선형적인 세금
     public long clickRate = 0;
-    public long periodLinear = 0;
+    public long periodEachLinear = 0;
+    public long periodTotalLinear = 0;
     public long periodRate = 0;
 };
 
@@ -43,6 +45,7 @@ public struct TechPrintUpgradeKind
     public bool isAcquireClickGold;
     public bool isAcquirePeriodGold;
     public bool isReducePeoplePeriod;
+    public bool isPyramid;
 }
 
 // 테크 효과 값이 담긴 구조체

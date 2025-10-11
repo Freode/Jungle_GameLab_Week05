@@ -23,22 +23,21 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     private float upperY = 5000f;
     private float leftX = 5000f;
     private bool isInteractTechInfoUI = false;  // 테크 정보 UI와 상호작용 여부
+    private bool isMouseHolding = false;        // 마우스 클릭 유지 상태
+    private float nextUpgradeInterval = 0.2f;  // 마우스 클릭 유지 시, 다음 업그레이드가 될 때까지의 시간 텀
+    private Coroutine upgradeIntervalCoroutine; // 마우스 클릭 유지 시, 다음 업그레이드까지 실행될 코루틴
 
     private void Start()
     {
         leftX = gameObject.transform.position.x - totalRectTransform.rect.width / 2f - 5f;
         buttonBG.onClick.AddListener(CheckTechLevelUp);
+
+        InitMouseClick();
     }
 
     private void OnDestroy()
     {
-        //OnActiveInfo = null;
-        //OnInactiveInfo = null;
-        //GameManager.instance.OnCurrentGoldAmountChanged -= OnCheckTechActive;
-
-        //// === 수정 필요 ===
-        //if (techState.techData.areaType != AreaType.Normal)
-        //    PeopleManager.Instance.OnAreaPeopleCountChanged -= CurrentCapacityChange;
+        DestroyMouseClick();
     }
 
     // 데이터 등록
@@ -183,7 +182,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (techState.techData.isClearTech)
             buttonBG.interactable = false;
 
-        int minusAmount = -1 * techState.requaireAmount;
+        long minusAmount = -1 * techState.requaireAmount;
         techState.LevelUp();
 
         // 외형 변경
@@ -209,9 +208,9 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             TechViewer.instance.CheckUnlockPreTech(nextTech);
         }
 
-        // 구조물 정보 업데이트
-        if (techState.techData.techKind == TechKind.Structure)
-            TechViewer.instance.ActiveStructureInfo(techState);
+        //// 구조물 정보 업데이트
+        //if (techState.techData.techKind == TechKind.Structure)
+        //    TechViewer.instance.ActiveStructureInfo(techState);
     }
 
     // 업그레이드 비용 출력
@@ -296,8 +295,8 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // 현재 단계 효과 계산
         IncreaseInfo increaseInfo = GameManager.instance.GetIncreaseGoldInfo(techState.techData.areaType);
 
-        long curLinearAmount = increaseInfo.clickLinear * (100 + increaseInfo.clickRate) / 100;
-        long curPeriodAmount = increaseInfo.periodLinear * (100 + increaseInfo.periodRate) / 100;
+        long curLinearAmount = increaseInfo.clickTotalLinear * (100 + increaseInfo.clickRate) / 100;
+        long curPeriodAmount = increaseInfo.periodTotalLinear * (100 + increaseInfo.periodRate) / 100;
 
         // 다음 단계 효과 계산
         TechTotalUpgradeAmount next = techState.CalculateNextEffectAmount(increaseInfo);
@@ -305,7 +304,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         if (techState.techData.printTech.isAcquireClickGold || techState.techData.printTech.isAcquirePeriodGold)
         {
             // === 클릭 시 금 얻는 효과 출력 ===
-            long nextClickLinear = increaseInfo.clickLinear + next.clickLinearAmount;
+            long nextClickLinear = increaseInfo.clickTotalLinear + next.clickLinearAmount;
             long nextClickRate = increaseInfo.clickRate + next.clickRateAmount;
 
             long resultClickAmount = nextClickLinear * (100 + nextClickRate) / 100;
@@ -322,7 +321,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             }
 
             // === 주기적으로 세금 얻는 효과 출력 ===
-            long nextPeriodLinear = increaseInfo.periodLinear + next.periodLinearAmount;
+            long nextPeriodLinear = increaseInfo.periodTotalLinear + next.periodLinearAmount;
             long nextPeriodRate = increaseInfo.periodRate + next.periodRateAmount;
 
             long resultPeriodAmount = (nextPeriodLinear) * (100 + nextPeriodRate) / 100;
@@ -363,57 +362,6 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
                 description += periodTechPercentLine;
             }
-
-            //// === 인원 수 출력 ===
-            //int people = PeopleManager.Instance.Count(techState.techData.areaType);
-            //string peopleLine;
-            //if(techState.techData.techKind == TechKind.Job)
-            //    peopleLine = $"배정 인원:<color=#00FF00>{people}</color>명▶<color=#00FF00>{people + 1}</color>명\n";
-            //else
-            //    peopleLine = $"배정 인원:{people}명▶{people}명\n";
-
-            //description += peopleLine;
-
-            // === 1명당 효율 ===
-            string onePersonLine;
-            // 클릭으로 인한 효율
-            //if (techState.techData.printTech.isAcquireClickGold)
-            //{
-            //    if (increaseInfo.clickLinear != nextClickLinear)
-            //        onePersonLine = $"증가 양:<color=#00FF00>{FuncSystem.Format(increaseInfo.clickLinear)}</color>▶<color=#00FF00>{FuncSystem.Format(nextClickLinear)}</color>\n";
-            //    else
-            //        onePersonLine = $"증가 양:{FuncSystem.Format(increaseInfo.clickLinear)}▶{FuncSystem.Format(nextClickLinear)}\n";
-            //}
-            //// 주기로 인한 효율
-            //else
-            //{
-            //    if (increaseInfo.periodLinear != nextPeriodLinear)
-            //        onePersonLine = $"증가 양:<color=#00FF00>{FuncSystem.Format(increaseInfo.periodLinear)}</color>▶<color=#00FF00>{FuncSystem.Format(nextPeriodLinear)}</color>\n";
-            //    else
-            //        onePersonLine = $"증가 양:{FuncSystem.Format(increaseInfo.periodLinear)}▶{FuncSystem.Format(nextPeriodLinear)}\n";
-            //}
-
-            //description += onePersonLine;
-
-            //// === 증가 비율 ===
-            //string rateLine;
-            //// 클릭으로 인한 효율
-            //if (techState.techData.printTech.isAcquireClickGold)
-            //{
-            //    if (increaseInfo.clickRate != nextClickRate)
-            //        rateLine = $"증가 비율:<color=#00FF00>{FuncSystem.Format(increaseInfo.clickRate)}</color>%▶<color=#00FF00>{FuncSystem.Format(nextClickRate)}</color>%\n";
-            //    else
-            //        rateLine = $"증가 비율:{FuncSystem.Format(increaseInfo.clickRate)}%▶{FuncSystem.Format(nextClickRate)}%\n";
-            //}
-            //// 주기로 인한 효율
-            //else
-            //{
-            //    if (increaseInfo.periodRate != nextPeriodRate)
-            //        rateLine = $"증가 비율:<color=#00FF00>{FuncSystem.Format(increaseInfo.periodRate)}</color>%▶<color=#00FF00>{FuncSystem.Format(nextPeriodRate)}</color>%\n";
-            //    else
-            //        rateLine = $"증가 비율:{FuncSystem.Format(increaseInfo.periodRate)}%▶{FuncSystem.Format(nextPeriodRate)}%\n";
-            //}
-            //description += rateLine;
         }
 
         // 잉여 인력 생성 주기 효과 출력
@@ -430,6 +378,86 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             description += respawnLine;
         }
 
+        // 피라미드 진척도 출력
+        if(techState.techData.printTech.isPyramid)
+        {
+            string pyramidLine;
+
+            pyramidLine = $"진척도:<color=#00FF00>{techState.currentLevel}</color>/{techState.techData.maxLevel}▶<color=#00FF00>{techState.currentLevel + 1}</color>/{techState.techData.maxLevel}";
+            description += pyramidLine;
+        }
+
         return description;
+    }
+
+    // 마우스 클릭 중
+    private void OnClickStart()
+    {
+        // 이미 실행 중인 코루틴 제거
+        if (upgradeIntervalCoroutine != null)
+        {
+            StopCoroutine(upgradeIntervalCoroutine);
+            upgradeIntervalCoroutine = null;
+        }
+        Debug.Log("Mouse Down");
+        isMouseHolding = true;
+        upgradeIntervalCoroutine = StartCoroutine(OperateUpgradeContinue());
+    }
+
+    // 마우스 클릭 해제
+    private void OnClickEnd()
+    {
+        isMouseHolding = false;
+
+        if (upgradeIntervalCoroutine != null)
+        {
+            StopCoroutine(upgradeIntervalCoroutine);
+            upgradeIntervalCoroutine = null;
+        }
+    }
+
+    // 마우스를 계속 누를 때, 업그레이드 지속
+    IEnumerator OperateUpgradeContinue()
+    {
+        float curTime = 0f;
+        bool isUpgradeSuccess = false;
+        while (isMouseHolding && buttonBG.interactable)
+        {
+            curTime += Time.deltaTime;
+            if(curTime >= nextUpgradeInterval)
+            {
+                CheckTechLevelUp();
+                isUpgradeSuccess = true;
+                break;
+            }
+            yield return null;
+        }
+
+        // 업그레이드 성공했으니 코루틴 시작
+        if (isUpgradeSuccess)
+            upgradeIntervalCoroutine = StartCoroutine(OperateUpgradeContinue());
+        // 업그레이드 실패했으면, 바로 반환
+        else
+            upgradeIntervalCoroutine = null;
+    }
+
+    // 마우스 클릭 시작 및 끝과 호환
+    private void InitMouseClick()
+    {
+        buttonBG.TryGetComponent(out TechEachButton techEachButton);
+        if (techEachButton == null) return;
+
+        techEachButton.OnClickStart += OnClickStart;
+        techEachButton.OnClickEnd += OnClickEnd;
+    }
+
+    // 마우스 클릭 시작 및 끝을 제거
+    private void DestroyMouseClick()
+    {
+        buttonBG.TryGetComponent(out TechEachButton techEachButton);
+        if (techEachButton == null) return;
+
+        techEachButton.OnClickStart -= OnClickStart;
+        techEachButton.OnClickEnd -= OnClickEnd;
     }
 }

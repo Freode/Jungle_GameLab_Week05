@@ -31,5 +31,7 @@ MonoBehaviour:
   effects:
   - {fileID: 11400000, guid: 54a79df511907934b82b84b90435314c, type: 2}
   printTech:
-    isAcquireGold: 0
+    isAcquireClickGold: 0
+    isAcquirePeriodGold: 0
     isReducePeoplePeriod: 0
+    isPyramid: 0

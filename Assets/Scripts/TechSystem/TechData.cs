@@ -48,7 +48,7 @@ public class TechState
     public int curCapacity;                 // 현재 수용량
     public int maxCapacity;                 // 최대 수용량
     public LockState lockState;             // 연구 가능 상태
-    public int requaireAmount = 0;          // 요구하는 양
+    public long requaireAmount = 0;          // 요구하는 양
     public int curTechUIIdx;                // 현재 UI의 위치
 
     // 생성자
@@ -68,7 +68,7 @@ public class TechState
         lockState = LockState.Complete;
         // ++curCapacity; 수정 필요
         ++currentLevel;
-        requaireAmount = (int)Math.Floor((double)techData.baseRequiredGold * Math.Pow(techData.increaseGoldValue, currentLevel));
+        requaireAmount = (long)Math.Floor((decimal)techData.baseRequiredGold * (decimal)Math.Pow(techData.increaseGoldValue, currentLevel));
         
     }
 

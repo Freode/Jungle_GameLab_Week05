@@ -62,8 +62,8 @@ public class TechInfo : MonoBehaviour
 
         string name = FuncSystem.GetStructureName(areaType);
 
-        long linearAmount = increaseInfo.clickLinear * (100 + increaseInfo.clickRate) / 100;
-        long periodAmount = increaseInfo.periodLinear * (100 + increaseInfo.periodRate) / 100;
+        long linearAmount = increaseInfo.clickTotalLinear * (100 + increaseInfo.clickRate) / 100;
+        long periodAmount = increaseInfo.periodTotalLinear * (100 + increaseInfo.periodRate) / 100;
 
         string description = FuncSystem.GetStructureDescription(areaType, linearAmount, periodAmount, currentLevel, finalLevel);
 
