@@ -24,7 +24,7 @@ public class ImageSpriteData
     [Header("Critical Duration Settings")]
     public float criticalChangeDuration = 1.0f;
     public bool useGlobalCriticalDuration = true;
-    
+
     [HideInInspector]
     public bool isChanging = false;
     
@@ -80,6 +80,8 @@ public class ButtonImageChanger : MonoBehaviour
         [SerializeField] private GameObject effectUI;
         [SerializeField] private float effectUIDuration = 1.0f;
     
+    [Header("Event Broadcasting")]
+    public VoidEventChannelSO onGoldButtonClickChannel;
     // 최적화를 위한 캐시
     private readonly List<Coroutine> activeCoroutines = new List<Coroutine>();
     private readonly List<ImageSpriteData> validImageData = new List<ImageSpriteData>();
@@ -208,6 +210,10 @@ public class ButtonImageChanger : MonoBehaviour
     
     public void OnButtonClick()
     {
+        if (onGoldButtonClickChannel != null)
+        {
+            onGoldButtonClickChannel.RaiseEvent();
+        }
         // 이미 실행 중인 애니메이션이 있다면 중단
         if (activeCoroutines.Count > 0)
         {
