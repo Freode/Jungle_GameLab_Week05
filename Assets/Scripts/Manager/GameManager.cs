@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
     public void RecalculateAllIncomes()
     {
         RecalculatePeriodIncreaseGoldAmount();
-        RecalculateClickIncreaseTotalAmount();
+        AddClickIncreaseTotalAmount();
     }
 
     // 주기적으로 값이 금이 추가
@@ -194,10 +194,23 @@ public class GameManager : MonoBehaviour
     public void AddClickIncreaseTotalAmount()
     {
         clickIncreaseTotalAmount = 0;
-        foreach (var data in increaseGoldAmounts)
+
+        // 왕국의 모든 지역(AreaType)을 순회합니다.
+        foreach (AreaType area in System.Enum.GetValues(typeof(AreaType)))
         {
-            clickIncreaseTotalAmount += data.Value.clickLinear * (100 + data.Value.clickRate) / 100;
+            // 1. 이 지역에서 일하는 백성이 몇 명인지 호조(PeopleManager)에게 묻습니다.
+            int peopleCount = PeopleManager.Instance.Count(area);
+
+            // 2. 이 지역의 기술 효과(1인당 생산량)가 얼마인지 자신의 장부에서 찾습니다.
+            if (increaseGoldAmounts.TryGetValue(area, out IncreaseInfo info))
+            {
+                // 3. (백성 수 * 1인당 생산량) 만큼을 총 클릭 수입에 더합니다.
+                long areaIncome = peopleCount * (info.clickLinear * (100 + info.clickRate) / 100);
+                clickIncreaseTotalAmount += areaIncome;
+            }
         }
+        
+        // 최종적으로 계산된 총 클릭 수입이 변경되었음을 왕국 전체에 알립니다.
         OnClickIncreaseTotalAmountChanged?.Invoke();
     }
 
