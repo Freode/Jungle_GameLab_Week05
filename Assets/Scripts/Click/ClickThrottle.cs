@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 클릭 수락 간 최소 간격(minInterval)로 연타 보호.
-/// - 수락된 클릭은 Debug.Log로 출력
+/// - 수락된 클릭은 Debug.Log로A 출력
 /// - 거절된 클릭은 남은 대기시간(ms)와 함께 로그(옵션)
 /// - 마우스 좌클릭(임시) 또는 UI Button.onClick에 TryClick() 연결
 /// </summary>
@@ -18,7 +18,7 @@ public class ClickThrottle : MonoBehaviour
     [Tooltip("거절된 클릭도 로그로 볼지 여부")]
     public bool logRejected = true;
     public Button buttonGold;
-    public int CriticalPercent = 2;
+    public int criticalPercent = 2;
 
     [Header("Button Anim")]
     [SerializeField] float animationDuration = 0.08f;    // 전체 애니메이션 시간
@@ -31,20 +31,20 @@ public class ClickThrottle : MonoBehaviour
     public static event System.Action OnCriticalHit;
     public static event System.Action OnNormalHit;
 
-    private float _lastClickTime = -9999f;
-    private int _accepted;
-    private int _rejected;
+    private float lastClickTime = -9999f;
+    private int accepted;
+    private int rejected;
 
     // 선택: 1초 단위 CPS 간이 측정
-    private float _cpsWindowStart;
-    private int _cpsCount;
+    private float cpsWindowStart;
+    private int cpsCount;
 
     public int tempCount = 0;
     public int mouseCount = 0;
 
     private void Awake()
     {
-        _cpsWindowStart = Time.unscaledTime;
+        cpsWindowStart = Time.unscaledTime;
     }
 
     private void Start()
@@ -57,11 +57,11 @@ public class ClickThrottle : MonoBehaviour
     public bool TryClick()
     {
         float now = Time.unscaledTime;              // 타임스케일 영향 없음
-        float dt = now - _lastClickTime;
+        float dt = now - lastClickTime;
 
         if (dt < minInterval)
         {
-            _rejected++;
+            rejected++;
             if (logRejected)
             {
                 float waitMs = (minInterval - dt) * 1000f;
@@ -70,15 +70,15 @@ public class ClickThrottle : MonoBehaviour
             return false;
         }
 
-        _lastClickTime = now;
-        _accepted++;
-        _cpsCount++;
+        lastClickTime = now;
+        accepted++;
+        cpsCount++;
 
         // 1초 창으로 CPS 출력(선택)
-        if (now - _cpsWindowStart >= 1f)
+        if (now - cpsWindowStart >= 1f)
         {
-            _cpsWindowStart = now;
-            _cpsCount = 0;
+            cpsWindowStart = now;
+            cpsCount = 0;
         }
 
         return true;
@@ -96,7 +96,7 @@ public class ClickThrottle : MonoBehaviour
         Color color;
         int random = UnityEngine.Random.Range(1, 101);
         // 크리티컬 O
-        if(random <= CriticalPercent)
+        if(random <= criticalPercent)
         {
             totalAmount *= 100;
             color = Color.red;
