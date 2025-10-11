@@ -18,10 +18,10 @@ MonoBehaviour:
   techNamePrint: 
   techDescription: "\uC6B4\uBC18\uC18C \uBC1C\uC804\\n\uC6B4\uBC18\uC790 \uBC30\uCE58
     \uAC00\uB2A5\\n\uC8FC\uAE30\uC801\uC73C\uB85C \uC6B4\uBC18\uC18C\uC5D0\uC11C
-    \uC5BB\uB294 \uAE08 +80%"
+    \uC5BB\uB294 \uAE08 +30%"
   techIcon: {fileID: 21300000, guid: 9e0fe632fdecfb2459f7ae7f89c880d4, type: 3}
-  baseRequiredGold: 750
-  increaseGoldValue: 750
+  baseRequiredGold: 800
+  increaseGoldValue: 800
   maxLevel: 0
   baseCapacity: 0
   isUsingLevel: 1
@@ -35,6 +35,3 @@ MonoBehaviour:
   effects:
   - {fileID: 11400000, guid: 39c5f72acba1a714fb4d8e02131dad54, type: 2}
   - {fileID: 11400000, guid: 28f008f36816dc74f863b86603034d9b, type: 2}
-  printTech:
-    isAcquireGold: 1
-    isReducePeoplePeriod: 0

@@ -17,7 +17,7 @@ MonoBehaviour:
   techName: "\uAE08\uAD11 \uAD11\uBD80 "
   techNamePrint: 
   techDescription: "\uC789\uC5EC \uC778\uB825 -1\uBA85\\n\uAE08\uAD11 \uAD11\uBD80\uB85C
-    1\uBA85 \uBC30\uCE58\\n\uD074\uB9AD \uC2DC, \uC5BB\uB294 \uAE08 +2"
+    1\uBA85 \uBC30\uCE58\\n\uD074\uB9AD \uC2DC, \uC5BB\uB294 \uAE08 +3"
   techIcon: {fileID: 21300000, guid: 619c7a4fb5f8b5947b267aaabc970924, type: 3}
   baseRequiredGold: 10
   increaseGoldValue: 10
@@ -32,6 +32,3 @@ MonoBehaviour:
   effects:
   - {fileID: 11400000, guid: 21ab6ba47711ad44d92599eeda311cf5, type: 2}
   - {fileID: 11400000, guid: 3021376fcfa956b4cb24dc6326a42d03, type: 2}
-  printTech:
-    isAcquireGold: 1
-    isReducePeoplePeriod: 0

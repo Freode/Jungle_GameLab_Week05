@@ -20,8 +20,8 @@ MonoBehaviour:
     \uBC30\uCE58\\n\uC790\uB3D9\uC73C\uB85C \uAD11\uC0B0\uC5D0\uC11C \uC5BB\uB294
     \uAE08 +2"
   techIcon: {fileID: 21300000, guid: 51d16ce79fa130c45b95c12b21fb049a, type: 3}
-  baseRequiredGold: 30
-  increaseGoldValue: 30
+  baseRequiredGold: 50
+  increaseGoldValue: 50
   maxLevel: 0
   baseCapacity: 99999999
   isUsingLevel: 0
@@ -33,6 +33,3 @@ MonoBehaviour:
   effects:
   - {fileID: 11400000, guid: a0f260286ae3928478efff7bd6fd507e, type: 2}
   - {fileID: 11400000, guid: ea4763a022c75e146afad580bc19737c, type: 2}
-  printTech:
-    isAcquireGold: 1
-    isReducePeoplePeriod: 0
