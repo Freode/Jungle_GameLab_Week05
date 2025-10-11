@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 20283019416705510}
   - component: {fileID: 494797833534958169}
   - component: {fileID: 5731312755228477355}
+  - component: {fileID: 1299254946573327421}
   m_Layer: 5
   m_Name: GoldMineBackground
   m_TagString: Untagged
@@ -75,6 +76,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1299254946573327421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 274250741286346165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f33cfb3e1f753204c9dbc025f375ceb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventChannel: {fileID: 11400000, guid: 1d35889e06b3ee147b05808887f1b651, type: 2}
+  duration: 0.2
+  magnitude: 5
 --- !u!1 &1251989284479377300
 GameObject:
   m_ObjectHideFlags: 0
@@ -1096,7 +1112,7 @@ MonoBehaviour:
   clickThrottle: {fileID: 1563861040617613537}
   effectUI: {fileID: 5154006539309045819}
   effectUIDuration: 0.2
-  onGoldButtonClickChannel: {fileID: 0}
+  onGoldButtonClickChannel: {fileID: 11400000, guid: 1d35889e06b3ee147b05808887f1b651, type: 2}
 --- !u!114 &3608945513546631869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1295,7 +1311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f33cfb3e1f753204c9dbc025f375ceb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventChannel: {fileID: 0}
+  eventChannel: {fileID: 11400000, guid: 1d35889e06b3ee147b05808887f1b651, type: 2}
   duration: 0.2
   magnitude: 5
 --- !u!1 &8482810058133859155
