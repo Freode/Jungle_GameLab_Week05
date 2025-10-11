@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Button buttonBG;
+    public Sprite unlockIcon;
     public Image imageIcon;
     public TextMeshProUGUI textName;
     public TextMeshProUGUI textCost;
@@ -43,12 +44,6 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         this.techState = techState;
 
-        imageIcon.sprite = techState.techData.techIcon;
-        textName.text = techState.techData.techName;
-
-        PrintCost();
-        PrintLevelOrCapacity();
-
         // 버튼 활성화 여부 설정
         GameManager.instance.OnCurrentGoldAmountChanged += OnCheckTechActive;
 
@@ -67,7 +62,8 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 상태 제거하는 함수
     public void RemoveState()
     {
-        if(techState == null)
+        UnlockUI();
+        if (techState == null)
             return;
 
         // 모두 초기화
@@ -89,9 +85,15 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void OnCheckTechActive()
     {
         long amount = GameManager.instance.GetCurrentGoldAmount();
-        // 선행 조건이 다 해결되지 않았다면, 무시
+        // 선행 조건이 다 해결되지 않았다면, 물음표 상태로 표시
         if (techState.lockState == LockState.Block)
             return;
+
+        imageIcon.sprite = techState.techData.techIcon;
+        textName.text = techState.techData.techName;
+
+        PrintCost();
+        PrintLevelOrCapacity();
 
         // 비활성화 또는 수용량 여유가 있는 경우
         if (amount < techState.requaireAmount || techState.CheckCapacity() == false)
@@ -105,6 +107,15 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             buttonBG.interactable = true;
             textCost.color = Color.green;
         }
+    }
+
+    // 잠겨 있을 때, UI 상태를 물음표로 변경
+    public void UnlockUI()
+    {
+        imageIcon.sprite = unlockIcon;
+        textName.text = "????";
+        textCost.text = "????";
+        textLevel.text = "??";
     }
 
     // 현재 노드의 해금 여부를 반환
@@ -206,6 +217,9 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 레벨 또는 현재 수용량 출력
     private void PrintLevelOrCapacity()
     {
+        if (techState.lockState == LockState.Block)
+            return;
+
         string value = techState.techData.isUsingLevel ? techState.currentLevel.ToString() : techState.curCapacity.ToString();
         textLevel.text = value;
     }
@@ -222,13 +236,31 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             leftX = corners[1].x;
         }
 
-        // 테크 정보 출력
+        // 테크 정보 위치 설정
         Vector3 loc = new Vector3(leftX, upperY, 0);
-        OnActiveInfo?.Invoke(techState.techData.techName, techState.techData.techDescription, techState.techData.techIcon, loc);
 
-        // 구조물 정보 출력
-        if (techState.techData.techKind == TechKind.Structure)
-            TechViewer.instance.ActiveStructureInfo(techState);
+        // 테크 정보 데이터 설정
+        string techName;
+        string techDescription;
+        Sprite techIcon;
+        if(techState.lockState == LockState.Block)
+        {
+            techName = "????";
+            techDescription = "아직 확인할 수 없습니다.";
+            techIcon = unlockIcon;
+        }
+        else
+        {
+            techName = techState.techData.techName;
+            techDescription = techState.techData.techDescription;
+            techIcon = techState.techData.techIcon;
+        }
+
+        OnActiveInfo?.Invoke(techName, techDescription, techIcon, loc);
+
+        //// 구조물 정보 출력
+        //if (techState.techData.techKind == TechKind.Structure)
+        //    TechViewer.instance.ActiveStructureInfo(techState);
     }
 
     // 마우스가 빠져 나감
@@ -238,5 +270,11 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         if (techState.techData.techKind == TechKind.Structure)
             TechViewer.instance.InactiveStructureInfo();
+    }
+
+    // 설명 문서 작성
+    private string SetDescriptionContent()
+    {
+        return string.Empty;
     }
 }
