@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+    [Header("Event Channels")]
+    public FloatEventChannelSO OnAuthorityChangedChannel;
 
     public GameObject canvasObject;                         // 캔버스 객체
 
@@ -33,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     private bool isGameOver = false;                        // 게임 종료 여부
     private long clickIncreaseTotalAmount = 0;               // 클릭 한 번 시, 획득하는 양
+    private float currentAuthority = 1f;
     private long periodIncreaseTotalAmount = 0;              // 주기적으로 획득하는 총 양
 
     private Dictionary<AreaType, IncreaseInfo> increaseGoldAmounts;
@@ -46,6 +49,32 @@ public class GameManager : MonoBehaviour
         increaseGoldAmounts = new Dictionary<AreaType, IncreaseInfo>();
         checkUnlockStructures = new Dictionary<AreaType, bool>();
     }
+    private void OnEnable()
+    {
+        if (OnAuthorityChangedChannel != null)
+        {
+            OnAuthorityChangedChannel.OnEventRaised += UpdateAuthority;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (OnAuthorityChangedChannel != null)
+        {
+            OnAuthorityChangedChannel.OnEventRaised -= UpdateAuthority;
+        }
+    }
+
+    // ★ 4. '권위 방송'을 받으면 호출될 함수
+    private void UpdateAuthority(float newAuthority)
+    {
+        // 권위는 1 이상이라는 법칙 적용
+        currentAuthority = Mathf.Max(1f, newAuthority);
+
+        // 권위가 바뀌었으니, UI에 표시되는 총 클릭 수입이 변경되었음을 알림
+        OnClickIncreaseTotalAmountChanged?.Invoke();
+    }
+
 
     private void Start()
     {
@@ -340,7 +369,10 @@ public class GameManager : MonoBehaviour
 
     public long GetPeriodIncreaseGoldAmountRate() { return periodIncreaseGoldAmountRate; }
 
-    public long GetClickIncreaseTotalAmount() { return clickIncreaseTotalAmount; }
+    public long GetClickIncreaseTotalAmount() 
+    { 
+        return (long)(clickIncreaseTotalAmount * currentAuthority); 
+    }
 
     public long GetPeriodIncreaseTotalAmount() { return periodIncreaseTotalAmount; }
 
