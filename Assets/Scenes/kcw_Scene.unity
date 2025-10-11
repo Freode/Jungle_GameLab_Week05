@@ -1731,6 +1731,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f93bf31ca621bb4c95b9fab685d02a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnAuthorityChangedChannel: {fileID: 11400000, guid: 7ad0cd89c7982d446a54f2beac87be71, type: 2}
   canvasObject: {fileID: 1464799245}
   currentGoldAmount: 100
   clickIncreaseGoldAmountLinear: 1

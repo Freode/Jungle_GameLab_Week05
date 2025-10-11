@@ -49,3 +49,5 @@ MonoBehaviour:
   decayRate: 3
   baseIncreaseAmount: 10
   scalingFactor: 0.05
+  authorityMultiplier: 1
+  onAuthorityChangedChannel: {fileID: 11400000, guid: 7ad0cd89c7982d446a54f2beac87be71, type: 2}

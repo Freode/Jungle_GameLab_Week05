@@ -34,6 +34,9 @@ public class AuthorityManager : MonoBehaviour
     
     [Tooltip("게이지 수치에 따라 동적으로 변하는 배율입니다.")]
     public float authorityMultiplier = 1f;
+    
+    [Header("방송할 채널")]
+    public FloatEventChannelSO onAuthorityChangedChannel;
 
     // 마지막으로 권위가 증가한 시간을 추적합니다.
     private float timeSinceLastIncrease = 0f;
@@ -134,6 +137,14 @@ public class AuthorityManager : MonoBehaviour
             // 기본 배율 1f에 레벨당 0.1f씩 더합니다.
             authorityMultiplier = 1f + (level * 0.1f);
             Mover.moveSpeed = Mover.defaultMoveSpeed * level;
+        }
+        
+        
+        // 연결된 채널이 있는지 확인 후,
+        if (onAuthorityChangedChannel != null)
+        {
+            // RaiseEvent() 함수를 통해 새로운 권위 값을 방송합니다.
+            onAuthorityChangedChannel.RaiseEvent(authorityMultiplier);
         }
     }
 }
