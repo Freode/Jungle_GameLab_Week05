@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
 
 public enum LockState
@@ -26,7 +27,7 @@ public class TechData : ScriptableObject
     public string techDescription;          // 기술 설명
     public Sprite techIcon;                 // 기술 아이콘
     public int baseRequiredGold;            // 기본 요구 바이트 (레벨 1)
-    public int increaseGoldValue;           // 레벨 당 증가하는 골드 양
+    public float increaseGoldValue;           // 레벨 당 증가하는 골드 양
     public int maxLevel;                    // 최대 레벨 - 변경 불가능
     public int baseCapacity;                // 기본 수용량 (레벨 1)
     public bool isUsingLevel;               // 레벨을 사용하는지 여부
@@ -67,7 +68,8 @@ public class TechState
         lockState = LockState.Complete;
         // ++curCapacity; 수정 필요
         ++currentLevel;
-        requaireAmount += techData.increaseGoldValue;
+        requaireAmount = (int)Math.Floor((double)techData.baseRequiredGold * Math.Pow(techData.increaseGoldValue, currentLevel));
+        
     }
 
     // 현재 수용량이 최대 수용량보다 적은지 확인
