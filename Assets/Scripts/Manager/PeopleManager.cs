@@ -63,7 +63,7 @@ public class PeopleManager : MonoBehaviour
         OnAreaPeopleCountChanged?.Invoke();
 
         // ★ 재정부에 세금 재계산을 명합니다.
-        GameManager.instance.RecalculatePeriodIncreaseGoldAmount();
+        GameManager.instance.RecalculateAllIncomes();
     }
 
     /// <summary>명시적 AreaType으로 등록 (부모 체인 무시)</summary>
@@ -73,7 +73,7 @@ public class PeopleManager : MonoBehaviour
         _areaSets[area].Add(actor);
         OnAreaPeopleCountChanged?.Invoke();
         // ★ 재정부에 세금 재계산을 명합니다.
-        GameManager.instance.RecalculatePeriodIncreaseGoldAmount();
+        GameManager.instance.RecalculateAllIncomes();
     }
 
     /// <summary>어느 영역에 있든 안전하게 해제</summary>
@@ -84,7 +84,7 @@ public class PeopleManager : MonoBehaviour
         foreach (var set in _areaSets.Values)
             set.Remove(actor);
         OnAreaPeopleCountChanged?.Invoke();
-        GameManager.instance.RecalculatePeriodIncreaseGoldAmount();
+        GameManager.instance.RecalculateAllIncomes();
     }
 
     /// <summary>부모 변경 등으로 영역이 바뀐 경우 호출</summary>

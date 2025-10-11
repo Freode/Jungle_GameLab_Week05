@@ -49,9 +49,13 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        AddClickIncreaseTotalAmount();
-        AddPeriodIncreaseGoldAmount();
+        RecalculateAllIncomes(); // 시작 시 모든 수입을 한 번 계산
         StartCoroutine(UpdateGoldAmount());
+    }
+    public void RecalculateAllIncomes()
+    {
+        RecalculatePeriodIncreaseGoldAmount();
+        RecalculateClickIncreaseTotalAmount();
     }
 
     // 주기적으로 값이 금이 추가
@@ -128,24 +132,21 @@ public class GameManager : MonoBehaviour
         OnCurrentGoldAmountChanged?.Invoke();
     }
 
-    // 한 번 클릭할 때, 얻는 금의 양에 대한 선형적 변화
+    // '클릭 수입 증가' 명령도 동일하게 처리
     public void AddClickIncreaseGoldAmountLinear(AreaType type, long amount)
     {
         if (increaseGoldAmounts.ContainsKey(type) == false)
             increaseGoldAmounts.Add(type, new IncreaseInfo());
-
-        increaseGoldAmounts[type].clickLinear += amount;
-        AddClickIncreaseTotalAmount();
+        increaseGoldAmounts[type].clickLinear = amount; // += 에서 = 으로 변경
+        RecalculateAllIncomes();
     }
 
-    // 한 번 클릭할 때, 얻는 금의 양에 대한 비율 변화
     public void AddClickIncreaseGoldAmountRate(AreaType type, long amount)
     {
         if (increaseGoldAmounts.ContainsKey(type) == false)
             increaseGoldAmounts.Add(type, new IncreaseInfo());
-
         increaseGoldAmounts[type].clickRate += amount;
-        AddClickIncreaseTotalAmount();
+        RecalculateAllIncomes();
     }
 
     // 주기적으로 얻는 금의 선형적 수 변화
@@ -153,9 +154,8 @@ public class GameManager : MonoBehaviour
     {
         if (increaseGoldAmounts.ContainsKey(type) == false)
             increaseGoldAmounts.Add(type, new IncreaseInfo());
-
-        increaseGoldAmounts[type].periodLinear += amount;
-        AddPeriodIncreaseGoldAmount();
+        increaseGoldAmounts[type].periodLinear = amount; // += 에서 = 으로 변경
+        RecalculateAllIncomes(); // 모든 수입 재계산
     }
 
     // 주기적으로 얻는 금의 비율 변화
@@ -163,9 +163,8 @@ public class GameManager : MonoBehaviour
     {
         if (increaseGoldAmounts.ContainsKey(type) == false)
             increaseGoldAmounts.Add(type, new IncreaseInfo());
-
         increaseGoldAmounts[type].periodRate += amount;
-        AddPeriodIncreaseGoldAmount();
+        RecalculateAllIncomes();
     }
 
     public void AddPeriodIncreaseGoldAmount()
@@ -228,6 +227,20 @@ public class GameManager : MonoBehaviour
         }
         
         OnPeriodIncreaseAmountChanged?.Invoke();
+    }
+    private void RecalculateClickIncreaseTotalAmount()
+    {
+        clickIncreaseTotalAmount = 0;
+        foreach (AreaType area in System.Enum.GetValues(typeof(AreaType)))
+        {
+            int peopleCount = PeopleManager.Instance.Count(area);
+            if (increaseGoldAmounts.TryGetValue(area, out IncreaseInfo info))
+            {
+                long areaIncome = peopleCount * (info.clickLinear * (100 + info.clickRate) / 100);
+                clickIncreaseTotalAmount += areaIncome;
+            }
+        }
+        OnClickIncreaseTotalAmountChanged?.Invoke();
     }
 
     // 비율 설정 함수도 동일하게 만듭니다.
