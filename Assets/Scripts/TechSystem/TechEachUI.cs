@@ -22,6 +22,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     private TechState techState;        // 데이터 원본과 상태 저장
     private float upperY = 5000f;
     private float leftX = 5000f;
+    private bool isInteractTechInfoUI = false;  // 테크 정보 UI와 상호작용 여부
 
     private void Start()
     {
@@ -158,7 +159,10 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         techState.curCapacity = PeopleManager.Instance.Count(techState.techData.areaType);
         OnCheckTechActive(); // 잉여 인력이 변경되면서 추가 === 수정 필요 ===
         PrintLevelOrCapacity();
-        OnCheckTechActive();
+
+        // 인원 수 변경된 것에 따라 다시 테크 UI 적용
+        if (isInteractTechInfoUI)
+            PrintTechInfo();
     }
 
     // 레벨업 확인
@@ -229,12 +233,14 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 마우스 올려 놓기
     public void OnPointerEnter(PointerEventData eventData)
     {
+        isInteractTechInfoUI = true;
         PrintTechInfo();
     }
 
     // 마우스가 빠져 나감
     public void OnPointerExit(PointerEventData eventData)
     {
+        isInteractTechInfoUI = false;
         OnInactiveInfo?.Invoke();
 
         if (techState.techData.techKind == TechKind.Structure)
@@ -294,39 +300,132 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         long curPeriodAmount = increaseInfo.periodLinear * (100 + increaseInfo.periodRate) / 100;
 
         // 다음 단계 효과 계산
-        var next = techState.CalculateNextEffectAmount(increaseInfo);
+        TechTotalUpgradeAmount next = techState.CalculateNextEffectAmount(increaseInfo);
 
-        // 금 얻는 효과 출력
-        if (techState.techData.printTech.isAcquireGold)
+        if (techState.techData.printTech.isAcquireClickGold || techState.techData.printTech.isAcquirePeriodGold)
         {
+            // === 클릭 시 금 얻는 효과 출력 ===
+            long nextClickLinear = increaseInfo.clickLinear + next.clickLinearAmount;
+            long nextClickRate = increaseInfo.clickRate + next.clickRateAmount;
+
+            long resultClickAmount = nextClickLinear * (100 + nextClickRate) / 100;
             // 클릭 세금 변경점
-            string clickLine;
-            if (curLinearAmount != next.nextClickAmount)
-                clickLine = $"클릭 세금:<color=#00FF00>{FuncSystem.Format(curLinearAmount)}</color>=><color=#00FF00>{FuncSystem.Format(next.nextClickAmount)}</color>\n";
-            else
-                clickLine = $"클릭 세금:{FuncSystem.Format(curLinearAmount)}=>{FuncSystem.Format(next.nextClickAmount)}\n";
+            if (techState.techData.printTech.isAcquireClickGold)
+            {
+                string clickLine;
+                if (curLinearAmount != resultClickAmount)
+                    clickLine = $"클릭 세금:<color=#00FF00>{FuncSystem.Format(curLinearAmount)}</color>▶<color=#00FF00>{FuncSystem.Format(resultClickAmount)}</color>\n";
+                else
+                    clickLine = $"클릭 세금:{FuncSystem.Format(curLinearAmount)}▶{FuncSystem.Format(resultClickAmount)}\n";
 
-            // 주기 세금 변경점
-            string periodLine;
-            if (curPeriodAmount != next.nextPeriodAmount)
-                periodLine = $"주기 세금:<color=#00FF00>{FuncSystem.Format(curPeriodAmount)}</color>=><color=#00FF00>{FuncSystem.Format(next.nextPeriodAmount)}</color>\n";
-            else
-                periodLine = $"주기 세금:{FuncSystem.Format(curPeriodAmount)}=>{FuncSystem.Format(next.nextPeriodAmount)}\n";
+                description += clickLine;
+            }
 
-            description += (clickLine + periodLine);
+            // === 주기적으로 세금 얻는 효과 출력 ===
+            long nextPeriodLinear = increaseInfo.periodLinear + next.periodLinearAmount;
+            long nextPeriodRate = increaseInfo.periodRate + next.periodRateAmount;
 
+            long resultPeriodAmount = (nextPeriodLinear) * (100 + nextPeriodRate) / 100;
+
+            if (techState.techData.printTech.isAcquirePeriodGold)
+            {
+                // 주기 세금 변경점
+                string periodLine;
+                if (curPeriodAmount != resultPeriodAmount)
+                    periodLine = $"주기 세금:<color=#00FF00>{FuncSystem.Format(curPeriodAmount)}</color>▶<color=#00FF00>{FuncSystem.Format(resultPeriodAmount)}</color>\n";
+                else
+                    periodLine = $"주기 세금:{FuncSystem.Format(curPeriodAmount)}▶{FuncSystem.Format(resultPeriodAmount)}\n";
+
+                description += periodLine;
+
+                long curTotalPeriodAmount = GameManager.instance.GetPeriodIncreaseTotalAmount();
+                
+                decimal curTotalPeriodPercent = 0;
+                decimal nextTotalPeriodPercent = 0;
+
+                if (curTotalPeriodAmount != 0)
+                    curTotalPeriodPercent = (decimal)curPeriodAmount / (decimal)curTotalPeriodAmount * 100;
+                else
+                    curTotalPeriodPercent = 0;
+
+                long nextTotalPeriodAmount = resultPeriodAmount - curPeriodAmount + curTotalPeriodAmount;
+                if (nextTotalPeriodAmount != 0)
+                    nextTotalPeriodPercent = (decimal)resultPeriodAmount / (decimal)(nextTotalPeriodAmount) * 100;
+                else
+                    nextTotalPeriodPercent = 0;
+
+                // 주기 세금 총 지분
+                string periodTechPercentLine;
+                if (curPeriodAmount != resultPeriodAmount)
+                    periodTechPercentLine = $"세금 지분:<color=#00FF00>{curTotalPeriodPercent.ToString("F2")}</color>%▶<color=#00FF00>{nextTotalPeriodPercent.ToString("F2")}</color>%\n";
+                else
+                    periodTechPercentLine = $"세금 지분:{curTotalPeriodPercent.ToString("F2")}%▶{nextTotalPeriodPercent.ToString("F2")}%\n";
+
+                description += periodTechPercentLine;
+            }
+
+            //// === 인원 수 출력 ===
+            //int people = PeopleManager.Instance.Count(techState.techData.areaType);
+            //string peopleLine;
+            //if(techState.techData.techKind == TechKind.Job)
+            //    peopleLine = $"배정 인원:<color=#00FF00>{people}</color>명▶<color=#00FF00>{people + 1}</color>명\n";
+            //else
+            //    peopleLine = $"배정 인원:{people}명▶{people}명\n";
+
+            //description += peopleLine;
+
+            // === 1명당 효율 ===
+            string onePersonLine;
+            // 클릭으로 인한 효율
+            //if (techState.techData.printTech.isAcquireClickGold)
+            //{
+            //    if (increaseInfo.clickLinear != nextClickLinear)
+            //        onePersonLine = $"증가 양:<color=#00FF00>{FuncSystem.Format(increaseInfo.clickLinear)}</color>▶<color=#00FF00>{FuncSystem.Format(nextClickLinear)}</color>\n";
+            //    else
+            //        onePersonLine = $"증가 양:{FuncSystem.Format(increaseInfo.clickLinear)}▶{FuncSystem.Format(nextClickLinear)}\n";
+            //}
+            //// 주기로 인한 효율
+            //else
+            //{
+            //    if (increaseInfo.periodLinear != nextPeriodLinear)
+            //        onePersonLine = $"증가 양:<color=#00FF00>{FuncSystem.Format(increaseInfo.periodLinear)}</color>▶<color=#00FF00>{FuncSystem.Format(nextPeriodLinear)}</color>\n";
+            //    else
+            //        onePersonLine = $"증가 양:{FuncSystem.Format(increaseInfo.periodLinear)}▶{FuncSystem.Format(nextPeriodLinear)}\n";
+            //}
+
+            //description += onePersonLine;
+
+            //// === 증가 비율 ===
+            //string rateLine;
+            //// 클릭으로 인한 효율
+            //if (techState.techData.printTech.isAcquireClickGold)
+            //{
+            //    if (increaseInfo.clickRate != nextClickRate)
+            //        rateLine = $"증가 비율:<color=#00FF00>{FuncSystem.Format(increaseInfo.clickRate)}</color>%▶<color=#00FF00>{FuncSystem.Format(nextClickRate)}</color>%\n";
+            //    else
+            //        rateLine = $"증가 비율:{FuncSystem.Format(increaseInfo.clickRate)}%▶{FuncSystem.Format(nextClickRate)}%\n";
+            //}
+            //// 주기로 인한 효율
+            //else
+            //{
+            //    if (increaseInfo.periodRate != nextPeriodRate)
+            //        rateLine = $"증가 비율:<color=#00FF00>{FuncSystem.Format(increaseInfo.periodRate)}</color>%▶<color=#00FF00>{FuncSystem.Format(nextPeriodRate)}</color>%\n";
+            //    else
+            //        rateLine = $"증가 비율:{FuncSystem.Format(increaseInfo.periodRate)}%▶{FuncSystem.Format(nextPeriodRate)}%\n";
+            //}
+            //description += rateLine;
         }
 
         // 잉여 인력 생성 주기 효과 출력
-        if(techState.techData.printTech.isReducePeoplePeriod)
+        if (techState.techData.printTech.isReducePeoplePeriod)
         {
             float curRespawnPeriod = GameManager.instance.GetRespawnTime();
 
             string respawnLine;
-            if (curRespawnPeriod != next.nextRespawnTime)
-                respawnLine = $"생성 주기 :<color=#00FF00>{curRespawnPeriod}</color>=><color=#00FF00))>{next.nextRespawnTime}</color>\n";
+            if (curRespawnPeriod != next.respawnTime)
+                respawnLine = $"생성 주기:<color=#00FF00>{curRespawnPeriod.ToString("F3")}</color>s▶<color=#00FF00))>{next.respawnTime.ToString("F3")}</color>s\n";
             else
-                respawnLine = $"생성 주기 :{curRespawnPeriod}=>{next.nextRespawnTime}\n";
+                respawnLine = $"생성 주기:{curRespawnPeriod.ToString("F3")}s▶{next.respawnTime.ToString("F3")}s\n";
 
             description += respawnLine;
         }
