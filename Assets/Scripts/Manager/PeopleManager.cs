@@ -5,6 +5,9 @@ using UnityEngine;
 public class PeopleManager : MonoBehaviour
 {
     public static PeopleManager Instance { get; private set; }
+
+    [Header("Event Channels to Listen")]
+    public PeopleActorEventChannelSO OnActorDiedChannel;
     public Dictionary<AreaType, bool> checkUnlockStructures;
 
     // 영역별 인원 목록
@@ -15,6 +18,42 @@ public class PeopleManager : MonoBehaviour
     [SerializeField] AreaZone[] AreaZones;
 
     public event System.Action OnAreaPeopleCountChanged;            // 구역에 있는 사람 변경
+
+
+    private void OnEnable()
+    {
+        if (OnActorDiedChannel != null)
+        {
+            OnActorDiedChannel.OnEventRaised += HandleActorDeath;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (OnActorDiedChannel != null)
+        {
+            OnActorDiedChannel.OnEventRaised -= HandleActorDeath;
+        }
+    }
+
+    private void HandleActorDeath(PeopleActor actor)
+    {
+        if (actor == null) return;
+
+        // 1단계: 호적에서 말소 (Unregister)
+        Unregister(actor);
+        
+        // 2단계: 시신 수습 (Return to Object Pooler)
+        if (ObjectPooler.Instance != null)
+        {
+            ObjectPooler.Instance.ReturnObject(actor.gameObject);
+        }
+        else
+        {
+            // 만약을 대비한 비상 처리
+            Destroy(actor.gameObject);
+        }
+    }
 
     void Awake()
     {

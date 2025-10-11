@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 459e3830058137b4abcc9a53607b3e8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnActorDiedChannel: {fileID: 11400000, guid: 007c28acfb971a94783e02d090b87c26, type: 2}
   AreaAnchors:
   - {fileID: 0}
   - {fileID: 0}
