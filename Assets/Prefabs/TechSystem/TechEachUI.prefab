@@ -462,6 +462,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonBG: {fileID: 6531596040895485867}
+  unlockIcon: {fileID: 21300000, guid: 0fa785363dd84984e89bf0a747b1592a, type: 3}
   imageIcon: {fileID: 6541297166162566038}
   textName: {fileID: 987156929544300695}
   textCost: {fileID: 7367110347829508918}
