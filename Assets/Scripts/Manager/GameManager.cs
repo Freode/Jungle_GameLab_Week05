@@ -21,12 +21,13 @@ public class GameManager : MonoBehaviour
     public event Action<float> OnModifyRespawnUselessPeople;        // 테크 레벨에 따라 백수 생성 주기 조정
     public event Action<AreaType> OnUnlockStructure;                // 해당 구조물이 처음으로 열렸는지, 확인
     public event Func<float> OnGetRespawnTime;                      // 잉여 인력 리스폰 시간 가져오기
+    public event Func<float, float> OnGetNextRespawnTime;                  // 잉여 인력 다음 리스폰 시간 가져오기
 
-    [SerializeField] long currentGoldAmount = 0;             // 현재 소지하고 있는 금의 양
-    [SerializeField] long clickIncreaseGoldAmountLinear = 1; // 클릭 한 번 시, 획득하는 금의 선형적인 양
-    [SerializeField] long periodIncreaseGoldAmountLinear = 0;// 주기적으로 얻는 금의 양이 선형적으로 증가
-    [SerializeField] long clickIncreaseGoldAmountRate = 0;   // 클릭 한 번 시, 획득하는 금의 비율 증가 양
-    [SerializeField] long periodIncreaseGoldAmountRate = 0;  // 주기적으로 얻는 금의 양이 비율적으로 증가
+    [SerializeField] long currentGoldAmount = 0;                // 현재 소지하고 있는 금의 양
+    [SerializeField] long clickIncreaseGoldAmountLinear = 1;    // 클릭 한 번 시, 획득하는 금의 선형적인 양
+    [SerializeField] long periodIncreaseGoldAmountLinear = 0;   // 주기적으로 얻는 금의 양이 선형적으로 증가
+    [SerializeField] long clickIncreaseGoldAmountRate = 0;      // 클릭 한 번 시, 획득하는 금의 비율 증가 양
+    [SerializeField] long periodIncreaseGoldAmountRate = 0;     // 주기적으로 얻는 금의 양이 비율적으로 증가
     // Ending
     [SerializeField] GameObject fadeOutImage;
 
@@ -250,6 +251,8 @@ public class GameManager : MonoBehaviour
     }
 
     public float GetRespawnTime() { return OnGetRespawnTime.Invoke(); }
+
+    public float GetNextRespwanTime(float amount) { return OnGetNextRespawnTime.Invoke(amount); }
 
     public long GetCurrentGoldAmount() { return currentGoldAmount; }
 

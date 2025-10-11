@@ -35,6 +35,7 @@ public class PitHouse : MonoBehaviour
     {
         GameManager.instance.OnModifyRespawnUselessPeople += ModifyRespawnUselessPeople;
         GameManager.instance.OnGetRespawnTime += GetRespawnInterval;
+        GameManager.instance.OnGetNextRespawnTime += CalculateRespawnUselessPeople;
 
         if (!spawner) spawner = FindFirstObjectByType<PeopleSpawner>();
         if (!spawnPoint) spawnPoint = transform;
@@ -47,6 +48,7 @@ public class PitHouse : MonoBehaviour
     {
         GameManager.instance.OnModifyRespawnUselessPeople -= ModifyRespawnUselessPeople;
         GameManager.instance.OnGetRespawnTime -= GetRespawnInterval;
+        GameManager.instance.OnGetNextRespawnTime -= CalculateRespawnUselessPeople;
     }
 
     void Update()
@@ -138,10 +140,16 @@ public class PitHouse : MonoBehaviour
         TrySpawn();
     }
 
+    // 생성 주기 계산
+    private float CalculateRespawnUselessPeople(float amount)
+    {
+        return Mathf.Max(respawnInterval + amount, minRespawnInterval);
+    }
+
     // 생성 주기 변경
     private void ModifyRespawnUselessPeople(float amount)
     {
-        respawnInterval = Mathf.Max(respawnInterval + amount, minRespawnInterval);
+        respawnInterval = CalculateRespawnUselessPeople(amount);
     }
 
     // 리스폰 시간 반환

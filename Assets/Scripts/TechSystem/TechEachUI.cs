@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -187,15 +188,16 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         // 현재 금액 감소
         GameManager.instance.AddCurrentGoldAmount(minusAmount);
 
-        // 업데이트
-        PrintCost();
-        PrintLevelOrCapacity();
-
         // 효과 적용
         foreach (var effect in techState.techData.effects)
         {
             effect.ApplyTechEffect();
         }
+
+        // 업데이트
+        PrintCost();
+        PrintLevelOrCapacity();
+        PrintTechInfo();
 
         // 다음 기술의 선행 기술들 확인
         foreach (var nextTech in techState.techData.postTeches)
@@ -227,6 +229,21 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 마우스 올려 놓기
     public void OnPointerEnter(PointerEventData eventData)
     {
+        PrintTechInfo();
+    }
+
+    // 마우스가 빠져 나감
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        OnInactiveInfo?.Invoke();
+
+        if (techState.techData.techKind == TechKind.Structure)
+            TechViewer.instance.InactiveStructureInfo();
+    }
+
+    // 설명 문서 출력
+    private void PrintTechInfo()
+    {
         // 위치 초기화가 되지 않았을 때만 진행
         if (upperY == 5000f)
         {
@@ -243,7 +260,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         string techName;
         string techDescription;
         Sprite techIcon;
-        if(techState.lockState == LockState.Block)
+        if (techState.lockState == LockState.Block)
         {
             techName = "????";
             techDescription = "아직 확인할 수 없습니다.";
@@ -252,7 +269,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         else
         {
             techName = techState.techData.techName;
-            techDescription = techState.techData.techDescription;
+            techDescription = SetDescriptionContent();
             techIcon = techState.techData.techIcon;
         }
 
@@ -263,18 +280,57 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         //    TechViewer.instance.ActiveStructureInfo(techState);
     }
 
-    // 마우스가 빠져 나감
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        OnInactiveInfo?.Invoke();
-
-        if (techState.techData.techKind == TechKind.Structure)
-            TechViewer.instance.InactiveStructureInfo();
-    }
 
     // 설명 문서 작성
     private string SetDescriptionContent()
     {
-        return string.Empty;
+        // 기존 설명
+        string description = techState.techData.techDescription + "\n";
+
+        // 현재 단계 효과 계산
+        IncreaseInfo increaseInfo = GameManager.instance.GetIncreaseGoldInfo(techState.techData.areaType);
+
+        long curLinearAmount = increaseInfo.clickLinear * (100 + increaseInfo.clickRate) / 100;
+        long curPeriodAmount = increaseInfo.periodLinear * (100 + increaseInfo.periodRate) / 100;
+
+        // 다음 단계 효과 계산
+        var next = techState.CalculateNextEffectAmount(increaseInfo);
+
+        // 금 얻는 효과 출력
+        if (techState.techData.printTech.isAcquireGold)
+        {
+            // 클릭 세금 변경점
+            string clickLine;
+            if (curLinearAmount != next.nextClickAmount)
+                clickLine = $"클릭 세금:<color=#00FF00>{FuncSystem.Format(curLinearAmount)}</color>=><color=#00FF00>{FuncSystem.Format(next.nextClickAmount)}</color>\n";
+            else
+                clickLine = $"클릭 세금:{FuncSystem.Format(curLinearAmount)}=>{FuncSystem.Format(next.nextClickAmount)}\n";
+
+            // 주기 세금 변경점
+            string periodLine;
+            if (curPeriodAmount != next.nextPeriodAmount)
+                periodLine = $"주기 세금:<color=#00FF00>{FuncSystem.Format(curPeriodAmount)}</color>=><color=#00FF00>{FuncSystem.Format(next.nextPeriodAmount)}</color>\n";
+            else
+                periodLine = $"주기 세금:{FuncSystem.Format(curPeriodAmount)}=>{FuncSystem.Format(next.nextPeriodAmount)}\n";
+
+            description += (clickLine + periodLine);
+
+        }
+
+        // 잉여 인력 생성 주기 효과 출력
+        if(techState.techData.printTech.isReducePeoplePeriod)
+        {
+            float curRespawnPeriod = GameManager.instance.GetRespawnTime();
+
+            string respawnLine;
+            if (curRespawnPeriod != next.nextRespawnTime)
+                respawnLine = $"생성 주기 :<color=#00FF00>{curRespawnPeriod}</color>=><color=#00FF00))>{next.nextRespawnTime}</color>\n";
+            else
+                respawnLine = $"생성 주기 :{curRespawnPeriod}=>{next.nextRespawnTime}\n";
+
+            description += respawnLine;
+        }
+
+        return description;
     }
 }

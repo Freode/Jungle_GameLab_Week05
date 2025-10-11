@@ -35,3 +35,11 @@ public struct TechKindInfo
     public TechKind techKind;
     public List<TechData> techDatas;
 }
+
+// 테크 업그레이드 유형 출력
+[System.Serializable]
+public struct TechPrintUpgradeKind
+{
+    public bool isAcquireGold;
+    public bool isReducePeoplePeriod;
+}
