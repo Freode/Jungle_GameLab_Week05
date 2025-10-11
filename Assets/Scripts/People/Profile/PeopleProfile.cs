@@ -61,6 +61,7 @@ public class PeopleProfile : ScriptableObject
         v.loyalty = randomLoyalty ? RandomIntInclusive(minLoyalty, maxLoyalty) : Mathf.Clamp(fixedLoyalty, 0, 100);
         v.name = GenerateName();
         v.job = defaultJob;
+        v.carrier = defaultCarrier;
         return v;
     }
 

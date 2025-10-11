@@ -54,6 +54,7 @@ public class PeopleActor : MonoBehaviour
         // 2. "내가 죽었노라!" 라고 방송
         if (OnActorDiedChannel != null)
         {
+            PeopleManager.Instance.DespawnPerson(this.gameObject);
             OnActorDiedChannel.RaiseEvent(this);
         }
     }
