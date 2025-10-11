@@ -110,7 +110,6 @@ public static class FuncSystem
                 break;
         }
 
-
         return description;
     }
 }
