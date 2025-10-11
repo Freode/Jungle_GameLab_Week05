@@ -12,7 +12,7 @@ public class Draggable : MonoBehaviour
 
     [Header("애니메이터 파라미터 이름")]
     [Tooltip("Hanging 상태를 제외한 모든 행동 상태의 Bool 파라미터 이름을 적어주세요.")]
-    public string[] stateParameterNames = { "IsWalking", "IsMining", "IsSwimming" };
+    public string[] stateParameterNames = { "IsWalking", "IsMining", "IsSwimming", "IsDoing", "IsHammering", "IsDigging", "IsCarrying", "IsCarryingBlock", "IsCarryingRock" };
 
     [Header("흔들기 감지")]
     [Tooltip("이 값 이상의 '흔들림 에너지'가 모이면 이벤트가 발생")]
@@ -26,7 +26,7 @@ public class Draggable : MonoBehaviour
 
     public GameObject dropObject;
 
-    
+
 
     // --- 내부 변수 (수정 필요 없음) ---
     private Vector3 offset;
@@ -77,7 +77,7 @@ public class Draggable : MonoBehaviour
             transform.position = GetMouseWorldPos() + offset;
 
             // 흔들기 감지 로직
-            if(dropObject != null)
+            if (dropObject != null)
                 DetectShaking();
         }
     }
@@ -136,7 +136,7 @@ public class Draggable : MonoBehaviour
             Debug.Log("감옥에서 나왔습니다!");
         }
     }
-    
+
     void ResetAllStateBools()
     {
         foreach (string paramName in stateParameterNames)
@@ -144,14 +144,14 @@ public class Draggable : MonoBehaviour
             anim.SetBool(paramName, false);
         }
     }
-    
+
     private Vector3 GetMouseWorldPos()
     {
         Vector3 mousePoint = Input.mousePosition;
         mousePoint.z = Camera.main.WorldToScreenPoint(transform.position).z;
         return Camera.main.ScreenToWorldPoint(mousePoint);
     }
-    
+
     // [핵심 수정] DieInRiver 코루틴 변경
     IEnumerator DieInRiver()
     {
@@ -162,15 +162,15 @@ public class Draggable : MonoBehaviour
         if (isOverRiver)
         {
             // 3. 죽음이 확정되면 더 이상 드래그할 수 없도록 이 스크립트를 비활성화
-            this.enabled = false; 
-            
+            this.enabled = false;
+
             // 4. 죽는 애니메이션 재생
-            if(anim != null)
+            if (anim != null)
             {
                 anim.SetTrigger("OnSwimDeath");
             }
-            
-            
+
+
 
             // 5. 애니메이션이 끝날 때까지 기다림 (애니메이션 길이를 1초로 가정)
             //    만약 애니메이션 길이가 다르다면 이 숫자를 맞춰주세요.

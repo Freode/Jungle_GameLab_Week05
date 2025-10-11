@@ -170,6 +170,8 @@ MonoBehaviour:
   - IsDoing
   - IsHammering
   - IsDigging
+  - IsCarryingBlock
+  - IsCarryingRock
   shakeThreshold: 20
   shakeSensitivity: 0.15
   shakeDecayRate: 20
@@ -270,6 +272,7 @@ MonoBehaviour:
   deathChancePercent: 0.1
   deathPrefab: {fileID: 2804783601361070082, guid: 49d51ab5821182d4ebd84849750bce76, type: 3}
   lockedArea: {fileID: 0}
+  isCarring: 0
 --- !u!114 &3075563472904722944
 MonoBehaviour:
   m_ObjectHideFlags: 0
