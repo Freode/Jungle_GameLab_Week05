@@ -212,29 +212,29 @@ public class Mover : MonoBehaviour
     }
 
     // 클래스 내부 어딘가에 추가
-    private bool TrySuddenDeath()
-    {
-        // normal 타입의 area에 있을때는 즉사 없음
-        if (lockedArea != null && lockedArea.areaType == AreaType.Normal)
-            return false;
+    //private bool TrySuddenDeath()
+    //{
+    //    // normal 타입의 area에 있을때는 즉사 없음
+    //    if (lockedArea != null && lockedArea.areaType == AreaType.Normal)
+    //        return false;
 
-        // 1%: Random.value < 0.01f (deathChancePercent 기준)
-        float p = deathChancePercent / 100f;
-        if (p <= 0f) return false;
+    //    // 1%: Random.value < 0.01f (deathChancePercent 기준)
+    //    float p = deathChancePercent / 100f;
+    //    if (p <= 0f) return false;
 
-        if (Random.value < p)
-        {
-            // 프리팹 스폰 (있을 때만)
-            if (deathPrefab != null)
-                Instantiate(deathPrefab, transform.position, transform.rotation);
+    //    if (Random.value < p)
+    //    {
+    //        // 프리팹 스폰 (있을 때만)
+    //        if (deathPrefab != null)
+    //            Instantiate(deathPrefab, transform.position, transform.rotation);
 
 
-            PeopleManager.Instance.DespawnPerson(this.gameObject);
+    //        PeopleManager.Instance.DespawnPerson(this.gameObject);
 
-            return true; // 죽음 발생
-        }
-        return false; // 생존
-    }
+    //        return true; // 죽음 발생
+    //    }
+    //    return false; // 생존
+    //}
 
     void StartCarring()
     {
@@ -510,6 +510,8 @@ public class Mover : MonoBehaviour
         animator.SetBool("IsWalking", false);
         animator.SetBool("IsMining", false);
         animator.SetBool("IsCarrying", false);
+        animator.SetBool("IsCarryingRock", false);
+        animator.SetBool("IsCarryingBlock", false);
         animator.SetBool("IsDigging", false);
         animator.SetBool("IsHammering", false);
         animator.SetBool("IsDoing", false);
