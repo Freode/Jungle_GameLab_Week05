@@ -248,7 +248,7 @@ public class Mover : MonoBehaviour
         CarrierItem carrierItem = peopleActor.CarrierItem;
 
         bool isStoneCarve = PeopleManager.Instance.checkUnlockStructures.ContainsKey(AreaType.StoneCarving);
-        Debug.Log(isStoneCarve + "is stone carve");
+        
         bool isArchitect = PeopleManager.Instance.checkUnlockStructures.ContainsKey(AreaType.Architect);
 
         switch (carrierItem)
