@@ -8,6 +8,6 @@ public class AddPeriodIncreaseGoldAmountLinearEffect : BaseTechEffect
     public int amount = 0;
     public override void ApplyTechEffect()
     {
-        GameManager.instance.AddPeriodIncreaseGoldAmountLinear(type, amount);
+        GameManager.instance.SetPeriodIncreaseGoldAmountLinear(type, amount);
     }
 }
