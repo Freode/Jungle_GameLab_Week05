@@ -124,6 +124,7 @@ public class Mover : MonoBehaviour
             }
         }
         UpdateAnimatorState();
+        UpdateAnimatorSpeed(); 
     }
 
     private void FixedUpdate()
@@ -500,6 +501,21 @@ public class Mover : MonoBehaviour
             }
         }
 
+    }
+
+    /// <summary>
+    /// 현재 이동 속도(moveSpeed)에 맞춰 애니메이터의 재생 속도를 조절합니다.
+    /// </summary>
+    private void UpdateAnimatorSpeed()
+    {
+        // 애니메이터가 없거나, 기본 속도가 0 이하면 오류 방지를 위해 실행하지 않습니다.
+        if (animator == null || defaultMoveSpeed <= 0) return;
+
+        // 현재 속도가 기본 속도의 몇 배인지 계산합니다. (예: 1.0 / 0.5 = 2배)
+        float speedMultiplier = moveSpeed / defaultMoveSpeed;
+        
+        // 계산된 배율을 애니메이터의 속도에 그대로 적용합니다.
+        animator.speed = speedMultiplier;
     }
 
     /// <summary>
