@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: AddClickGoldAmountLinearEffect_Lv1
   m_EditorClassIdentifier: 
   type: 5
-  amount: 3
+  amount: 4

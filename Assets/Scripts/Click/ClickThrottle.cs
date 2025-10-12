@@ -18,7 +18,7 @@ public class ClickThrottle : MonoBehaviour
     [Tooltip("거절된 클릭도 로그로 볼지 여부")]
     public bool logRejected = true;
     public Button buttonGold;
-    public int criticalPercent = 2;
+    public int criticalPercent = 0;
 
     [Header("Button Anim")]
     [SerializeField] float animationDuration = 0.08f;    // 전체 애니메이션 시간

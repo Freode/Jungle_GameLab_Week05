@@ -23,7 +23,7 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     private float leftX = 5000f;
     private bool isInteractTechInfoUI = false;  // 테크 정보 UI와 상호작용 여부
     private bool isMouseHolding = false;        // 마우스 클릭 유지 상태
-    private float nextUpgradeInterval = 0.2f;  // 마우스 클릭 유지 시, 다음 업그레이드가 될 때까지의 시간 텀
+    private float nextUpgradeInterval = 0.07f;  // 마우스 클릭 유지 시, 다음 업그레이드가 될 때까지의 시간 텀
     private Coroutine upgradeIntervalCoroutine; // 마우스 클릭 유지 시, 다음 업그레이드까지 실행될 코루틴
 
     private void Start()
