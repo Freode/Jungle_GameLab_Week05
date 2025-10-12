@@ -19,6 +19,9 @@ public class AuthorityManager : MonoBehaviour
     [Tooltip("피버 타임 동안 적용될 최종 배율입니다.")]
     public float feverTimeMultiplier = 100f; // 예: 10배
 
+    private ClickThrottle _clickThrottle;
+    private int _originalCriticalPercent;
+
 
     [Header("Authority Settings")]
     [Tooltip("현재 권위 게이지. 상한 없이 계속 증가할 수 있습니다.")]
@@ -65,6 +68,7 @@ public class AuthorityManager : MonoBehaviour
     {
         if (instance != null && instance != this) { Destroy(gameObject); return; }
         instance = this;
+        _clickThrottle = GetComponent<ClickThrottle>();
         UpdateAuthorityMultiplier();
         UpdateAuthorityUI();
     }
@@ -128,6 +132,12 @@ public class AuthorityManager : MonoBehaviour
         _isGaugeFrozen = true; // 더 이상 게이지가 오르거나 내리지 않음
         isFeverTime = true;    // 피버 타임 시작 선포!
 
+        if (_clickThrottle != null)
+        {
+            _originalCriticalPercent = _clickThrottle.criticalPercent;
+            _clickThrottle.criticalPercent = 100;
+        }
+
         Debug.Log($"★★★ 피버 타임 시작! {feverTimeDuration}초 동안 지속됩니다. ★★★");
         
         // 피버 타임 효과 적용 (배율과 속도 즉시 갱신)
@@ -141,6 +151,11 @@ public class AuthorityManager : MonoBehaviour
         authorityGauge = 0f; // 권위 게이지 초기화
         timeSinceLastIncrease = 0f;
         _isGaugeFrozen = false;
+
+        if (_clickThrottle != null)
+        {
+            _clickThrottle.criticalPercent = _originalCriticalPercent;
+        }
 
         Debug.Log("피버 타임 종료. 권위가 0으로 초기화되었습니다.");
 
