@@ -1040,7 +1040,7 @@ MonoBehaviour:
   minInterval: 0.06
   logRejected: 1
   buttonGold: {fileID: 7707784904374329210}
-  criticalPercent: 2
+  criticalPercent: 0
   animationDuration: 0.08
   targetScaleFactor: 1.1
   tempCount: 0
