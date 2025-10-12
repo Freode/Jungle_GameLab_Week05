@@ -43,7 +43,8 @@ public class PeopleActor : MonoBehaviour
         // 1. 해골 생성 및 정보 전달
         if (skullPrefab != null)
         {
-            GameObject skullObj = Instantiate(skullPrefab, transform.position, Quaternion.identity);
+            Vector3 spawnPosition = new Vector3(transform.position.x, transform.position.y, -9f);
+            GameObject skullObj = Instantiate(skullPrefab, spawnPosition, Quaternion.identity);
             DraggableSkull skull = skullObj.GetComponent<DraggableSkull>();
             if (skull != null)
             {
