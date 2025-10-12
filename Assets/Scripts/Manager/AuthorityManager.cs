@@ -18,6 +18,9 @@ public class AuthorityManager : MonoBehaviour
     public float feverTimeDuration = 10f;
     [Tooltip("피버 타임 동안 적용될 최종 배율입니다.")]
     public float feverTimeMultiplier = 100f; // 예: 10배
+    [Tooltip("캐릭터 이동/애니메이션 속도의 최대 배율입니다.")]
+    public float maxSpeedMultiplier = 5f;
+
 
     private ClickThrottle _clickThrottle;
     private int _originalCriticalPercent;
@@ -129,6 +132,7 @@ public class AuthorityManager : MonoBehaviour
     /// </summary>
     private IEnumerator FeverTimeCoroutine()
     {
+        // --- 피버 타임 시작 ---
         _isGaugeFrozen = true;
         isFeverTime = true;
 
@@ -140,20 +144,13 @@ public class AuthorityManager : MonoBehaviour
 
         Debug.Log($"★★★ 피버 타임 시작! {feverTimeDuration}초 동안 지속됩니다. ★★★");
         
-        // ★★★ 여기가 폐하의 명에 따라 개정된 법률이옵니다 ★★★
-        // 1. 다른 신하들을 깨우는 보고(UpdateAuthorityMultiplier) 대신, 내부적으로만 조용히 처리합니다.
-        authorityMultiplier = feverTimeMultiplier;
-        Mover.moveSpeed = Mover.defaultMoveSpeed * authorityMultiplier;
-        // 2. 피버타임 시작을 알리는 방송은 딱 한 번만 송출합니다.
-        if (onAuthorityChangedChannel != null)
-        {
-            onAuthorityChangedChannel.RaiseEvent(authorityMultiplier);
-        }
+        // "상황이 바뀌었으니(피버 시작), 법률에 따라 배율을 재계산하라"고 명합니다.
+        UpdateAuthorityMultiplier();
 
         // 정해진 축제 시간만큼 기다립니다.
         yield return new WaitForSeconds(feverTimeDuration);
         
-        // --- 축제 종료 ---
+        // --- 피버 타임 종료 ---
         isFeverTime = false;
         authorityGauge = 0f;
         timeSinceLastIncrease = 0f;
@@ -166,38 +163,43 @@ public class AuthorityManager : MonoBehaviour
 
         Debug.Log("피버 타임 종료. 권위가 0으로 초기화되었습니다.");
 
-        // ★ 3. 축제가 끝났을 때도, 내부적으로만 조용히 원래 상태로 되돌립니다.
-        authorityMultiplier = 1f; // 0레벨의 기본 배율
-        Mover.moveSpeed = Mover.defaultMoveSpeed;
-        // 4. 피버타임 종료를 알리는 방송도 딱 한 번만 송출합니다.
-        if (onAuthorityChangedChannel != null)
-        {
-            onAuthorityChangedChannel.RaiseEvent(authorityMultiplier);
-        }
+        // "상황이 바뀌었으니(피버 종료), 법률에 따라 배율을 재계산하라"고 명합니다.
+        UpdateAuthorityMultiplier();
     }
 
     /// <summary>
     /// 현재 권위 게이지에 따라 배율 변수를 업데이트합니다.
     /// </summary>
+    /// <summary>
+    /// 현재 권위 게이지와 피버 타임 상태에 따라 모든 배율을 계산하고 적용합니다.
+    /// </summary>
     private void UpdateAuthorityMultiplier()
     {
-        // ★ 1. 가장 먼저, 지금이 피버 타임인지 확인합니다.
+        float finalGoldMultiplier; // 최종 골드 배율 (제한 없음)
+
+        // 1. 지금이 피버 타임인지 확인합니다.
         if (isFeverTime)
         {
-            // 피버 타임이 맞다면, 모든 일반 계산을 건너뛰고
-            // 폐하께서 정하신 피버 타임 전용 배율을 즉시 적용합니다.
-            authorityMultiplier = feverTimeMultiplier;
-            Mover.moveSpeed = Mover.defaultMoveSpeed * authorityMultiplier;
+            // 피버 타임이 맞다면, 폐하께서 정하신 피버 타임 전용 배율을 사용합니다.
+            finalGoldMultiplier = feverTimeMultiplier;
         }
-        // ★ 2. 피버 타임이 아니라면, 기존의 레벨별 계산법을 따릅니다.
+        // 2. 피버 타임이 아니라면, 기존의 레벨별 계산법을 따릅니다.
         else
         {
             int level = Mathf.FloorToInt(authorityGauge / 100);
-            authorityMultiplier = Mathf.Max(1f, level + 1);
-            Mover.moveSpeed = Mover.defaultMoveSpeed * authorityMultiplier;
+            finalGoldMultiplier = Mathf.Max(1f, level + 1);
         }
         
-        // 최종적으로 결정된 배율을 왕국 전체에 방송합니다.
+        // 3. '절제의 칙령'을 집행합니다.
+        // 계산된 최종 배율이 얼마이든, '속도'에 적용될 배율만큼은
+        // 폐하께서 정하신 한도(maxSpeedMultiplier)를 절대 넘지 못합니다.
+        float finalSpeedMultiplier = Mathf.Min(finalGoldMultiplier, maxSpeedMultiplier);
+
+        // 4. 최종적으로 결정된 배율들을 각 시스템에 적용합니다.
+        authorityMultiplier = finalGoldMultiplier; // 골드 계산용 배율
+        Mover.moveSpeed = Mover.defaultMoveSpeed * finalSpeedMultiplier; // 속도 계산용 배율
+        
+        // 5. 최종 '골드 배율'을 왕국 전체에 방송합니다.
         if (onAuthorityChangedChannel != null)
         {
             onAuthorityChangedChannel.RaiseEvent(authorityMultiplier);
