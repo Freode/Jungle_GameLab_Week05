@@ -118,7 +118,7 @@ public class GoldClickAreaUI : MonoBehaviour
     // 한 번 클릭 시, 얻는 골드 양 출력
     private void PrintClickGoldAmount()
     {
-        long amount = GameManager.instance.GetClickIncreaseTotalAmount();
+        long amount = GameManager.instance.GetBaseClickIncreaseTotalAmount();
         textClickAmount.text = "Click Gold\n" + FuncSystem.Format(amount);
     }
 

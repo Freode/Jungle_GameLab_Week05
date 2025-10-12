@@ -376,9 +376,17 @@ public class GameManager : MonoBehaviour
 
     public long GetPeriodIncreaseGoldAmountRate() { return periodIncreaseGoldAmountRate; }
 
-    public long GetClickIncreaseTotalAmount() 
-    { 
-        return (long)(clickIncreaseTotalAmount * currentAuthority); 
+    /// <summary>
+    /// UI에 표시할 '기본' 클릭당 골드 획득량을 반환합니다. (권위 배율 미적용)
+    /// </summary>
+    public long GetBaseClickIncreaseTotalAmount()
+    {
+        return clickIncreaseTotalAmount;
+    }
+
+    public long GetClickIncreaseTotalAmount()
+    {
+        return (long)(clickIncreaseTotalAmount * currentAuthority);
     }
 
     public long GetPeriodIncreaseTotalAmount() { return periodIncreaseTotalAmount; }
