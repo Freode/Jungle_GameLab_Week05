@@ -59,6 +59,8 @@ public class AuthorityManager : MonoBehaviour
     [Header("Gage Slider")]
     public Slider authorityGaugeSlider;
     public TextMeshProUGUI authorityGaugeText;
+    [Tooltip("현재 골드 획득 배율을 표시할 텍스트입니다.")]
+    public TextMeshProUGUI authorityMultiplierText;
     
     // 마지막으로 권위가 증가한 시간을 추적합니다.
     private float timeSinceLastIncrease = 0f;
@@ -146,6 +148,8 @@ public class AuthorityManager : MonoBehaviour
         
         // "상황이 바뀌었으니(피버 시작), 법률에 따라 배율을 재계산하라"고 명합니다.
         UpdateAuthorityMultiplier();
+        // ★★★ 추가: 계산된 배율을 즉시 UI에 그리라고 명령합니다.
+        UpdateAuthorityUI();
 
         // 정해진 축제 시간만큼 기다립니다.
         yield return new WaitForSeconds(feverTimeDuration);
@@ -165,11 +169,10 @@ public class AuthorityManager : MonoBehaviour
 
         // "상황이 바뀌었으니(피버 종료), 법률에 따라 배율을 재계산하라"고 명합니다.
         UpdateAuthorityMultiplier();
+        // ★★★ 추가: 초기화된 배율을 즉시 UI에 그리라고 명령합니다.
+        UpdateAuthorityUI();
     }
 
-    /// <summary>
-    /// 현재 권위 게이지에 따라 배율 변수를 업데이트합니다.
-    /// </summary>
     /// <summary>
     /// 현재 권위 게이지와 피버 타임 상태에 따라 모든 배율을 계산하고 적용합니다.
     /// </summary>
@@ -177,13 +180,14 @@ public class AuthorityManager : MonoBehaviour
     {
         float finalGoldMultiplier; // 최종 골드 배율 (제한 없음)
 
-        // 1. 지금이 피버 타임인지 확인합니다.
+        // 1. "지금이 피버 타임인가?" 를 가장 먼저 확인합니다.
         if (isFeverTime)
         {
-            // 피버 타임이 맞다면, 폐하께서 정하신 피버 타임 전용 배율을 사용합니다.
+            // 피버 타임이 맞다면, 다른 모든 계산을 무시하고
+            // 오직 폐하께서 정하신 피버 타임 전용 배율을 최종 배율로 삼습니다.
             finalGoldMultiplier = feverTimeMultiplier;
         }
-        // 2. 피버 타임이 아니라면, 기존의 레벨별 계산법을 따릅니다.
+        // 2. 피버 타임이 아니라면, 비로소 기존의 레벨별 계산법을 따릅니다.
         else
         {
             int level = Mathf.FloorToInt(authorityGauge / 100);
@@ -207,43 +211,58 @@ public class AuthorityManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 현재 권위 게이지에 따라 UI를 업데이트합니다.
+    /// 현재 권위 게이지와 배율에 따라 모든 관련 UI를 업데이트합니다.
     /// </summary>
     private void UpdateAuthorityUI()
     {
-        if (authorityGaugeSlider == null || authorityGaugeText == null) return;
-
-        // 게이지가 최대치일 경우 "MAX"를 표시합니다.
-        if (authorityGauge >= MaxAuthorityGauge)
+        // --- 기존 게이지 슬라이더 및 레벨 텍스트 업데이트 (변경 없음) ---
+        if (authorityGaugeSlider != null && authorityGaugeText != null)
         {
-            authorityGaugeText.gameObject.SetActive(true);
-            authorityGaugeText.text = "MAX";
-            authorityGaugeSlider.value = 100f;
-            return;
-        }
+            if (isFeverTime || authorityGauge >= MaxAuthorityGauge) // 피버타임일 때도 MAX 표시
+            {
+                authorityGaugeText.gameObject.SetActive(true);
+                authorityGaugeText.text = "MAX";
+                authorityGaugeSlider.value = 100f;
+            }
+            else
+            {
+                int hundreds = Mathf.FloorToInt(authorityGauge / 100);
+                float sliderValue = authorityGauge % 100f;
 
-        int hundreds = Mathf.FloorToInt(authorityGauge / 100);
-        float sliderValue = authorityGauge % 100f;
+                if (authorityGauge > 0 && authorityGauge % 100 == 0)
+                {
+                    sliderValue = 100f;
+                    hundreds -= 1;
+                }
+                
+                if (hundreds <= 0)
+                {
+                    authorityGaugeText.gameObject.SetActive(false);
+                }
+                else
+                {
+                    authorityGaugeText.gameObject.SetActive(true);
+                    authorityGaugeText.text = $"x{hundreds + 1}"; // 레벨을 1부터 표시하도록 수정
+                }
 
-        // 게이지가 100, 200 등 정확히 100의 배수일 때의 예외 처리
-        if (authorityGauge > 0 && authorityGauge % 100 == 0)
-        {
-            sliderValue = 100f;
-            hundreds -= 1;
+                authorityGaugeSlider.value = sliderValue;
+            }
         }
         
-        // 텍스트 업데이트 (100 단위 레벨)
-        if (hundreds <= 0)
+        // ★★★ 2. 폐하의 명에 따라 '황금 배율' 보고 절차를 수정합니다. ★★★
+        if (authorityMultiplierText != null)
         {
-            authorityGaugeText.gameObject.SetActive(false);
+            // 배율이 1배를 초과할 때만 텍스트를 표시합니다.
+            if (authorityMultiplier > 1f)
+            {
+                // 소수점 없이 정수로 표시하도록 수정합니다. (예: x100)
+                authorityMultiplierText.text = $"x{authorityMultiplier:F0}";
+            }
+            else
+            {
+                // 배율이 1배 이하면 아무것도 표시하지 않습니다 (빈 공간).
+                authorityMultiplierText.text = "";
+            }
         }
-        else
-        {
-            authorityGaugeText.gameObject.SetActive(true);
-            authorityGaugeText.text = $"x {hundreds}";
-        }
-
-        // 슬라이더 값 업데이트
-        authorityGaugeSlider.value = sliderValue;
     }
 }
