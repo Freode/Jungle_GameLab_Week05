@@ -492,7 +492,8 @@ public class Mover : MonoBehaviour
                 switch (carrierItem)
                 {
                     case CarrierItem.None:
-                        animator.SetBool("IsCarrying", true);
+                        //animator.SetBool("IsCarrying", true);
+                        animator.SetBool("IsWalking", true);
                         break;
                     case CarrierItem.Stone:
                         animator.SetBool("IsCarryingRock", true);
