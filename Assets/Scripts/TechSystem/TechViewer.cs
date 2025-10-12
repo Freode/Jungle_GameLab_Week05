@@ -180,7 +180,7 @@ public class TechViewer : MonoBehaviour
     void PrintRemainPeople()
     {
         int amount = PeopleManager.Instance.Count(AreaType.Normal);
-        textPeopleCount.text = "인력 : " + amount;
+        textPeopleCount.text = "가용 가능 인력 : " + amount;
     }
 
     // 기술 탭 클릭
