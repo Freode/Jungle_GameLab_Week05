@@ -968,6 +968,7 @@ GameObject:
   - component: {fileID: 1775260434400756840}
   - component: {fileID: 3608945513546631869}
   - component: {fileID: 8805586580705365850}
+  - component: {fileID: 3635968755051264563}
   m_Layer: 5
   m_Name: GoldClickArea
   m_TagString: Untagged
@@ -1056,7 +1057,7 @@ MonoBehaviour:
   minInterval: 0.06
   logRejected: 1
   buttonGold: {fileID: 7707784904374329210}
-  criticalPercent: 2
+  criticalPercent: 0
   animationDuration: 0.08
   targetScaleFactor: 1.1
   tempCount: 0
@@ -1122,7 +1123,7 @@ MonoBehaviour:
     isChanging: 0
   globalChangeDuration: 0.1
   changeAllSimultaneously: 1
-  globalCriticalChangeDuration: 0.15
+  globalCriticalChangeDuration: 0.3
   useGoldAreaCount: 1
   enableCriticalImages: 1
   clickThrottle: {fileID: 1563861040617613537}
@@ -1239,6 +1240,29 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3635968755051264563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6547805875454259584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 523876613666a9a4e95d5f043c7b2253, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  feverTimeDuration: 10
+  feverTimeMultiplier: 100
+  authorityGauge: 0
+  decayDelay: 5
+  decayRate: 3
+  baseIncreaseAmount: 10
+  scalingFactor: 0.05
+  authorityMultiplier: 1
+  onAuthorityChangedChannel: {fileID: 11400000, guid: 7ad0cd89c7982d446a54f2beac87be71, type: 2}
+  authorityGaugeSlider: {fileID: 0}
+  authorityGaugeText: {fileID: 0}
 --- !u!1 &7783656668573535008
 GameObject:
   m_ObjectHideFlags: 0

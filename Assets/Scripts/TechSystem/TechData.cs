@@ -26,8 +26,8 @@ public class TechData : ScriptableObject
     public string techNamePrint;            // 출력용 기술 이름
     public string techDescription;          // 기술 설명
     public Sprite techIcon;                 // 기술 아이콘
-    public int baseRequiredGold;            // 기본 요구 바이트 (레벨 1)
-    public float increaseGoldValue;           // 레벨 당 증가하는 골드 양
+    public long baseRequiredGold;            // 기본 요구 바이트 (레벨 1)
+    public float increaseGoldValue;         // 레벨 당 증가하는 골드 양
     public int maxLevel;                    // 최대 레벨 - 변경 불가능
     public int baseCapacity;                // 기본 수용량 (레벨 1)
     public bool isUsingLevel;               // 레벨을 사용하는지 여부
@@ -37,6 +37,8 @@ public class TechData : ScriptableObject
     public List<TechData> postTeches;       // 다음 기술 목록
     public List<BaseTechEffect> effects;    // 해금 시, 적용할 효과 목록
     public TechPrintUpgradeKind printTech;  // 효과 출력할 테크 종류
+    public int reduceIncreaseGoldValueLevel;// 레벨 당 증가하는 골드 양을 줄이는 레벨 단위
+    public float reduceIncreaseGoldValue;   // 레벨 당 증가하는 골드 양을 줄이는 양
 }
 
 // 상태를 저장하는 클래스
@@ -46,6 +48,7 @@ public class TechState
     public TechData techData;               // 어떤 기술의 상태인지 원본 참조
     public int currentLevel;                // 현재 레벨
     public int curCapacity;                 // 현재 수용량
+    public float curIncreaseGoldValue;      // 현재 골드 증가량
     public int maxCapacity;                 // 최대 수용량
     public LockState lockState;             // 연구 가능 상태
     public long requaireAmount = 0;          // 요구하는 양
@@ -57,6 +60,7 @@ public class TechState
         techData = data;
         currentLevel = 0;
         curCapacity = 0;
+        curIncreaseGoldValue = data.increaseGoldValue;
         maxCapacity = data.baseCapacity;
         lockState = LockState.Block;
         requaireAmount = data.baseRequiredGold;
@@ -68,8 +72,17 @@ public class TechState
         lockState = LockState.Complete;
         // ++curCapacity; 수정 필요
         ++currentLevel;
-        requaireAmount = (long)Math.Floor((decimal)techData.baseRequiredGold * (decimal)Math.Pow(techData.increaseGoldValue, currentLevel));
-        
+
+        if (techData.reduceIncreaseGoldValueLevel != 0 && techData.reduceIncreaseGoldValue != 0)
+        {
+            if (currentLevel % techData.reduceIncreaseGoldValueLevel == 0)
+                curIncreaseGoldValue = Math.Max(curIncreaseGoldValue - techData.reduceIncreaseGoldValue, 1.01f);
+        }
+
+        // requaireAmount = (long)Math.Floor((decimal)techData.baseRequiredGold * (decimal)Math.Pow(curIncreaseGoldValue, currentLevel));
+        requaireAmount = (long)Math.Floor((decimal)requaireAmount * (decimal)curIncreaseGoldValue);
+
+
     }
 
     // 현재 수용량이 최대 수용량보다 적은지 확인
