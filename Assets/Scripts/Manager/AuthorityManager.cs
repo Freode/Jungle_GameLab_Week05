@@ -13,9 +13,21 @@ public class AuthorityManager : MonoBehaviour
     public static AuthorityManager instance { get; private set; }
     #endregion
 
+    [Header("Fever Time Settings")]
+    [Tooltip("피버 타임의 지속 시간(초)입니다.")]
+    public float feverTimeDuration = 10f;
+    [Tooltip("피버 타임 동안 적용될 최종 배율입니다.")]
+    public float feverTimeMultiplier = 100f; // 예: 10배
+
+
     [Header("Authority Settings")]
     [Tooltip("현재 권위 게이지. 상한 없이 계속 증가할 수 있습니다.")]
     public float authorityGauge = 0f;
+
+    // ★ 현재 피버 타임 상태인지 알려주는 변수
+    private bool isFeverTime = false;
+    // ★ 외부에서 현재 피버 타임인지 확인할 수 있는 창구
+    public bool IsFeverTime => isFeverTime;
 
     [Tooltip("권위가 감소하기 시작하는 비활성 시간(초)입니다.")]
     public float decayDelay = 5f;
@@ -104,27 +116,36 @@ public class AuthorityManager : MonoBehaviour
         // 게이지가 최대치에 도달하면 초기화 코루틴을 시작합니다.
         if (authorityGauge >= MaxAuthorityGauge)
         {
-            StartCoroutine(ResetGaugeAfterDelay());
+            StartCoroutine(FeverTimeCoroutine());
         }
     }
 
     /// <summary>
-    /// 게이지가 최대치에 도달했을 때, 5초 대기 후 0으로 초기화하는 코루틴입니다.
+    /// 게이지가 최대치에 도달하면 피버 타임을 시작하고, 시간이 지나면 종료합니다.
     /// </summary>
-    private IEnumerator ResetGaugeAfterDelay()
+    private IEnumerator FeverTimeCoroutine()
     {
-        _isGaugeFrozen = true;
-        Debug.Log($"권위가 최대치({MaxAuthorityGauge})에 도달했습니다! 5초 후 초기화됩니다.");
+        _isGaugeFrozen = true; // 더 이상 게이지가 오르거나 내리지 않음
+        isFeverTime = true;    // 피버 타임 시작 선포!
+
+        Debug.Log($"★★★ 피버 타임 시작! {feverTimeDuration}초 동안 지속됩니다. ★★★");
         
-        yield return new WaitForSeconds(5f);
-        
-        authorityGauge = 0f;
-        timeSinceLastIncrease = 0f; // 초기화 후 바로 감소하는 것을 방지합니다.
+        // 피버 타임 효과 적용 (배율과 속도 즉시 갱신)
         UpdateAuthorityMultiplier();
-        UpdateAuthorityUI();
-        _isGaugeFrozen = false;
         
-        Debug.Log("권위가 0으로 초기화되었습니다.");
+        // 정해진 축제 시간만큼 기다립니다.
+        yield return new WaitForSeconds(feverTimeDuration);
+        
+        // --- 축제 종료 ---
+        isFeverTime = false; // 피버 타임 종료 선포
+        authorityGauge = 0f; // 권위 게이지 초기화
+        timeSinceLastIncrease = 0f;
+        _isGaugeFrozen = false;
+
+        Debug.Log("피버 타임 종료. 권위가 0으로 초기화되었습니다.");
+
+        // 배율과 속도를 다시 0레벨 상태로 되돌립니다.
+        UpdateAuthorityMultiplier();
     }
 
     /// <summary>
@@ -132,26 +153,25 @@ public class AuthorityManager : MonoBehaviour
     /// </summary>
     private void UpdateAuthorityMultiplier()
     {
-        if (authorityGauge <= 100f)
+        // ★ 1. 가장 먼저, 지금이 피버 타임인지 확인합니다.
+        if (isFeverTime)
         {
-            authorityMultiplier = 1f;
-            Mover.moveSpeed = Mover.defaultMoveSpeed;
+            // 피버 타임이 맞다면, 모든 일반 계산을 건너뛰고
+            // 폐하께서 정하신 피버 타임 전용 배율을 즉시 적용합니다.
+            authorityMultiplier = feverTimeMultiplier;
+            Mover.moveSpeed = Mover.defaultMoveSpeed * authorityMultiplier;
         }
+        // ★ 2. 피버 타임이 아니라면, 기존의 레벨별 계산법을 따릅니다.
         else
         {
-            // 100단위 레벨을 계산합니다.
-            // 예: 101~199 -> level 1, 200~299 -> level 2, ..., 500 -> level 5
             int level = Mathf.FloorToInt(authorityGauge / 100);
-            // 배율을 레벨 값으로 직접 설정하되, 최소 1배를 보장합니다.
-            authorityMultiplier = Mathf.Max(1f, level+1);
+            authorityMultiplier = Mathf.Max(1f, level + 1);
             Mover.moveSpeed = Mover.defaultMoveSpeed * authorityMultiplier;
         }
         
-        
-        // 연결된 채널이 있는지 확인 후,
+        // 최종적으로 결정된 배율을 왕국 전체에 방송합니다.
         if (onAuthorityChangedChannel != null)
         {
-            // RaiseEvent() 함수를 통해 새로운 권위 값을 방송합니다.
             onAuthorityChangedChannel.RaiseEvent(authorityMultiplier);
         }
     }
