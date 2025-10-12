@@ -125,27 +125,40 @@ public class AuthorityManager : MonoBehaviour
     /// </summary>
     private IEnumerator FeverTimeCoroutine()
     {
-        _isGaugeFrozen = true; // 더 이상 게이지가 오르거나 내리지 않음
-        isFeverTime = true;    // 피버 타임 시작 선포!
+        _isGaugeFrozen = true;
+        isFeverTime = true;
 
         Debug.Log($"★★★ 피버 타임 시작! {feverTimeDuration}초 동안 지속됩니다. ★★★");
         
-        // 피버 타임 효과 적용 (배율과 속도 즉시 갱신)
-        UpdateAuthorityMultiplier();
-        
+        // ★★★ 여기가 폐하의 명에 따라 개정된 법률이옵니다 ★★★
+        // 1. 다른 신하들을 깨우는 보고(UpdateAuthorityMultiplier) 대신, 내부적으로만 조용히 처리합니다.
+        authorityMultiplier = feverTimeMultiplier;
+        Mover.moveSpeed = Mover.defaultMoveSpeed * authorityMultiplier;
+        // 2. 피버타임 시작을 알리는 방송은 딱 한 번만 송출합니다.
+        if (onAuthorityChangedChannel != null)
+        {
+            onAuthorityChangedChannel.RaiseEvent(authorityMultiplier);
+        }
+
         // 정해진 축제 시간만큼 기다립니다.
         yield return new WaitForSeconds(feverTimeDuration);
         
         // --- 축제 종료 ---
-        isFeverTime = false; // 피버 타임 종료 선포
-        authorityGauge = 0f; // 권위 게이지 초기화
+        isFeverTime = false;
+        authorityGauge = 0f;
         timeSinceLastIncrease = 0f;
         _isGaugeFrozen = false;
 
         Debug.Log("피버 타임 종료. 권위가 0으로 초기화되었습니다.");
 
-        // 배율과 속도를 다시 0레벨 상태로 되돌립니다.
-        UpdateAuthorityMultiplier();
+        // ★ 3. 축제가 끝났을 때도, 내부적으로만 조용히 원래 상태로 되돌립니다.
+        authorityMultiplier = 1f; // 0레벨의 기본 배율
+        Mover.moveSpeed = Mover.defaultMoveSpeed;
+        // 4. 피버타임 종료를 알리는 방송도 딱 한 번만 송출합니다.
+        if (onAuthorityChangedChannel != null)
+        {
+            onAuthorityChangedChannel.RaiseEvent(authorityMultiplier);
+        }
     }
 
     /// <summary>
