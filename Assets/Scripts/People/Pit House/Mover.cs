@@ -14,6 +14,12 @@ public class Mover : MonoBehaviour
     public static float defaultMoveSpeed = 0.5f;
     [SerializeField] private float dwellTimeMin = 1f;
     [SerializeField] private float dwellTimeMax = 3f;
+
+    // ★ 1. '운반자 전용' 휴식 시간 변수를 추가합니다.
+    [Header("Carrier Settings")]
+    [Tooltip("운반자가 짐을 싣고 내릴 때의 짧은 체류 시간입니다.")]
+    [SerializeField] private float carrierDwellTimeMin = 0.1f;
+    [SerializeField] private float carrierDwellTimeMax = 0.5f;
     [SerializeField] private float arrivalDistance = 0.1f;
 
     [Header("Debug")]
@@ -295,11 +301,15 @@ public class Mover : MonoBehaviour
     private void StartDwelling()
     {
         currentState = MoveState.Dwelling;
-        dwellTimer = Random.Range(dwellTimeMin, dwellTimeMax);
 
-        // 만약 운송자면 도착시 아이템 정보 갱신
+        // ★ 2. 신분을 확인하여 다른 법률을 적용합니다.
+        // 만약 이 백성이 '운반자'라면,
         if (peopleActor.Job == JobType.Carrier)
         {
+            // 운반자 전용의 짧은 휴식 시간을 부여합니다.
+            dwellTimer = Random.Range(carrierDwellTimeMin, carrierDwellTimeMax);
+
+            // 도착했으니 아이템 정보를 갱신합니다.
             AreaType destinationArea = lockedArea.areaType;
             switch (destinationArea)
             {
@@ -313,6 +323,12 @@ public class Mover : MonoBehaviour
                     peopleActor.SetCarrierItem(CarrierItem.None);
                     break;
             }
+        }
+        // 운반자가 아닌 다른 모든 백성이라면,
+        else
+        {
+            // 기존의 긴 휴식 시간을 부여합니다.
+            dwellTimer = Random.Range(dwellTimeMin, dwellTimeMax);
         }
 
         DecideDwellAnimation();
