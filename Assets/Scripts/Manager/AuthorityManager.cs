@@ -142,9 +142,9 @@ public class AuthorityManager : MonoBehaviour
             // 100단위 레벨을 계산합니다.
             // 예: 101~199 -> level 1, 200~299 -> level 2, ..., 500 -> level 5
             int level = Mathf.FloorToInt(authorityGauge / 100);
-            // 기본 배율 1f에 레벨당 0.1f씩 더합니다.
-            authorityMultiplier = 1f + (level * 0.1f);
-            Mover.moveSpeed = Mover.defaultMoveSpeed * level;
+            // 배율을 레벨 값으로 직접 설정하되, 최소 1배를 보장합니다.
+            authorityMultiplier = Mathf.Max(1f, level+1);
+            Mover.moveSpeed = Mover.defaultMoveSpeed * authorityMultiplier;
         }
         
         
