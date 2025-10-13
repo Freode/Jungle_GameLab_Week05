@@ -42,48 +42,72 @@ public class WhipController : MonoBehaviour
         }
     }
 
-    // 형벌을 집행하는 핵심 임무 (개정안)
+   // 형벌을 집행하는 핵심 임무 (개정안)
     void ExecutePunishment()
     {
         Vector2 whipPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        // --- 시각 효과 (변경 없음) ---
         if (whipExplosionPrefab != null)
         {
-            // 폭발 병기 설계도(Prefab)를 사용하여 실제 폭발을 소환합니다.
             Instantiate(whipExplosionPrefab, whipPoint, Quaternion.identity);
         }
 
-        Collider2D[] allAffected = Physics2D.OverlapCircleAll(whipPoint, outerRadius);
-        Collider2D[] directHits = Physics2D.OverlapCircleAll(whipPoint, innerRadius);
+        // --- 죄인 색출 (기존과 동일) ---
+        Collider2D[] allAffectedColliders = Physics2D.OverlapCircleAll(whipPoint, outerRadius);
+        Collider2D[] directHitColliders = Physics2D.OverlapCircleAll(whipPoint, innerRadius);
 
-        HashSet<Collider2D> punishedCitizens = new HashSet<Collider2D>(directHits);
+        // ★★★ 핵심 개정: 이제부터는 죄인의 '신원'을 확인합니다! ★★★
 
-        // === 중죄인 처벌 (안쪽 원) ===
-        foreach (var citizenCollider in directHits)
+        // 권위 계산을 위한 변수를 초기화합니다.
+        int directHitCount = 0;
+        int nearMissCount = 0;
+
+        // 중죄인 명단을 기록하여 이중 처벌을 막습니다.
+        HashSet<GameObject> punishedCitizens = new HashSet<GameObject>();
+
+        // === 중죄인(안쪽) 처벌 및 신원 확인 ===
+        foreach (var citizenCollider in directHitColliders)
         {
-            HandleDirectHit(citizenCollider.gameObject);
+            // 먼저, 이 자가 '살아있는 백성'이 맞는지 신원을 확인합니다.
+            if (citizenCollider.TryGetComponent<PeopleActor>(out PeopleActor actor))
+            {
+                // 살아있는 백성이 맞다면, 비로소 죄인의 수에 더합니다.
+                directHitCount++;
+                punishedCitizens.Add(actor.gameObject); // 명단에 기록합니다.
+
+                // 형벌을 집행합니다.
+                HandleDirectHit(actor.gameObject);
+            }
         }
 
-        // === 경범죄인 처벌 (바깥쪽 원) ===
-        foreach (var citizenCollider in allAffected)
+        // === 경범죄인(바깥쪽) 처벌 및 신원 확인 ===
+        foreach (var citizenCollider in allAffectedColliders)
         {
-            if (punishedCitizens.Contains(citizenCollider)) continue;
-            HandleNearMiss(citizenCollider.gameObject);
+            // 이미 중죄로 다스려진 자는 제외합니다.
+            if (punishedCitizens.Contains(citizenCollider.gameObject))
+            {
+                continue;
+            }
+
+            // 이 자 또한 '살아있는 백성'이 맞는지 신원을 확인합니다.
+            if (citizenCollider.TryGetComponent<PeopleActor>(out PeopleActor actor))
+            {
+                // 살아있는 백성이 맞다면, 경범죄인의 수에 더합니다.
+                nearMissCount++;
+
+                // 형벌을 집행합니다.
+                HandleNearMiss(actor.gameObject);
+            }
         }
 
-        // ★★★ 추가된 임무: 형벌 결과를 취합하여 권위 상승을 보고하라! ★★★
+        // === 권위 상승 보고 (이제 정확한 수로 보고합니다) ===
         if (AuthorityManager.instance != null)
         {
-            // 1. 중죄인과 경범죄인의 수를 각각 계산합니다.
-            int directHitCount = directHits.Length;
-            int nearMissCount = allAffected.Length - directHitCount;
-
-            // 2. 각 죄인 수에 따른 권위 상승량을 계산합니다.
-            // (규정은 AuthorityManager가 가지고 있으니, 그에게 물어봅니다)
             float totalAuthorityGained = 
                 (directHitCount * AuthorityManager.instance.directHitAuthorityGain) + 
                 (nearMissCount * AuthorityManager.instance.nearMissAuthorityGain);
             
-            // 3. 만약 상승량이 0보다 크다면, 권위 관리관에게 보고를 올립니다.
             if (totalAuthorityGained > 0)
             {
                 AuthorityManager.instance.IncreaseAuthorityByAmount(totalAuthorityGained);
