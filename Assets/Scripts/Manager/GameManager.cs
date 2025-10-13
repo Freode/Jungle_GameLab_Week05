@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
     public event Action<AreaType> OnUnlockStructure;                // 해당 구조물이 처음으로 열렸는지, 확인
     public event Func<float> OnGetRespawnTime;                      // 잉여 인력 리스폰 시간 가져오기
     public event Func<float, float> OnGetNextRespawnTime;           // 잉여 인력 다음 리스폰 시간 가져오기
-    public event Action<int> OnAuthorityMultiplierChanged;        // 권위 수치가 변경되었을 때
+    public event Action<int, Color> OnAuthorityMultiplierUpdate;    // 권위 수치가 변경되었으니, 업데이트하는 이벤트
 
     [SerializeField] long currentGoldAmount = 0;                // 현재 소지하고 있는 금의 양
     [SerializeField] long clickIncreaseGoldAmountLinear = 1;    // 클릭 한 번 시, 획득하는 금의 선형적인 양
@@ -303,10 +303,10 @@ public class GameManager : MonoBehaviour
         RecalculatePeriodIncreaseGoldAmount();
     }
 
-    // 권위 게이지가 변경되었을 때 호출
-    public void ModifyAuthorityMultiplier(int amount)
+    // 권위 수치와 색깔이 변경되었을 때, 관련 기능 업데이트
+    public void UpdateAuthorityValueAndColor(Color color)
     {
-        OnAuthorityMultiplierChanged?.Invoke(amount);
+        OnAuthorityMultiplierUpdate?.Invoke((int)currentAuthority, color);
     }
 
     // ==========================================================

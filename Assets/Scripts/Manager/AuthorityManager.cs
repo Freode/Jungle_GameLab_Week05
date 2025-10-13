@@ -268,8 +268,7 @@ public class AuthorityManager : MonoBehaviour
             if (authorityMultiplier > 1f)
             {
                 // 소수점 없이 정수로 표시하도록 수정합니다. (예: x100)
-                authorityMultiplierText.text = $"x{authorityMultiplier:F0}";
-                GameManager.instance.ModifyAuthorityMultiplier((int)authorityMultiplier);
+                authorityMultiplierText.text = $"x{authorityMultiplier:F0}";;
             }
             else
             {
@@ -286,6 +285,7 @@ public class AuthorityManager : MonoBehaviour
             {
                 sliderFillImage.color = feverTimeColor;
                 sliderBackgroundImage.color = feverTimeColor; // 배경도 통일
+                GameManager.instance.UpdateAuthorityValueAndColor(feverTimeColor);
                 return; // 아래 로직을 실행하지 않음
             }
 
@@ -314,6 +314,7 @@ public class AuthorityManager : MonoBehaviour
             // 계산된 색상을 실제 이미지에 적용
             sliderFillImage.color = fillColor;
             sliderBackgroundImage.color = backgroundColor;
+            GameManager.instance.UpdateAuthorityValueAndColor(backgroundColor);
         }
 
     }
