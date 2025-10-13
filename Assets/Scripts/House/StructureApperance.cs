@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,10 +8,14 @@ public class StructureApperance : MonoBehaviour
     public LevelAppearance[] levelAppearances;
     public bool isClearStructure = false;
     public GameObject InfoUI;
+    
+    public Queue<bool> levelUpQueue = new Queue<bool>();
+    public GameObject levelUpQueueUI;
 
     private SpriteRenderer spriteRenderer;
     private int currentLevel = 0;
     private int finalLevel = 0;
+    private int appliedAppearanceLevel = -1;
 
     void Start()
     {
@@ -38,10 +43,39 @@ public class StructureApperance : MonoBehaviour
             if (level < levelAppearances[i].level)
                 continue;
 
-            spriteRenderer.sprite = levelAppearances[i].sprite;
-            transform.localScale = levelAppearances[i].scale;
+            // Check if we are applying a sprite from a new, higher level tier
+            if (appliedAppearanceLevel < levelAppearances[i].level)
+            {
+                if (appliedAppearanceLevel != -1)
+                {
+                    levelUpQueue.Enqueue(true);
+                }
+                appliedAppearanceLevel = levelAppearances[i].level;
+            }
+
+            
             break;
         }
+    }
+
+    void CheckLevelUpQueue()
+    {
+        // ui 가 active false 상태이고, queue 의 count 가 0 이상일때
+        if (!levelUpQueueUI.activeSelf && levelUpQueue.Count > 0)
+        {
+            levelUpQueueUI.SetActive(true);
+        } else if (levelUpQueue.Count == 0)
+        {
+            levelUpQueueUI.SetActive(false);
+        }
+    }
+    
+    public void LevelUpStructure(int index)
+    {
+        spriteRenderer.sprite = levelAppearances[index].sprite;
+        transform.localScale = levelAppearances[index].scale;
+        levelUpQueue.Dequeue();
+        levelUpQueueUI.SetActive(false);
     }
 
     // 마우스 올려 놓기
@@ -60,5 +94,15 @@ public class StructureApperance : MonoBehaviour
         if (techInfo == null) return;
 
         techInfo.OnInactiveInfo();
+    }
+    
+    // level Up Queue 출력
+    [ContextMenu("Print LevelUpQueue")]
+    public void PrintLevelUpQueue()
+    {
+        foreach (var item in levelUpQueue)
+        {
+            Debug.Log(item);
+        }
     }
 }
