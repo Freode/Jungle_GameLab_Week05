@@ -16,9 +16,8 @@ MonoBehaviour:
   areaType: 3
   techName: "\uAC74\uCD95\uAC00 "
   techNamePrint: 
-  techDescription: "\uC789\uC5EC \uC778\uB825 -1\uBA85\\n\uAC74\uCD95\uAC00\uB85C
-    1\uBA85 \uBC30\uCE58\\n\uC790\uB3D9\uC73C\uB85C \uAC74\uCD95\uC18C(\uD53C\uB77C\uBBF8\uB4DC)\uC5D0\uC11C
-    \uC5BB\uB294 \uAE08 +150"
+  techDescription: "\uBB34\uC9C1 <color=#FF0000>-1</color>\uBA85\\n\uAC74\uCD95\uAC00\uB85C
+    1\uBA85 \uBC30\uCE58\\n\uAC74\uCD95\uC18C\uAD11\uC0B0 \uCD08\uB2F9 \uAE08 <color=#00ff00>+150</color>"
   techIcon: {fileID: 21300000, guid: e134b184151c18647803ea2beb023299, type: 3}
   baseRequiredGold: 0
   increaseGoldValue: 0
@@ -38,3 +37,5 @@ MonoBehaviour:
     isAcquirePeriodGold: 1
     isReducePeoplePeriod: 0
     isPyramid: 0
+  reduceIncreaseGoldValueLevel: 0
+  reduceIncreaseGoldValue: 0

@@ -690,7 +690,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8222647436339757797
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1773,7 +1773,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &6602554372739673942
@@ -2145,7 +2145,7 @@ MonoBehaviour:
   - job: 1
     portrait: {fileID: 0}
     video: {fileID: 32900000, guid: c8385fd083ef8c747b2fbfb60d24b987, type: 3}
-  skullSprite: {fileID: 0}
+  skullSprite: {fileID: 21300000, guid: 37dc3999c22048348b7fc5954f3cd060, type: 3}
 --- !u!1 &8823053934126473469
 GameObject:
   m_ObjectHideFlags: 0

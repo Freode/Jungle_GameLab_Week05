@@ -14,11 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   techKind: 1
   areaType: 2
-  techName: "\uC6B4\uBC18\uC18C \uAC1C\uBC1C"
+  techName: "\uC6B4\uBC18\uC18C"
   techNamePrint: 
-  techDescription: "\uC6B4\uBC18\uC18C \uBC1C\uC804\\n\uC6B4\uBC18\uC790 \uBC30\uCE58
-    \uAC00\uB2A5\\n\uC8FC\uAE30\uC801\uC73C\uB85C \uC6B4\uBC18\uC18C\uC5D0\uC11C
-    \uC5BB\uB294 \uAE08 +30%"
+  techDescription: "\uC6B4\uBC18\uC790, \uC138\uACF5\uC18C \uD574\uAE08\\n\uCD08\uB2F9
+    \uAE08 +30%"
   techIcon: {fileID: 21300000, guid: 9e0fe632fdecfb2459f7ae7f89c880d4, type: 3}
   baseRequiredGold: 60000
   increaseGoldValue: 1.07
