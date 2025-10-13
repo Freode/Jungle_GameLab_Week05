@@ -138,7 +138,12 @@ public class GoldClickAreaUI : MonoBehaviour
     // 현재 권위에 따른 배수 수치 출력
     private void PrintCurrentAuthorityMultiplier(int amount, Color color)
     {
-        _localAuthorityMultiplier = amount;
+        // Fever
+        if (amount == 6)
+            _localAuthorityMultiplier = 100;
+        // Not Fever
+        else
+            _localAuthorityMultiplier = amount + 1;
         _localAuthorityColor = ColorUtility.ToHtmlStringRGB(color);
         textClickAmount.text = FuncSystem.Format(_localClickGold) + $"<color=#{_localAuthorityColor}>(x{_localAuthorityMultiplier})</color>";
     }
