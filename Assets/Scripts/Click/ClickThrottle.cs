@@ -96,16 +96,17 @@ public class ClickThrottle : MonoBehaviour
 
         Color color;
         int random = UnityEngine.Random.Range(1, 101);
-        // 크리티컬 O
+        // 크리티컬 O - 권위 레벨 영향 받지 않음
         if(random <= criticalPercent)
         {
             totalAmount *= 100;
             color = Color.red;
             OnCriticalHit?.Invoke(); // 크리티컬 이벤트 발생
         }
-        // 크리티컬 X
+        // 크리티컬 X - 권위 레벨 영향 받음
         else
         {
+            totalAmount *= GameManager.instance.GetCurrentAuthority();
             color = Color.green;
             OnNormalHit?.Invoke(); // 일반 이벤트 발생
         }
