@@ -257,6 +257,7 @@ public class AuthorityManager : MonoBehaviour
             {
                 // 소수점 없이 정수로 표시하도록 수정합니다. (예: x100)
                 authorityMultiplierText.text = $"x{authorityMultiplier:F0}";
+                GameManager.instance.ModifyAuthorityMultiplier((int)authorityMultiplier);
             }
             else
             {
