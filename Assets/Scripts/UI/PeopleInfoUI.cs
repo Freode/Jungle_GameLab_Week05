@@ -22,6 +22,7 @@ public class PeopleInfoUI : MonoBehaviour
     public VoidEventChannelSO OnYearPassedChannel;
     public DraggableSkullEventChannelSO OnSkullSelectedChannel;
     public HighlightEventChannelSO OnHighlightChannel;
+    public NameTagEventChannelSO OnNameTagStateChangeChannel;
 
     [Header("UI Components")]
     public GameObject infoPanel;
@@ -175,9 +176,10 @@ public class PeopleInfoUI : MonoBehaviour
         {
             // PeopleActor에 있는 이름 변경 함수 호출
             currentActor.ChangeName(nameInputField.text);
-            
+
             // UI 텍스트도 즉시 갱신
             nameText.text = $"이름: {currentActor.DisplayName}";
+            OnNameTagStateChangeChannel?.RaiseEvent(currentActor.gameObject, true);
         }
         // 기본 보기 모드로 전환
         ExitEditMode();
