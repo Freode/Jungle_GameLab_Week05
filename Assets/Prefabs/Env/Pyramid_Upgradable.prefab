@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   areaType: 7
-  areaIcon: {fileID: 0}
+  areaIcon: {fileID: 21300000, guid: 6ccd7936efd7e1840b2e4f674cfe1aff, type: 3}
   levelAppearances:
   - level: 0
     sprite: {fileID: 21300000, guid: f713810c1ee633e4488843d51ca5a7b3, type: 3}
