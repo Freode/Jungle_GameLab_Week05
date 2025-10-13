@@ -101,11 +101,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff60b8c780a17474b8bdc8ddd55c0061, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  areaType: 0
+  areaType: 2
   levelAppearances:
-  - level: 0
-    sprite: {fileID: 0}
-    scale: {x: 0.15, y: 0.15, z: 1}
   - level: 1
     sprite: {fileID: 21300000, guid: 4d76bf9cd818a33408113b061b52d11d, type: 3}
     scale: {x: 0.15, y: 0.15, z: 1}
@@ -120,6 +117,8 @@ MonoBehaviour:
     scale: {x: 0.2, y: 0.2, z: 1}
   isClearStructure: 0
   InfoUI: {fileID: 0}
+  structureType: 1
+  levelUpQueueUI: {fileID: 0}
 --- !u!61 &4035714240877434710
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -121,6 +121,8 @@ MonoBehaviour:
     scale: {x: 0.2, y: 0.2, z: 0}
   isClearStructure: 1
   InfoUI: {fileID: 0}
+  structureType: 3
+  levelUpQueueUI: {fileID: 0}
 --- !u!61 &438539222546351273
 BoxCollider2D:
   m_ObjectHideFlags: 0
