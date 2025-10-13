@@ -270,6 +270,15 @@ public class Mover : MonoBehaviour
         if (PeopleManager.Instance != null)
         {
             PeopleManager.Instance.DespawnPerson(this.gameObject);
+
+            // 다시 활성화시키고 반환
+            enabled = true;
+
+            Draggable draggable = GetComponent<Draggable>();
+            if (draggable != null)
+            {
+                draggable.enabled = true;
+            }
         }
         else // 만약을 대비해 PeopleManager가 없을 경우, 스스로 소멸합니다.
         {

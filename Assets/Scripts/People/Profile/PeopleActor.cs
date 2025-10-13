@@ -84,6 +84,7 @@ public class PeopleActor : MonoBehaviour
         displayName = string.IsNullOrWhiteSpace(v.name) ? "NPC" : v.name;
         job = v.job;
         carrierItem = v.carrier;
+        HasReceivedRoyalName = false;
     }
 
     public void ApplyJop(JobType _job)
@@ -122,6 +123,9 @@ public class PeopleActor : MonoBehaviour
         displayName = null;
         job = JobType.None;
         carrierItem = CarrierItem.None;
+
+        HasReceivedRoyalName = false;
+        isDying = false;
     }
 
     /// <summary>
