@@ -30,6 +30,9 @@ public class Draggable : MonoBehaviour
     [Header("방송할 채널")]
     [Tooltip("백성이 선택되었을 때 보고를 올릴 채널입니다.")]
     public PeopleActorEventChannelSO OnPeopleSelectedChannel;
+    [Header("감정 표현 설정")]
+    [Tooltip("감정 표현을 제어할 자식 오브젝트의 Animator입니다.")]
+    public Animator emotionAnimator;
 
     // --- 내부 변수 ---
     private Vector3 offset;
@@ -270,6 +273,12 @@ public class Draggable : MonoBehaviour
         StartCoroutine(ShakeCooldownCoroutine());
         Debug.Log("Shake");
         GameManager.instance.DropGoldEasterEgg(dropObject);
+        if (emotionAnimator != null)
+        {
+            // "Emoji_Question"이라는 신호(Trigger)를 보내어 감정을 표출시킵니다.
+            // (백성이 "어찌하여 나를 흔드시나이까?" 하고 묻는 듯한 감정이옵니다)
+            emotionAnimator.SetTrigger("Emoji_Question");
+        }
     }
 
     // 쿨타임 관리 코루틴

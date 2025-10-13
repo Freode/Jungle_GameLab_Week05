@@ -7,6 +7,7 @@ public class PeopleActor : MonoBehaviour
     [Header("Death Settings")]
     public GameObject skullPrefab; // 죽었을 때 생성할 해골 프리팹
     public PeopleActorEventChannelSO OnActorDiedChannel; // 죽음을 알릴 방송 채널
+    private EmotionController emotionController;
     private bool isDying = false;
 
     [Header("Runtime Values")]
@@ -25,6 +26,11 @@ public class PeopleActor : MonoBehaviour
     public CarrierItem CarrierItem => carrierItem;
     public bool HasReceivedRoyalName { get; private set; } = false;
 
+    void Awake() // Awake 함수가 없다면 새로 만드시고, 있다면 내용을 추가하시옵소서.
+    {
+        // 임무 시작 시, 자신의 몸에 붙어있는 감정 관리인을 찾아냅니다.
+        emotionController = GetComponent<EmotionController>();
+    }
 
     // ★ '죽음'을 명하는 함수
     public void Die()
