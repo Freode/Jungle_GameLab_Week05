@@ -46,6 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   innerRadius: 0.5
   outerRadius: 1
-  innerLoyaltyPenalty: 5
-  outerLoyaltyPenalty: 1
+  innerLoyaltyPenalty: 20
+  outerLoyaltyPenalty: 5
   whipExplosionPrefab: {fileID: 5247228930657605166, guid: fc8ff6bbc3d64fc4d954c0a49769f2ea, type: 3}
