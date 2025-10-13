@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [Header("Event Channels")]
     public FloatEventChannelSO OnAuthorityChangedChannel;
     public AuthorityLevelChangeEventChannelSO OnAuthorityLevelChangedChannel;   // 권위 레벨과 색상이 변경됨
+    public OutFloatEventChannelSO OnGetAdditionLifeRateChannel;               // 추가 생존 확률을 가져오는 채널
 
     public GameObject canvasObject;                         // 캔버스 객체
 
@@ -42,7 +43,7 @@ public class GameManager : MonoBehaviour
 
     private Dictionary<AreaType, IncreaseInfo> increaseGoldAmounts;
     private Dictionary<AreaType, bool> checkUnlockStructures;       // 이미 처음으로 열린 구조물 효과인지 확인
-
+    private float additionLifeRate = 0f;                             // 추가 생존 확률
 
     private void Awake()
     {
@@ -60,6 +61,9 @@ public class GameManager : MonoBehaviour
 
         if (OnAuthorityLevelChangedChannel != null)
             OnAuthorityLevelChangedChannel.OnEventRaised += UpdateAuthorityValueAndColor;
+
+        if (OnGetAdditionLifeRateChannel != null)
+            OnGetAdditionLifeRateChannel.OnEventRaised += GetAdditionalLifeRate;
     }
 
     private void OnDisable()
@@ -71,6 +75,9 @@ public class GameManager : MonoBehaviour
 
         if (OnAuthorityLevelChangedChannel != null)
             OnAuthorityLevelChangedChannel.OnEventRaised -= UpdateAuthorityValueAndColor;
+
+        if (OnGetAdditionLifeRateChannel != null)
+            OnGetAdditionLifeRateChannel.OnEventRaised -= GetAdditionalLifeRate;
     }
 
     // ★ 4. '권위 방송'을 받으면 호출될 함수
@@ -218,7 +225,7 @@ public class GameManager : MonoBehaviour
             if (increaseGoldAmounts.TryGetValue(area, out IncreaseInfo info))
             {
                 // 3. (백성 수 * 기술 효과) 만큼을 총수입에 더합니다.
-                increaseGoldAmounts[area].periodTotalLinear = peopleCount * info.periodEachLinear;
+                increaseGoldAmounts[area].periodTotalLinear = peopleCount * (info.periodEachLinear + info.periodEachLinearrAddition);
                 long areaIncome = peopleCount * (increaseGoldAmounts[area].periodTotalLinear * (100 + info.periodRate) / 100);
 
                 periodIncreaseTotalAmount += areaIncome;
@@ -244,8 +251,8 @@ public class GameManager : MonoBehaviour
             if (increaseGoldAmounts.TryGetValue(area, out IncreaseInfo info))
             {
                 // 3. (백성 수 * 1인당 생산량) 만큼을 총 클릭 수입에 더합니다.
-                increaseGoldAmounts[area].clickTotalLinear = peopleCount * info.clickEachLinear;
-                long areaIncome = increaseGoldAmounts[area].clickTotalLinear * (100 + info.clickRate) / 100;
+                info.clickTotalLinear = peopleCount * (info.clickEachLinear + info.clickEachLinearAddition);
+                long areaIncome = info.clickTotalLinear * (100 + info.clickRate) / 100;
                 clickIncreaseTotalAmount += areaIncome;
             }
         }
@@ -275,8 +282,8 @@ public class GameManager : MonoBehaviour
             int peopleCount = PeopleManager.Instance.Count(area);
             if (increaseGoldAmounts.TryGetValue(area, out IncreaseInfo info))
             {
-                increaseGoldAmounts[area].periodTotalLinear = peopleCount * increaseGoldAmounts[area].periodEachLinear;
-                long areaIncome = increaseGoldAmounts[area].periodTotalLinear * (100 + info.periodRate) / 100;
+                info.periodTotalLinear = peopleCount * (info.periodEachLinear + info.periodEachLinearrAddition);
+                long areaIncome = info.periodTotalLinear * (100 + info.periodRate) / 100;
                 periodIncreaseTotalAmount += areaIncome;
             }
         }
@@ -292,8 +299,8 @@ public class GameManager : MonoBehaviour
             int peopleCount = PeopleManager.Instance.Count(area);
             if (increaseGoldAmounts.TryGetValue(area, out IncreaseInfo info))
             {
-                increaseGoldAmounts[area].clickTotalLinear = peopleCount * increaseGoldAmounts[area].clickEachLinear;
-                long areaIncome = increaseGoldAmounts[area].clickTotalLinear * (100 + info.clickRate) / 100;
+                info.clickTotalLinear = peopleCount * (info.clickEachLinear + info.clickEachLinearAddition);
+                long areaIncome = info.clickTotalLinear * (100 + info.clickRate) / 100;
                 clickIncreaseTotalAmount += areaIncome;
             }
         }
@@ -314,6 +321,40 @@ public class GameManager : MonoBehaviour
     public void UpdateAuthorityValueAndColor(int authority, Color color)
     {
         OnAuthorityMultiplierUpdate?.Invoke(authority, color);
+    }
+
+    // 클릭으로 얻는 + 금의 양 추가 증가
+    public void IncreaseClickLinearGoldAcquirementAmount(AreaType areaType, long amount)
+    {
+        increaseGoldAmounts[areaType].clickEachLinearAddition += amount;
+        AddClickIncreaseTotalAmount();
+    }
+
+    // 클릭으로 얻는 x 금의 양 추가 증가
+    public void IncreaseClickRateGoldAcquirementAmount(AreaType areaType, long amount)
+    {
+        increaseGoldAmounts[areaType].clickRate += amount;
+        AddClickIncreaseTotalAmount();
+    }
+
+    // 주기적으로 얻는 + 금의 양 추가 증가
+    public void IncreasePeriodLinearGoldAcquirementAmount(AreaType areaType, long amount)
+    {
+        increaseGoldAmounts[areaType].periodEachLinearrAddition += amount;
+        RecalculatePeriodIncreaseGoldAmount();
+    }
+
+    // 주기적으로 얻는 x 금의 양 추가 증가
+    public void IncreasePeriodRateGoldAcquirementAmount(AreaType areaType, long amount)
+    {
+        increaseGoldAmounts[areaType].periodRate += amount;
+        RecalculatePeriodIncreaseGoldAmount();
+    }
+
+    // 추가 생존 확률을 증가
+    public void IncreaseAdditionalLifeRate(float amount)
+    {
+        additionLifeRate += amount;
     }
 
     // ==========================================================
@@ -413,4 +454,9 @@ public class GameManager : MonoBehaviour
     public bool GetIsGameOver() { return isGameOver; }
 
     public Dictionary<AreaType, bool> GetCheckUnlockStructures() { return checkUnlockStructures; }
+
+    public float GetAdditionalLifeRate()
+    {
+        return additionLifeRate;
+    }
 }

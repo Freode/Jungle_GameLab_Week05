@@ -103,26 +103,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   areaType: 7
+  areaIcon: {fileID: 21300000, guid: 6ccd7936efd7e1840b2e4f674cfe1aff, type: 3}
   levelAppearances:
   - level: 0
     sprite: {fileID: 21300000, guid: f713810c1ee633e4488843d51ca5a7b3, type: 3}
     scale: {x: 0.25, y: 0.25, z: 0}
+    effect: {fileID: 0}
   - level: 10
     sprite: {fileID: 21300000, guid: 90a41ba3d316cc949be9cf60246d4b08, type: 3}
     scale: {x: 0.2, y: 0.2, z: 0}
+    effect: {fileID: 11400000, guid: 3f86d36bd5cb2994cb30a9605b7f0696, type: 2}
   - level: 20
     sprite: {fileID: 21300000, guid: 4371bff3ee5f0ec44b5afb71e7c9f907, type: 3}
     scale: {x: 0.2, y: 0.2, z: 0}
+    effect: {fileID: 11400000, guid: 3f86d36bd5cb2994cb30a9605b7f0696, type: 2}
   - level: 30
     sprite: {fileID: 21300000, guid: f3bafdac53adb494785f0d96008ece96, type: 3}
     scale: {x: 0.2, y: 0.2, z: 0}
+    effect: {fileID: 11400000, guid: 5a5841badc9009d48961039631119407, type: 2}
   - level: 40
     sprite: {fileID: 21300000, guid: 6e35cc20bddbd8e4e8b563be52b300d4, type: 3}
     scale: {x: 0.2, y: 0.2, z: 0}
+    effect: {fileID: 11400000, guid: 3f86d36bd5cb2994cb30a9605b7f0696, type: 2}
   isClearStructure: 1
   InfoUI: {fileID: 0}
   structureType: 3
   levelUpQueueUI: {fileID: 0}
+  levelUpParticle: {fileID: 0}
 --- !u!61 &438539222546351273
 BoxCollider2D:
   m_ObjectHideFlags: 0
