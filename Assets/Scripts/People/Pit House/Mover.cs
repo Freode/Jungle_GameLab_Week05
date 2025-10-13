@@ -254,24 +254,33 @@ public class Mover : MonoBehaviour
     private IEnumerator DeathProcessCoroutine()
     {
         // 죽음의 동작이 끝날 때까지 잠시 기다립니다. (애니메이션 길이를 1.5초로 가정)
-        // 폐하, 이 시간은 실제 애니메이션 길이에 맞추어 조정하시옵소서.
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.3f);
 
-        // 죽음 이후의 절차는 기존의 PeopleActor의 것을 따릅니다.
-        // 1. 유골 생성
-        if (deathPrefab != null) // Mover가 이미 deathPrefab 변수를 가지고 있사옵니다.
+        // 죽음 이후의 절차를 진행합니다.
+        // 1. 유골 생성 및 '신상 기록'
+        if (deathPrefab != null)
         {
             Vector3 spawnPosition = new Vector3(transform.position.x, transform.position.y, -9f);
-            Instantiate(deathPrefab, spawnPosition, Quaternion.identity);
+            
+            // 1-1. 유골을 소환합니다.
+            GameObject skullObj = Instantiate(deathPrefab, spawnPosition, Quaternion.identity);
+            
+            // 1-2. 소환된 유골의 장부(DraggableSkull)를 찾아냅니다.
+            DraggableSkull skull = skullObj.GetComponent<DraggableSkull>();
+            
+            // 1-3. 장부를 찾았다면, '자신(peopleActor)'의 정보를 새겨넣으라 명합니다!
+            if (skull != null && peopleActor != null)
+            {
+                skull.Initialize(peopleActor);
+            }
         }
 
         // 2. 시신 처리 (소멸)
-        // PeopleManager를 통해 처리하는 것이 왕국의 법도에 맞사옵니다.
         if (PeopleManager.Instance != null)
         {
             PeopleManager.Instance.DespawnPerson(this.gameObject);
         }
-        else // 만약을 대비해 PeopleManager가 없을 경우, 스스로 소멸합니다.
+        else
         {
             Destroy(gameObject);
         }
