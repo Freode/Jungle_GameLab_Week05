@@ -1610,6 +1610,7 @@ MonoBehaviour:
   scalingFactor: 0.05
   authorityMultiplier: 1
   onAuthorityChangedChannel: {fileID: 11400000, guid: 7ad0cd89c7982d446a54f2beac87be71, type: 2}
+  onAuthorityLevelChangedChannel: {fileID: 11400000, guid: e2d045cf2ffb1554b9305e3c75948a9f, type: 2}
   authorityGaugeSlider: {fileID: 937768214946788065}
   authorityGaugeText: {fileID: 2717320870628953771}
   authorityMultiplierText: {fileID: 7394020963412316869}

@@ -52,9 +52,11 @@ public class AuthorityManager : MonoBehaviour
     
     [Tooltip("게이지 수치에 따라 동적으로 변하는 배율입니다.")]
     public float authorityMultiplier = 1f;
-    
+
     [Header("방송할 채널")]
     public FloatEventChannelSO onAuthorityChangedChannel;
+    [Tooltip("권위 '레벨'(int)과 '색상'(Color)이 바뀔 때만 방송합니다.")]
+    public AuthorityLevelChangeEventChannelSO onAuthorityLevelChangedChannel; // 새로 추가된 채널
 
     [Header("Gage Slider")]
     public Slider authorityGaugeSlider;
@@ -80,6 +82,7 @@ public class AuthorityManager : MonoBehaviour
     // 게이지 최대치 및 초기화 로직을 위한 변수
     private const float MaxAuthorityGauge = 500f;
     private bool _isGaugeFrozen = false;
+    private int _previousAuthorityLevel = -1; // 이전 레벨을 기억 (-1로 초기화하여 시작 시 무조건 방송)
 
     void Awake()
     {
@@ -285,7 +288,14 @@ public class AuthorityManager : MonoBehaviour
             {
                 sliderFillImage.color = feverTimeColor;
                 sliderBackgroundImage.color = feverTimeColor; // 배경도 통일
-                return; // 아래 로직을 실행하지 않음
+                // ★★★ 피버타임 방송 로직 추가 ★★★
+                const int feverLevel = 6; // 피버타임은 6레벨로 정의
+                if (_previousAuthorityLevel != feverLevel)
+                {
+                    onAuthorityLevelChangedChannel?.RaiseEvent(feverLevel, feverTimeColor);
+                    _previousAuthorityLevel = feverLevel;
+                }
+                return; // 기존 return은 그대로 유지
             }
 
             // 현재 레벨 계산 (0~99.9 => 0레벨, 100~199.9 => 1레벨 ...)
@@ -313,6 +323,11 @@ public class AuthorityManager : MonoBehaviour
             // 계산된 색상을 실제 이미지에 적용
             sliderFillImage.color = fillColor;
             sliderBackgroundImage.color = backgroundColor;
+            if (_previousAuthorityLevel != currentLevel)
+            {
+                onAuthorityLevelChangedChannel?.RaiseEvent(currentLevel, fillColor);
+                _previousAuthorityLevel = currentLevel;
+            }
         }
 
     }
