@@ -60,7 +60,7 @@ public class TechInfo : MonoBehaviour
 
         IncreaseInfo increaseInfo = GameManager.instance.GetIncreaseGoldInfo(areaType);
 
-        string name = FuncSystem.GetStructureName(areaType);
+        string name = FuncSystem.GetStructureName(areaType, currentLevel);
 
         long linearAmount = increaseInfo.clickTotalLinear * (100 + increaseInfo.clickRate) / 100;
         long periodAmount = increaseInfo.periodTotalLinear * (100 + increaseInfo.periodRate) / 100;
