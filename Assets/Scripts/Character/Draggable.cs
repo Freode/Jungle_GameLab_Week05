@@ -24,6 +24,10 @@ public class Draggable : MonoBehaviour
     [Tooltip("흔들기 이벤트 발생 후 다음 감지까지 필요한 대기 시간.")]
     public float shakeCooldown = 3.0f;
 
+    [Header("방송할 채널")]
+    [Tooltip("백성이 선택되었을 때 보고를 올릴 채널입니다.")]
+    public PeopleActorEventChannelSO OnPeopleSelectedChannel;
+
     public GameObject dropObject;
 
 
@@ -40,16 +44,23 @@ public class Draggable : MonoBehaviour
     private float lastVelocityX = 0f;
     private float currentShakeEnergy = 0f;
     private bool isShakeOnCooldown = false;
+    private PeopleActor selfActor;
     private Vector3 lastPosition;
 
     void Awake()
     {
         anim = GetComponent<Animator>();
         spriteMover = GetComponent<Mover>();
+        selfActor = GetComponent<PeopleActor>();
     }
 
     void OnMouseDown()
     {
+        if (selfActor != null && OnPeopleSelectedChannel != null)
+        {
+            OnPeopleSelectedChannel.RaiseEvent(selfActor);
+        }    
+
         if (isOverRiver) return;
 
         offset = transform.position - GetMouseWorldPos();

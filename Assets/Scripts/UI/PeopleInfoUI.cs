@@ -19,8 +19,9 @@ public class PeopleInfoUI : MonoBehaviour
     [Header("Event Channels")]
     public PeopleActorEventChannelSO OnPeopleSelectedChannel;
     public VoidEventChannelSO OnDeselectedChannel;
-    public VoidEventChannelSO OnYearPassedChannel; 
+    public VoidEventChannelSO OnYearPassedChannel;
     public DraggableSkullEventChannelSO OnSkullSelectedChannel;
+    public HighlightEventChannelSO OnHighlightChannel;
 
     [Header("UI Components")]
     public GameObject infoPanel;
@@ -117,6 +118,7 @@ public class PeopleInfoUI : MonoBehaviour
     // '선택됨' 방송을 받으면 호출되는 메인 함수
     private void OnPeopleSelected(PeopleActor selectedActor)
     {
+        OnHighlightChannel?.RaiseEvent(selectedActor.gameObject, true);
         // 현재 선택된 actor를 클래스 변수에 저장해서 다른 함수에서도 쓸 수 있게 함
         currentActor = selectedActor;
         currentSkull = null;
