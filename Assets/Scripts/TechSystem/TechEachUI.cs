@@ -127,7 +127,8 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 현재 노드의 해금 가능하다고 설정
     public void SetTechUnlock()
     {
-        techState.lockState = LockState.CanUnlock;
+        if(techState.lockState == LockState.Block)
+            techState.lockState = LockState.CanUnlock;
     }
 
     // 최대 수용량(유사 최대 레벨) 증가
