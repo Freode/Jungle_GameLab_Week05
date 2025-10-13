@@ -17,7 +17,7 @@ public class PeopleDropGold : MonoBehaviour
             return;
 
         long baseAmount = GameManager.instance.GetClickIncreaseTotalAmount();
-        long amount = FuncSystem.RandomLongRange(baseAmount * 7, baseAmount * 30);
+        long amount = FuncSystem.RandomLongRange(baseAmount * 10, baseAmount * 30);
 
         GameManager.instance.AddCurrentGoldAmount(amount);
 
