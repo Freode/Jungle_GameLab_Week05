@@ -213,6 +213,22 @@ PrefabInstance:
       propertyPath: m_Colors.m_NormalColor.a
       value: 0.8627451
       objectReference: {fileID: 0}
+    - target: {fileID: 2409333683569896361, guid: 56504f37af425e746a72113177f52df1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2409333683569896361, guid: 56504f37af425e746a72113177f52df1, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2409333683569896361, guid: 56504f37af425e746a72113177f52df1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2409333683569896361, guid: 56504f37af425e746a72113177f52df1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4684520671387443354, guid: 56504f37af425e746a72113177f52df1, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -226,6 +242,22 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4684520671387443354, guid: 56504f37af425e746a72113177f52df1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4727172799060025057, guid: 56504f37af425e746a72113177f52df1, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4727172799060025057, guid: 56504f37af425e746a72113177f52df1, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4727172799060025057, guid: 56504f37af425e746a72113177f52df1, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4727172799060025057, guid: 56504f37af425e746a72113177f52df1, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
@@ -1381,6 +1413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OnAuthorityChangedChannel: {fileID: 11400000, guid: 7ad0cd89c7982d446a54f2beac87be71, type: 2}
+  OnAuthorityLevelChangedChannel: {fileID: 11400000, guid: e2d045cf2ffb1554b9305e3c75948a9f, type: 2}
   canvasObject: {fileID: 1464799245}
   currentGoldAmount: 100
   clickIncreaseGoldAmountLinear: 1
