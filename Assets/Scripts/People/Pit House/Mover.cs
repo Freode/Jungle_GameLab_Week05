@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public enum MoveState
 {
@@ -222,6 +223,58 @@ public class Mover : MonoBehaviour
         currentState = MoveState.Returning;
         targetPosition = area.GetRandomPointInside();
         wasInsideArea = false;
+    }
+    /// <summary>
+    /// 불충으로 인한 죽음을 집행합니다. PeopleActor에 의해 호출됩니다.
+    /// </summary>
+    public void ExecuteDeathByDisloyalty()
+    {
+        // 1. 모든 이성과 움직임을 멈춥니다.
+        this.enabled = false; // Mover 자신의 모든 활동을 중단!
+        
+        Draggable draggable = GetComponent<Draggable>();
+        if (draggable != null)
+        {
+            draggable.enabled = false; // 드래그 기능도 정지시킵니다.
+        }
+
+        // 2. 폐하의 명대로, 숨겨진 'OnDeath' 동작을 취하게 합니다.
+        if (animator != null)
+        {
+            // 모든 일반 동작을 멈추고, 죽음을 맞이할 준비를 합니다.
+            ResetAnimationBools(); 
+            animator.SetTrigger("OnDeath");
+        }
+
+        // 3. 죽음의 절차를 시작합니다.
+        StartCoroutine(DeathProcessCoroutine());
+    }
+
+    // ★★★ 추가: 죽음의 절차를 순서대로 진행하는 임무 (코루틴) ★★★
+    private IEnumerator DeathProcessCoroutine()
+    {
+        // 죽음의 동작이 끝날 때까지 잠시 기다립니다. (애니메이션 길이를 1.5초로 가정)
+        // 폐하, 이 시간은 실제 애니메이션 길이에 맞추어 조정하시옵소서.
+        yield return new WaitForSeconds(1.5f);
+
+        // 죽음 이후의 절차는 기존의 PeopleActor의 것을 따릅니다.
+        // 1. 유골 생성
+        if (deathPrefab != null) // Mover가 이미 deathPrefab 변수를 가지고 있사옵니다.
+        {
+            Vector3 spawnPosition = new Vector3(transform.position.x, transform.position.y, -9f);
+            Instantiate(deathPrefab, spawnPosition, Quaternion.identity);
+        }
+
+        // 2. 시신 처리 (소멸)
+        // PeopleManager를 통해 처리하는 것이 왕국의 법도에 맞사옵니다.
+        if (PeopleManager.Instance != null)
+        {
+            PeopleManager.Instance.DespawnPerson(this.gameObject);
+        }
+        else // 만약을 대비해 PeopleManager가 없을 경우, 스스로 소멸합니다.
+        {
+            Destroy(gameObject);
+        }
     }
 
     // 클래스 내부 어딘가에 추가
