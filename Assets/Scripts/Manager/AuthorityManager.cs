@@ -294,7 +294,6 @@ public class AuthorityManager : MonoBehaviour
                 {
                     onAuthorityLevelChangedChannel?.RaiseEvent(feverLevel, feverTimeColor);
                     _previousAuthorityLevel = feverLevel;
-                    GameManager.instance.UpdateAuthorityValueAndColor(feverTimeColor);
                 }
                 return; // 기존 return은 그대로 유지
             }
@@ -328,7 +327,6 @@ public class AuthorityManager : MonoBehaviour
             {
                 onAuthorityLevelChangedChannel?.RaiseEvent(currentLevel, fillColor);
                 _previousAuthorityLevel = currentLevel;
-                GameManager.instance.UpdateAuthorityValueAndColor(backgroundColor);
             }
         }
 

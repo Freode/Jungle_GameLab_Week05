@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     [Header("Event Channels")]
     public FloatEventChannelSO OnAuthorityChangedChannel;
+    public AuthorityLevelChangeEventChannelSO OnAuthorityLevelChangedChannel;   // 권위 레벨과 색상이 변경됨
 
     public GameObject canvasObject;                         // 캔버스 객체
 
@@ -56,6 +57,9 @@ public class GameManager : MonoBehaviour
         {
             OnAuthorityChangedChannel.OnEventRaised += UpdateAuthority;
         }
+
+        if (OnAuthorityLevelChangedChannel != null)
+            OnAuthorityLevelChangedChannel.OnEventRaised += UpdateAuthorityValueAndColor;
     }
 
     private void OnDisable()
@@ -64,6 +68,9 @@ public class GameManager : MonoBehaviour
         {
             OnAuthorityChangedChannel.OnEventRaised -= UpdateAuthority;
         }
+
+        if (OnAuthorityLevelChangedChannel != null)
+            OnAuthorityLevelChangedChannel.OnEventRaised -= UpdateAuthorityValueAndColor;
     }
 
     // ★ 4. '권위 방송'을 받으면 호출될 함수
@@ -304,9 +311,9 @@ public class GameManager : MonoBehaviour
     }
 
     // 권위 수치와 색깔이 변경되었을 때, 관련 기능 업데이트
-    public void UpdateAuthorityValueAndColor(Color color)
+    public void UpdateAuthorityValueAndColor(int authority, Color color)
     {
-        OnAuthorityMultiplierUpdate?.Invoke((int)currentAuthority, color);
+        OnAuthorityMultiplierUpdate?.Invoke(authority, color);
     }
 
     // ==========================================================
