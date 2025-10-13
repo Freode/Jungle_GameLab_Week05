@@ -15,6 +15,8 @@ public class TechViewer : MonoBehaviour
     public Button buttonTabStructure;                       // 기술 탭 버튼
     public Button buttonTabJob;                             // 징집 탭 버튼
 
+    public GameClearEffectInStructure OnPyramidComplete;    // 피라미드 완성
+
     public GameObject techUIInToVerticalLayer;              // Tech UI를 vertical layer에 추가할 곳
     [SerializeField] private GameObject uiPrefab;
     [SerializeField] private List<TechKindInfo> techInfoes; // 테크 기본 정보들
@@ -59,7 +61,7 @@ public class TechViewer : MonoBehaviour
 
             // 나중에 TechData techData, TechData or 다른것 condition 으로 다양한 조건 추가 가능하도록 확장 가능
             // 최고 레벨이 도달하지 않는 경우는 무시
-            if (preTech.maxLevel != 0 && techStates[preTech.techKind][preTech].currentLevel != preTech.maxLevel)
+            if (preTech.maxLevel != 0 && techStates[preTech.techKind][preTech].currentLevel < preTech.maxLevel)
                 return;
         }
 
@@ -79,6 +81,9 @@ public class TechViewer : MonoBehaviour
         GameManager.instance.OnMaxCapacityUpgrade += MaxCapacityUpgrade;
         GameManager.instance.OnCurrentCapacityChanged += ModifyCurrentCapacity;
         PeopleManager.Instance.OnAreaPeopleCountChanged += PrintRemainPeople;
+
+        if (OnPyramidComplete != null)
+            OnPyramidComplete.OnClearEvent += CompletePyramid;
     }
 
     private void OnDestroy()
@@ -86,6 +91,9 @@ public class TechViewer : MonoBehaviour
         GameManager.instance.OnMaxCapacityUpgrade -= MaxCapacityUpgrade;
         GameManager.instance.OnCurrentCapacityChanged -= ModifyCurrentCapacity;
         PeopleManager.Instance.OnAreaPeopleCountChanged -= PrintRemainPeople;
+
+        if (OnPyramidComplete != null)
+            OnPyramidComplete.OnClearEvent -= CompletePyramid;
     }
 
     // 테크 데이터들 초기화
@@ -265,6 +273,17 @@ public class TechViewer : MonoBehaviour
                 IncreaseButtonAlpha(buttonTabStructure, false);
                 IncreaseButtonAlpha(buttonTabJob, true);
                 break;
+        }
+    }
+
+    // 피라미드가 완성되었다고 알림
+    private void CompletePyramid(TechData techData)
+    {
+        Debug.Log("Complete");
+        techStates[TechKind.None][techData].lockState = LockState.Complete;
+        foreach(TechData nextTech in techData.postTeches)
+        {
+            CheckUnlockPreTech(nextTech);
         }
     }
 }
