@@ -77,29 +77,29 @@ public static class FuncSystem
         switch (areaType)
         {
             case AreaType.Mine:
-                description = $"클릭 세금 : +{Format(linearAmount)}\n" +
-                    $"주기 세금 : +{Format(periodAmount)}\n";
+                description = $"클릭당 금 : +{Format(linearAmount)}\n" +
+                    $"초당 금 : +{Format(periodAmount)}\n";
                 break;
 
             case AreaType.Gold:
-                description = $"클릭 세금 : +{Format(linearAmount)}\n" +
-                    $"주기 세금 : +{Format(periodAmount)}\n" +
-                    $"인력 생성 주기 : {GameManager.instance.GetRespawnTime().ToString("F3")}초\n";
+                description = $"클릭당 금 : +{Format(linearAmount)}\n" +
+                    $"초당 금 : +{Format(periodAmount)}\n" +
+                    $"무직 생성 주기 : {GameManager.instance.GetRespawnTime().ToString("F3")}초\n";
                 break;
 
             case AreaType.StoneCarving:
-                description = $"클릭 세금 : +{Format(linearAmount)}\n" +
-                    $"주기 세금 : +{Format(periodAmount)}\n";
+                description = $"클릭당 금 : +{Format(linearAmount)}\n" +
+                    $"초당 금 : +{Format(periodAmount)}\n";
                 break;
 
             case AreaType.Carrier:
-                description = $"클릭 세금 : +{Format(linearAmount)}\n" +
-                    $"주기 세금 : +{Format(periodAmount)}\n";
+                description = $"클릭당 금 : +{Format(linearAmount)}\n" +
+                    $"초당 금 : +{Format(periodAmount)}\n";
                 break;
 
             case AreaType.Architect:
-                description = $"클릭 세금 : +{Format(linearAmount)}\n" +
-                    $"주기 세금 : +{Format(periodAmount)}\n";
+                description = $"클릭당 금 : +{Format(linearAmount)}\n" +
+                    $"초당 금 : +{Format(periodAmount)}\n";
                 break;
 
             case AreaType.Pyramid:
