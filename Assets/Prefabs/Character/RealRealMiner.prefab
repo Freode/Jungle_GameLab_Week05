@@ -119,7 +119,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4955629623132759649
 RectTransform:
   m_ObjectHideFlags: 0
@@ -256,6 +256,7 @@ GameObject:
   - component: {fileID: -5557679032189099348}
   - component: {fileID: 8980313082978823670}
   - component: {fileID: 3075563472904722944}
+  - component: {fileID: 6286918439428936681}
   m_Layer: 0
   m_Name: RealRealMiner
   m_TagString: Untagged
@@ -415,6 +416,7 @@ MonoBehaviour:
   shakeSensitivity: 0.15
   shakeDecayRate: 20
   shakeCooldown: 3
+  OnPeopleSelectedChannel: {fileID: 11400000, guid: 9c85e2194ab112645a8ef560d79262dc, type: 2}
   dropObject: {fileID: 7413343513413014637}
 --- !u!212 &1172071191988972309
 SpriteRenderer:
@@ -527,6 +529,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnYearPassedChannel: {fileID: 11400000, guid: f6f3db6cdae3de645912ac32889e7835, type: 2}
   survivalProfile: {fileID: 11400000, guid: a414ca916988f744ca163aa6c72e26d2, type: 2}
+--- !u!114 &6286918439428936681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8606077447229817456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d36f37479bf9e674c8af29d9fe4cbeb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseOverHighlightColor: {r: 0.6315413, g: 1, b: 0.6245283, a: 1}
+  selectedHighlightColor: {r: 0.015686274, g: 1, b: 0.057247166, a: 1}
+  OnPeopleSelectedChannel: {fileID: 11400000, guid: 9c85e2194ab112645a8ef560d79262dc, type: 2}
+  OnDeselectedChannel: {fileID: 11400000, guid: 7515757cc825c2849b5d28c43e945ed9, type: 2}
 --- !u!1001 &2137918468979866047
 PrefabInstance:
   m_ObjectHideFlags: 0
