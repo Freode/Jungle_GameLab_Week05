@@ -92,31 +92,57 @@ public class DraggableSkull : MonoBehaviour
     public int LoyaltyAtDeath => loyaltyAtDeath;
     public bool IsPreserved => isPreserved;
 
-    void OnMouseDown()
+    void Update()
     {
-        // 마우스 클릭 시 드래그 시작 준비
+        // 폐하께서 '오른손'을 누르시는 그 순간을 감지합니다.
+        if (Input.GetMouseButtonDown(1))
+        {
+            // 마우스 커서 아래에 있는 것이 '나' 자신인지 확인합니다.
+            if (IsMouseCurrentlyOver())
+            {
+                HandleDragStart();
+            }
+        }
+
+        // 폐하께서 '오른손'을 떼시는 그 순간을 감지합니다.
+        if (Input.GetMouseButtonUp(1))
+        {
+            if (isDragging)
+            {
+                HandleDragEnd();
+            }
+        }
+
+        // 폐하께서 '오른손'을 누르고 계시는 동안 계속 감지합니다.
+        if (Input.GetMouseButton(1))
+        {
+            if (isDragging)
+            {
+                HandleDragging();
+            }
+        }
+    }
+
+    // 드래그 시작을 처리하는 새로운 임무 (기존 OnMouseDown의 내용)
+    void HandleDragStart()
+    {
         offset = transform.position - GetMouseWorldPos();
         isDragging = true;
     }
 
-    void OnMouseDrag()
+    // 드래그 중일 때 처리하는 새로운 임무 (기존 OnMouseDrag의 내용)
+    void HandleDragging()
     {
-        // 드래그 중 오브젝트 위치 업데이트
-        if (isDragging)
-        {
-            transform.position = GetMouseWorldPos() + offset;
-        }
+        transform.position = GetMouseWorldPos() + offset;
     }
 
-    void OnMouseUp()
+    // 드래그 종료를 처리하는 새로운 임무 (기존 OnMouseUp의 내용)
+    void HandleDragEnd()
     {
         isDragging = false;
 
-        // 강 위에 놓았을 경우 즉시 파괴
         if (isOverRiver)
         {
-            //Debug.Log("해골을 강에 놓았습니다. 영원히 사라집니다... 🌊");
-            // 오브젝트 즉시 파괴
             Destroy(gameObject);
         }
     }
@@ -163,5 +189,12 @@ public class DraggableSkull : MonoBehaviour
         mousePoint.z = Camera.main.WorldToScreenPoint(transform.position).z;
         // 스크린 좌표를 월드 좌표로 변환
         return Camera.main.ScreenToWorldPoint(mousePoint);
+    }
+    // 마우스가 현재 이 오브젝트 위에 있는지 확인하는 임무
+    private bool IsMouseCurrentlyOver()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+        return (hit.collider != null && hit.collider.gameObject == this.gameObject);
     }
 }
