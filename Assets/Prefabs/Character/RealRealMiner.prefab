@@ -1,5 +1,115 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3260337882489036367
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4827603199101885877}
+  - component: {fileID: 5382748528703025444}
+  - component: {fileID: 7231521072877495044}
+  m_Layer: 0
+  m_Name: Emotion_Display
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &4827603199101885877
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3260337882489036367}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.008, y: 0.53, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6529380339346792215}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &5382748528703025444
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3260337882489036367}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6189a653cfdd09e4197776bd73421b71, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!212 &7231521072877495044
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3260337882489036367}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: -255167383455267363, guid: 50483b244c67ee54e8dabeec07b6f134, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 0.48, y: 0.48}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &4138232674342637606
 GameObject:
   m_ObjectHideFlags: 0
@@ -258,6 +368,7 @@ GameObject:
   - component: {fileID: 3075563472904722944}
   - component: {fileID: 6286918439428936681}
   - component: {fileID: 571374607929215678}
+  - component: {fileID: 7050506785181397887}
   m_Layer: 0
   m_Name: RealRealMiner
   m_TagString: Untagged
@@ -280,6 +391,7 @@ Transform:
   m_Children:
   - {fileID: 3310560870828932788}
   - {fileID: 8987213012337096943}
+  - {fileID: 4827603199101885877}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1258310518351277716
@@ -419,6 +531,7 @@ MonoBehaviour:
   shakeCooldown: 3
   dropObject: {fileID: 7413343513413014637}
   OnPeopleSelectedChannel: {fileID: 11400000, guid: 9c85e2194ab112645a8ef560d79262dc, type: 2}
+  emotionAnimator: {fileID: 0}
 --- !u!212 &1172071191988972309
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -545,8 +658,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseOverHighlightColor: {r: 0.6315413, g: 1, b: 0.6245283, a: 1}
   selectedHighlightColor: {r: 0.015686274, g: 1, b: 0.057247166, a: 1}
+  emotionController: {fileID: 7050506785181397887}
   OnPeopleSelectedChannel: {fileID: 11400000, guid: 9c85e2194ab112645a8ef560d79262dc, type: 2}
   OnDeselectedChannel: {fileID: 11400000, guid: 7515757cc825c2849b5d28c43e945ed9, type: 2}
+  dropObject: {fileID: 7413343513413014637}
 --- !u!114 &571374607929215678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -562,6 +677,21 @@ MonoBehaviour:
   nameTagObject: {fileID: 4138232674342637606}
   nameText: {fileID: 1009226899224611083}
   onNameTagStateChangeChannel: {fileID: 11400000, guid: 23344ec70c922374ca2459d5496ebd78, type: 2}
+--- !u!114 &7050506785181397887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8606077447229817456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61f2be1a25c116541bcb8a813d7d70ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emotionDisplayObject: {fileID: 3260337882489036367}
+  emotionAnimator: {fileID: 5382748528703025444}
+  emotionDuration: 2
 --- !u!1001 &2137918468979866047
 PrefabInstance:
   m_ObjectHideFlags: 0

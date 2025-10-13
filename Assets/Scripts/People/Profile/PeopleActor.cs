@@ -7,6 +7,8 @@ public class PeopleActor : MonoBehaviour
     [Header("Death Settings")]
     public GameObject skullPrefab; // 죽었을 때 생성할 해골 프리팹
     public PeopleActorEventChannelSO OnActorDiedChannel; // 죽음을 알릴 방송 채널
+    private EmotionController emotionController;
+    private Mover mover; // ★★★ 추가: 자신의 수족을 관장할 Mover 장군 ★★★
     private bool isDying = false;
 
     [Header("Runtime Values")]
@@ -25,6 +27,13 @@ public class PeopleActor : MonoBehaviour
     public CarrierItem CarrierItem => carrierItem;
     public bool HasReceivedRoyalName { get; private set; } = false;
 
+
+    void Awake() // Awake 함수가 없다면 새로 만드시고, 있다면 내용을 추가하시옵소서.
+    {
+        // 임무 시작 시, 자신의 몸에 붙어있는 감정 관리인을 찾아냅니다.
+        emotionController = GetComponent<EmotionController>();
+        mover = GetComponent<Mover>();
+    }
 
     // ★ '죽음'을 명하는 함수
     public void Die()
@@ -60,13 +69,13 @@ public class PeopleActor : MonoBehaviour
             OnActorDiedChannel.RaiseEvent(this);
         }
     }
-    
+
     void OnEnable()
     {
         // 스폰될 때마다 새 ID 부여
         id = RuntimeIdGenerator.Next();
     }
-     
+
     public void Apply(PeopleValue v)
     {
         if (v == null) return;
@@ -113,5 +122,41 @@ public class PeopleActor : MonoBehaviour
         displayName = null;
         job = JobType.None;
         carrierItem = CarrierItem.None;
+    }
+
+    /// <summary>
+    /// 충성심을 지정된 양만큼 변경합니다. (음수도 가능)
+    /// </summary>
+    /// <param name="amount">변화시킬 충성도의 양</param>
+    public void ChangeLoyalty(int amount)
+    {
+        loyalty += amount;
+        // 충성심은 0과 100 사이를 벗어날 수 없다는 왕국의 법도를 적용합니다.
+        loyalty = Mathf.Clamp(loyalty, 0, 100);
+
+        if (loyalty <= 0 && !isDying)
+        {
+            isDying = true; // 이중 선고를 막기 위해 즉시 기록합니다.
+
+            // Mover 집행관에게 "불충으로 인한 죽음을 집행하라"고 명합니다!
+            if (mover != null)
+            {
+                mover.ExecuteDeathByDisloyalty();
+            }
+            else // 만약 집행관이 없다면, 기존 방식대로 처리합니다.
+            {
+                Die(); 
+            }
+        }
+
+    }
+    
+    /// <summary>
+    /// 충성심을 특정 값으로 즉시 설정합니다.
+    /// </summary>
+    /// <param name="value">설정할 충성도의 값</param>
+    public void SetLoyalty(int value)
+    {
+        loyalty = Mathf.Clamp(value, 0, 100);
     }
 }
