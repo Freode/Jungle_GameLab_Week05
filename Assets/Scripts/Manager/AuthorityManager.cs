@@ -271,7 +271,7 @@ public class AuthorityManager : MonoBehaviour
             if (authorityMultiplier > 1f)
             {
                 // 소수점 없이 정수로 표시하도록 수정합니다. (예: x100)
-                authorityMultiplierText.text = $"x{authorityMultiplier:F0}";
+                authorityMultiplierText.text = $"x{authorityMultiplier:F0}";;
             }
             else
             {
@@ -294,6 +294,7 @@ public class AuthorityManager : MonoBehaviour
                 {
                     onAuthorityLevelChangedChannel?.RaiseEvent(feverLevel, feverTimeColor);
                     _previousAuthorityLevel = feverLevel;
+                    GameManager.instance.UpdateAuthorityValueAndColor(feverTimeColor);
                 }
                 return; // 기존 return은 그대로 유지
             }
@@ -327,6 +328,7 @@ public class AuthorityManager : MonoBehaviour
             {
                 onAuthorityLevelChangedChannel?.RaiseEvent(currentLevel, fillColor);
                 _previousAuthorityLevel = currentLevel;
+                GameManager.instance.UpdateAuthorityValueAndColor(backgroundColor);
             }
         }
 

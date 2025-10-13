@@ -12,6 +12,9 @@ public class GoldClickAreaUI : MonoBehaviour
     public GameObject acquireGoldAmountPrefab;          // 클릭으로 금 획득 시, 출력할 UI 프리팹
 
     private long _localCurrentGold = 0;
+    private long _localClickGold = 0;
+    private int _localAuthorityMultiplier = 1;
+    private string _localAuthorityColor = "000000";
 
     private float _interval = 0.05f;
     private float _curTime = 0f;
@@ -24,6 +27,7 @@ public class GoldClickAreaUI : MonoBehaviour
         GameManager.instance.OnClickIncreaseTotalAmountChanged += PrintClickGoldAmount;
         GameManager.instance.OnPeriodIncreaseAmountChanged += PrintPeriodGoldAmount;
         GameManager.instance.OnClickIncreaseGoldAmount += PrintIncreaseGoldAmountWhenClicked;
+        GameManager.instance.OnAuthorityMultiplierUpdate += PrintCurrentAuthorityMultiplier;
 
         _localCurrentGold = GameManager.instance.GetCurrentGoldAmount();
         PrintCurrentGoldAmount(_localCurrentGold);
@@ -35,6 +39,7 @@ public class GoldClickAreaUI : MonoBehaviour
         GameManager.instance.OnClickIncreaseTotalAmountChanged -= PrintClickGoldAmount;
         GameManager.instance.OnPeriodIncreaseAmountChanged -= PrintPeriodGoldAmount;
         GameManager.instance.OnClickIncreaseGoldAmount -= PrintIncreaseGoldAmountWhenClicked;
+        GameManager.instance.OnAuthorityMultiplierUpdate -= PrintCurrentAuthorityMultiplier;
     }
 
     private void Update()
@@ -111,21 +116,30 @@ public class GoldClickAreaUI : MonoBehaviour
     // 현재 골드 양 출력
     private void PrintCurrentGoldAmount(long amount)
     {
-        textCurrentGoldAmount.text = "Current Gold\n" + FuncSystem.Format(amount);
         _localCurrentGold = amount;
+        textCurrentGoldAmount.text = FuncSystem.Format(_localCurrentGold);
     }
 
     // 한 번 클릭 시, 얻는 골드 양 출력
     private void PrintClickGoldAmount()
     {
         long amount = GameManager.instance.GetBaseClickIncreaseTotalAmount();
-        textClickAmount.text = "Click Gold\n" + FuncSystem.Format(amount);
+        _localClickGold = amount;
+        textClickAmount.text = FuncSystem.Format(_localClickGold) + $"<color=#{_localAuthorityColor}>(x{_localAuthorityMultiplier})</color>";
     }
 
     // 주기적으로 얻는 골드 양 출력
     private void PrintPeriodGoldAmount()
     {
         long amount = GameManager.instance.GetPeriodIncreaseTotalAmount();
-        textPeriodAmount.text = "Period Gold\n" + FuncSystem.Format(amount);
+        textPeriodAmount.text = FuncSystem.Format(amount);
+    }
+
+    // 현재 권위에 따른 배수 수치 출력
+    private void PrintCurrentAuthorityMultiplier(int amount, Color color)
+    {
+        _localAuthorityMultiplier = amount;
+        _localAuthorityColor = ColorUtility.ToHtmlStringRGB(color);
+        textClickAmount.text = FuncSystem.Format(_localClickGold) + $"<color=#{_localAuthorityColor}>(x{_localAuthorityMultiplier})</color>";
     }
 }

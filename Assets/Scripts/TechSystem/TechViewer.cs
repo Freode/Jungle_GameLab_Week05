@@ -39,7 +39,7 @@ public class TechViewer : MonoBehaviour
     {
         InitUI();
         InitTechData();
-        ChangeTechTab(TechKind.Structure);
+        ChangeTechTab(TechKind.Job);
 
         buttonTabStructure.onClick.AddListener(OnClickStructureTab);
         buttonTabJob.onClick.AddListener(OnClickJobTab);
@@ -180,7 +180,7 @@ public class TechViewer : MonoBehaviour
     void PrintRemainPeople()
     {
         int amount = PeopleManager.Instance.Count(AreaType.Normal);
-        textPeopleCount.text = "가용 가능 인력 : " + amount;
+        textPeopleCount.text = "무직 : " + amount;
     }
 
     // 기술 탭 클릭
@@ -205,11 +205,11 @@ public class TechViewer : MonoBehaviour
                 break;
 
             case TechKind.Structure:
-                textTabName.text = "기술";
+                textTabName.text = "건물";
                 break;
 
             case TechKind.Job:
-                textTabName.text = "징집";
+                textTabName.text = "일꾼";
                 break;
         }
     }
