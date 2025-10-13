@@ -35,6 +35,17 @@ public class CitizenNameTag : MonoBehaviour
 
     private void OnEnable()
     {
+        // 임무 시작 시, 이 백성이 이미 이름을 하사받은 몸인지 확인합니다.
+        // (예: 저장된 게임을 불러왔을 경우)
+        if (selfActor.HasReceivedRoyalName)
+        {
+            ShowNameTag();
+        }
+        else
+        {
+            HideNameTag();
+        }
+
         if (onNameTagStateChangeChannel != null)
         {
             onNameTagStateChangeChannel.OnEventRaised += HandleNameTagEvent;
@@ -43,6 +54,7 @@ public class CitizenNameTag : MonoBehaviour
 
     private void OnDisable()
     {
+        HideNameTag();
         if (onNameTagStateChangeChannel != null)
         {
             onNameTagStateChangeChannel.OnEventRaised -= HandleNameTagEvent;
