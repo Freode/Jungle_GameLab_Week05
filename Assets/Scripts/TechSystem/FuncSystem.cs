@@ -33,7 +33,7 @@ public static class FuncSystem
     }
 
     // 구조물 이름 가져오기
-    public static string GetStructureName(AreaType areaType)
+    public static string GetStructureName(AreaType areaType, int currentLevel)
     {
         string name = string.Empty;
         switch(areaType)
@@ -47,15 +47,15 @@ public static class FuncSystem
                 break;
 
             case AreaType.StoneCarving:
-                name = "세공소";
+                name = (currentLevel != 0) ? "세공소" : "???";
                 break;
 
             case AreaType.Carrier:
-                name = "운반소";
+                name = (currentLevel != 0) ? "운반소" : "???";
                 break;
 
             case AreaType.Architect:
-                name = "건축소";
+                name = (currentLevel != 0) ? "건축소" : "???";
                 break;
 
             case AreaType.Pyramid:
@@ -88,18 +88,28 @@ public static class FuncSystem
                 break;
 
             case AreaType.StoneCarving:
-                description = $"클릭당 금 : +{Format(linearAmount)}\n" +
-                    $"초당 금 : +{Format(periodAmount)}\n";
+                if (currentLevel != 0)
+                    description = $"클릭당 금 : +{Format(linearAmount)}\n" +
+                        $"초당 금 : +{Format(periodAmount)}\n";
+                else
+                    description = "버려진 땅";
+
                 break;
 
             case AreaType.Carrier:
-                description = $"클릭당 금 : +{Format(linearAmount)}\n" +
-                    $"초당 금 : +{Format(periodAmount)}\n";
+                if (currentLevel != 0)
+                    description = $"클릭당 금 : +{Format(linearAmount)}\n" +
+                        $"초당 금 : +{Format(periodAmount)}\n";
+                else
+                    description = "버려진 땅";
                 break;
 
             case AreaType.Architect:
-                description = $"클릭당 금 : +{Format(linearAmount)}\n" +
-                    $"초당 금 : +{Format(periodAmount)}\n";
+                if (currentLevel != 0)
+                    description = $"클릭당 금 : +{Format(linearAmount)}\n" +
+                        $"초당 금 : +{Format(periodAmount)}\n";
+                else
+                    description = "버려진 땅";
                 break;
 
             case AreaType.Pyramid:

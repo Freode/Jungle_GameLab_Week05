@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 public class StructureApperance : MonoBehaviour
 {
     public AreaType areaType;
+    public Sprite areaIcon;                     // 건물 아이콘
     public LevelAppearance[] levelAppearances;
     public bool isClearStructure = false;
     public GameObject InfoUI;
@@ -84,7 +85,7 @@ public class StructureApperance : MonoBehaviour
         InfoUI.TryGetComponent(out TechInfo techInfo);
         if (techInfo == null) return;
 
-        techInfo.OnActiveInfo(areaType, currentLevel, finalLevel, null, new Vector3(1920f, 0f, 0f));
+        techInfo.OnActiveInfo(areaType, currentLevel, finalLevel, areaIcon, new Vector3(1920f, 0f, 0f));
     }
 
     // 마우스가 빠져 나감
