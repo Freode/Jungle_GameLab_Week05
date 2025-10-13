@@ -104,6 +104,7 @@ public class Draggable : MonoBehaviour
         if (other.CompareTag("River"))
         {
             isOverRiver = true;
+            // Mover.moveSpeed = 0f;
         }
         else if (other.CompareTag("Jail"))
         {
@@ -153,6 +154,7 @@ public class Draggable : MonoBehaviour
     // [핵심 수정] DieInRiver 코루틴 변경
     IEnumerator DieInRiver()
     {
+        spriteMover.LockToArea(null);
         // 1. 설정된 시간만큼 기다림
         yield return new WaitForSeconds(timeToDieInRiver);
 

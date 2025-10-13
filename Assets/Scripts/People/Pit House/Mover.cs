@@ -1,7 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public enum MoveState { Returning, Wandering, Dwelling, Carring }
+public enum MoveState
+{
+    Returning,
+    Wandering,
+    Dwelling,
+    Carring
+}
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Rigidbody2D))]
@@ -9,29 +15,25 @@ public enum MoveState { Returning, Wandering, Dwelling, Carring }
 [RequireComponent(typeof(Animator))]
 public class Mover : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    public static float moveSpeed = 0.5f;
+    [Header("Movement Settings")] public static float moveSpeed = 0.5f;
     public static float defaultMoveSpeed = 0.5f;
     [SerializeField] private float dwellTimeMin = 1f;
     [SerializeField] private float dwellTimeMax = 3f;
 
     // ★ 1. '운반자 전용' 휴식 시간 변수를 추가합니다.
-    [Header("Carrier Settings")]
-    [Tooltip("운반자가 짐을 싣고 내릴 때의 짧은 체류 시간입니다.")]
-    [SerializeField] private float carrierDwellTimeMin = 0.1f;
+    [Header("Carrier Settings")] [Tooltip("운반자가 짐을 싣고 내릴 때의 짧은 체류 시간입니다.")] [SerializeField]
+    private float carrierDwellTimeMin = 0.1f;
+
     [SerializeField] private float carrierDwellTimeMax = 0.5f;
     [SerializeField] private float arrivalDistance = 0.1f;
 
-    [Header("Debug")]
-    [SerializeField] private bool showDebugGizmos = true;
+    [Header("Debug")] [SerializeField] private bool showDebugGizmos = true;
 
-    [Header("Death Settings")]
-    [Tooltip("이동을 시작하기 전 1회 체크되는 즉사 확률(%)")]
-    [Range(0f, 100f)]
-    [SerializeField] private float deathChancePercent = 0.1f;
+    [Header("Death Settings")] [Tooltip("이동을 시작하기 전 1회 체크되는 즉사 확률(%)")] [Range(0f, 100f)] [SerializeField]
+    private float deathChancePercent = 0.1f;
 
-    [Tooltip("즉사 시 현재 위치에 생성할 프리팹(시체/유골 등)")]
-    [SerializeField] private GameObject deathPrefab;
+    [Tooltip("즉사 시 현재 위치에 생성할 프리팹(시체/유골 등)")] [SerializeField]
+    private GameObject deathPrefab;
 
     private PeopleActor peopleActor;
     private MoveState currentState = MoveState.Dwelling; // 초기에는 대기 상태로 시작
@@ -48,8 +50,6 @@ public class Mover : MonoBehaviour
     private string currentDwellAnimation;
 
     public bool isCarring = false;
-
-
 
 
     private void Awake()
@@ -102,7 +102,6 @@ public class Mover : MonoBehaviour
     }
 
 
-
     private void Update()
     {
         // 초기화가 안 됐으면 다시 시도
@@ -125,12 +124,13 @@ public class Mover : MonoBehaviour
                 {
                     StartCarring();
                 }
-                StartWandering();
 
+                StartWandering();
             }
         }
+
         UpdateAnimatorState();
-        UpdateAnimatorSpeed(); 
+        UpdateAnimatorSpeed();
     }
 
     private void FixedUpdate()
@@ -212,7 +212,12 @@ public class Mover : MonoBehaviour
 
     private void ReturnToArea(AreaZone area)
     {
-        if (area == null) return;
+        // null 이면 targetPosition 제자리로
+        if (area == null)
+        {
+            targetPosition = transform.position;
+            return;
+        }
 
         currentState = MoveState.Returning;
         targetPosition = area.GetRandomPointInside();
@@ -256,7 +261,7 @@ public class Mover : MonoBehaviour
         CarrierItem carrierItem = peopleActor.CarrierItem;
 
         bool isStoneCarve = PeopleManager.Instance.checkUnlockStructures.ContainsKey(AreaType.StoneCarving);
-        
+
         bool isArchitect = PeopleManager.Instance.checkUnlockStructures.ContainsKey(AreaType.Architect);
 
         switch (carrierItem)
@@ -271,6 +276,7 @@ public class Mover : MonoBehaviour
                     PeopleManager.Instance.SetAreaLock(this.gameObject, AreaType.StoneCarving);
                     isCarring = true;
                 }
+
                 break;
             case CarrierItem.CarvedStone:
                 if (isArchitect)
@@ -278,6 +284,7 @@ public class Mover : MonoBehaviour
                     PeopleManager.Instance.SetAreaLock(this.gameObject, AreaType.Architect);
                     isCarring = true;
                 }
+
                 break;
         }
     }
@@ -357,6 +364,7 @@ public class Mover : MonoBehaviour
                     currentDwellAnimation = "IsCarryingBlock";
                     break;
             }
+
             return;
         }
 
@@ -371,7 +379,7 @@ public class Mover : MonoBehaviour
             case AreaType.StoneCarving:
                 currentDwellAnimation = Random.value < 0.5f ? "IsHammering" : "IsDoing";
                 break;
-                // Normal, Carrier 등은 특별한 행동이 없으므로 null 유지
+            // Normal, Carrier 등은 특별한 행동이 없으므로 null 유지
         }
     }
 
@@ -379,11 +387,9 @@ public class Mover : MonoBehaviour
     public void LockToArea(AreaZone area)
     {
         lockedArea = area;
-        if (area != null)
-        {
-            isInitialized = false; // 재초기화 필요
-            ReturnToArea(area);
-        }
+
+        isInitialized = false; // 재초기화 필요
+        ReturnToArea(area);
     }
 
     public void UnlockArea()
@@ -477,7 +483,6 @@ public class Mover : MonoBehaviour
         ResetAnimationBools();
 
 
-
         bool isMoving = currentState == MoveState.Wandering || currentState == MoveState.Returning;
 
         AreaZone targetArea = lockedArea != null ? lockedArea : currentArea;
@@ -502,7 +507,6 @@ public class Mover : MonoBehaviour
                         animator.SetBool("IsCarryingBlock", true);
                         break;
                 }
-
             }
             else
             {
@@ -517,7 +521,6 @@ public class Mover : MonoBehaviour
                 animator.SetBool(currentDwellAnimation, true);
             }
         }
-
     }
 
     /// <summary>
@@ -530,7 +533,7 @@ public class Mover : MonoBehaviour
 
         // 현재 속도가 기본 속도의 몇 배인지 계산합니다. (예: 1.0 / 0.5 = 2배)
         float speedMultiplier = moveSpeed / defaultMoveSpeed;
-        
+
         // 계산된 배율을 애니메이터의 속도에 그대로 적용합니다.
         animator.speed = speedMultiplier;
     }
@@ -550,8 +553,6 @@ public class Mover : MonoBehaviour
         animator.SetBool("IsHammering", false);
         animator.SetBool("IsDoing", false);
     }
-
-
 
 
     // Public getters
