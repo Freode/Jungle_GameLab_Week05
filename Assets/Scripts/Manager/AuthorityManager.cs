@@ -45,6 +45,10 @@ public class AuthorityManager : MonoBehaviour
     [Header("Balancing Settings")]
     [Tooltip("게이지가 0일 때의 기본 권위 증가량입니다.")]
     public float baseIncreaseAmount = 10f;
+    [Tooltip("채찍에 직접 맞은 백성 1명당 얻는 권위의 양입니다.")]
+    public float directHitAuthorityGain = 10f;
+    [Tooltip("채찍 근처에서 놀란 백성 1명당 얻는 권위의 양입니다.")]
+    public float nearMissAuthorityGain = 2f;
 
     // [Original: 0.1f] 스케일링 팩터를 줄여서 권위 증가량의 감소폭을 완만하게 수정.
     [Tooltip("증가량 감소에 영향을 미치는 스케일링 팩터입니다. 값이 클수록 증가량이 더 빠르게 줄어듭니다.")]
@@ -125,19 +129,47 @@ public class AuthorityManager : MonoBehaviour
 
         // 권위 게이지를 증가시킵니다.
         authorityGauge += amountToIncrease;
-        
+
         // 게이지가 상한선을 넘지 않도록 합니다.
         authorityGauge = Mathf.Min(authorityGauge, MaxAuthorityGauge);
 
         // 마지막 증가 시간을 초기화하여 감소를 막습니다.
         timeSinceLastIncrease = 0f;
-        
+
         UpdateAuthorityMultiplier();
         UpdateAuthorityUI();
 
         Debug.Log($"Authority Increased by {amountToIncrease:F2}! Current Gauge: {authorityGauge:F2}");
 
         // 게이지가 최대치에 도달하면 초기화 코루틴을 시작합니다.
+        if (authorityGauge >= MaxAuthorityGauge)
+        {
+            StartCoroutine(FeverTimeCoroutine());
+        }
+    }
+    /// <summary>
+    /// 권위 게이지를 '지정된 양'만큼, '둔화 법칙을 적용하여' 증가시키는 개정된 어명입니다.
+    /// </summary>
+    /// <param name="baseAmount">계산의 기준이 될 권위의 총량</param>
+    public void IncreaseAuthorityByAmount(float baseAmount)
+    {
+        if (_isGaugeFrozen) return;
+
+        // ★★★ 핵심 개정: 보고받은 양을 '둔화 법칙'에 따라 재계산합니다! ★★★
+        // 기존의 baseIncreaseAmount 대신, 보고받은 baseAmount를 사용하여 최종 상승량을 계산합니다.
+        float amountToIncrease = baseAmount / (authorityGauge * scalingFactor + 1);
+
+        // (이하 로직은 기존과 동일하옵니다)
+        authorityGauge += amountToIncrease;
+        
+        authorityGauge = Mathf.Min(authorityGauge, MaxAuthorityGauge);
+        timeSinceLastIncrease = 0f;
+        
+        UpdateAuthorityMultiplier();
+        UpdateAuthorityUI();
+
+        Debug.Log($"<color=orange>채찍질의 결과로 권위가 {amountToIncrease:F2}만큼 상승! 현재 게이지: {authorityGauge:F2}</color>");
+
         if (authorityGauge >= MaxAuthorityGauge)
         {
             StartCoroutine(FeverTimeCoroutine());

@@ -31,10 +31,15 @@ public class CitizenHighlighter : MonoBehaviour
     private bool isBeingDragged = false;
     private bool isGoldDropOnCooldown = false;
     private PeopleActor selfActor;
-
+    [Tooltip("채찍에 맞았을 때 번쩍일 색상입니다.")]
+    public Color flashColor = Color.red;
+    [Tooltip("섬광이 지속될 시간(초)입니다.")]
+    public float flashDuration = 0.2f;
+    private Coroutine flashCoroutine; // 섬광 코루틴을 제어하기 위함
+    private bool isFlashing = false;
     void Awake()
     {
-        selfActor = GetComponent<PeopleActor>(); 
+        selfActor = GetComponent<PeopleActor>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null) { originalColor = spriteRenderer.color; }
     }
@@ -107,7 +112,7 @@ public class CitizenHighlighter : MonoBehaviour
             {
                 // 2. 황금 하사
                 GameManager.instance.DropGoldEasterEgg(dropObject);
-                
+
                 // 3. 충성심 고취 (황금 하사 직후 바로 실행)
                 if (selfActor != null)
                 {
@@ -143,8 +148,14 @@ public class CitizenHighlighter : MonoBehaviour
         UpdateHighlight();
     }
 
+    /// <summary>
+    /// 평상시의 안색을 살피는 임무
+    /// </summary>
     private void UpdateHighlight()
     {
+        // ★★★ 핵심 개정: 긴급 어명(isFlashing)이 발령 중일 때는, 모든 평시 임무를 중단한다! ★★★
+        if (isFlashing) return;
+
         if (spriteRenderer == null) return;
         if (isSelected) { spriteRenderer.color = selectedHighlightColor; }
         else if (isMouseOver) { spriteRenderer.color = mouseOverHighlightColor; }
@@ -157,4 +168,35 @@ public class CitizenHighlighter : MonoBehaviour
         RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
         return (hit.collider != null && hit.collider.gameObject == this.gameObject);
     }
+    /// <summary>
+    /// 형벌 집행관이 호출할 '붉은 섬광' 어명
+    /// </summary>
+    public void FlashRed()
+    {
+        if (flashCoroutine != null) { StopCoroutine(flashCoroutine); }
+        flashCoroutine = StartCoroutine(FlashCoroutine());
+    }
+
+    /// <summary>
+    /// 붉은 섬광을 잠시 보여주고 원래 색으로 되돌리는 임무
+    /// </summary>
+    private IEnumerator FlashCoroutine()
+    {
+        // 1. 긴급 어명 깃발을 올린다!
+        isFlashing = true;
+        
+        // 2. 몸을 붉게 물들인다.
+        spriteRenderer.color = flashColor;
+
+        // 3. 정해진 시간만큼 기다린다.
+        yield return new WaitForSeconds(flashDuration);
+
+        // 4. 긴급 어명 깃발을 내린다!
+        isFlashing = false;
+        flashCoroutine = null;
+
+        // 5. 긴급 어명이 끝났으니, 다시 평상시의 안색으로 돌아가도록 명한다.
+        UpdateHighlight();
+    }
+
 }
