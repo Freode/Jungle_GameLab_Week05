@@ -29,7 +29,15 @@ public class WhipController : MonoBehaviour
         // 폐하께서 '왼손'을 내리치는 순간을 감지합니다.
         if (Input.GetMouseButtonDown(0))
         {
-            // 어명을 집행합니다!
+            // ★★★ 추가된 법도: UI를 경외하라! ★★★
+            // 만약 폐하의 손길이 UI 위에 머물러 있다면,
+            if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+            {
+                // 어떠한 형벌도 집행하지 말고 즉시 물러나라!
+                return;
+            }
+
+            // UI 위가 아닐 때만, 비로소 어명을 집행합니다!
             ExecutePunishment();
         }
     }
