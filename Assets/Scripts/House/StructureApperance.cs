@@ -100,6 +100,7 @@ public class StructureApperance : MonoBehaviour
     {
         if (levelUpQueue.Count == 0) return;
 
+        ApplyLevelUpEffect();
         spriteRenderer.sprite = levelAppearances[currentLevelIndex].sprite;
         transform.localScale = levelAppearances[currentLevelIndex].scale;
         levelUpQueue.Dequeue();
@@ -123,5 +124,15 @@ public class StructureApperance : MonoBehaviour
         if (techInfo == null) return;
 
         techInfo.OnInactiveInfo();
+    }
+
+    // 레벨 업 시, 적용되는 효과 발동
+    private void ApplyLevelUpEffect()
+    {
+        if (levelAppearances[currentLevelIndex].effect == null)
+            return;
+
+        string content = levelAppearances[currentLevelIndex].effect.ApplyTechEffect();
+
     }
 }
