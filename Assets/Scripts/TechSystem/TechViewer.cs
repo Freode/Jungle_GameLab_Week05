@@ -118,6 +118,8 @@ public class TechViewer : MonoBehaviour
         if(curTechKind == techKind) return;
 
         SetTabName(techKind);
+        ChangeTabsAlphaValue(techKind);
+
         curTechKind = techKind;
         int activeNum = techStates[techKind].Count;
         int kindIdx = techKindIdx[techKind];
@@ -233,5 +235,36 @@ public class TechViewer : MonoBehaviour
         if (techInfo == null) return;
 
         techInfo.OnInactiveInfo();
+    }
+
+    // 버튼 alpha 값을 조정
+    private void IncreaseButtonAlpha(Button button, bool isIncrease)
+    {
+        ColorBlock colors = button.colors;
+        Color normal = colors.normalColor;
+        normal.a = isIncrease ? 1.0f : 0.85f;
+
+        colors.normalColor = normal;
+        button.colors = colors;
+    }
+
+    // 탭 alpha 값 전체 변경
+    private void ChangeTabsAlphaValue(TechKind techKind)
+    {
+        switch (techKind)
+        {
+            case TechKind.None:
+                break;
+
+            case TechKind.Structure:
+                IncreaseButtonAlpha(buttonTabStructure, true);
+                IncreaseButtonAlpha(buttonTabJob, false);
+                break;
+
+            case TechKind.Job:
+                IncreaseButtonAlpha(buttonTabStructure, false);
+                IncreaseButtonAlpha(buttonTabJob, true);
+                break;
+        }
     }
 }
