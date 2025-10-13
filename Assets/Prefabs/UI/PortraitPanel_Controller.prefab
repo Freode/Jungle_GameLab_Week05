@@ -2114,6 +2114,7 @@ MonoBehaviour:
   OnYearPassedChannel: {fileID: 11400000, guid: f6f3db6cdae3de645912ac32889e7835, type: 2}
   OnSkullSelectedChannel: {fileID: 11400000, guid: beb286f048327f04d885aa95f0cc9d14, type: 2}
   OnHighlightChannel: {fileID: 11400000, guid: a698649b7633452479ad46cbbbb88551, type: 2}
+  OnNameTagStateChangeChannel: {fileID: 11400000, guid: 23344ec70c922374ca2459d5496ebd78, type: 2}
   infoPanel: {fileID: 1855839585950276556}
   nameText: {fileID: 5333317554893133385}
   ageText: {fileID: 8517230640920887477}

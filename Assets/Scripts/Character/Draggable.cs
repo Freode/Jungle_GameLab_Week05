@@ -1,3 +1,4 @@
+// 파일 이름: Draggable.cs (전면 개정안)
 using UnityEngine;
 using System.Collections;
 
@@ -23,28 +24,24 @@ public class Draggable : MonoBehaviour
     public float shakeDecayRate = 20f;
     [Tooltip("흔들기 이벤트 발생 후 다음 감지까지 필요한 대기 시간.")]
     public float shakeCooldown = 3.0f;
+    
+    public GameObject dropObject;
 
     [Header("방송할 채널")]
     [Tooltip("백성이 선택되었을 때 보고를 올릴 채널입니다.")]
     public PeopleActorEventChannelSO OnPeopleSelectedChannel;
 
-    public GameObject dropObject;
-
-
-
-    // --- 내부 변수 (수정 필요 없음) ---
+    // --- 내부 변수 ---
     private Vector3 offset;
     private bool isDragging = false;
     private bool isOverRiver = false;
     private Coroutine deathCoroutine;
     private Animator anim;
     private Mover spriteMover;
-    
-
+    private PeopleActor selfActor;
     private float lastVelocityX = 0f;
     private float currentShakeEnergy = 0f;
     private bool isShakeOnCooldown = false;
-    private PeopleActor selfActor;
     private Vector3 lastPosition;
 
     void Awake()
@@ -54,17 +51,53 @@ public class Draggable : MonoBehaviour
         selfActor = GetComponent<PeopleActor>();
     }
 
-    void OnMouseDown()
+    // ★★★ 핵심: 새로운 감찰 초소 'Update' ★★★
+    void Update()
+    {
+        // 폐하께서 '오른손'을 누르시는 그 순간을 감지합니다 (마우스 오른쪽 버튼 클릭)
+        if (Input.GetMouseButtonDown(1))
+        {
+            // 마우스 커서 아래에 있는 것이 '나' 자신인지 확인합니다.
+            if (IsMouseCurrentlyOver())
+            {
+                HandleDragStart();
+            }
+        }
+
+        // 폐하께서 '오른손'을 떼시는 그 순간을 감지합니다.
+        if (Input.GetMouseButtonUp(1))
+        {
+            // 드래그 중이었다면, 드래그를 종료하는 명을 내립니다.
+            if (isDragging)
+            {
+                HandleDragEnd();
+            }
+        }
+
+        // 폐하께서 '오른손'을 누르고 계시는 동안 계속 감지합니다.
+        if (Input.GetMouseButton(1))
+        {
+            // 드래그 중일 때만 백성을 이끕니다.
+            if (isDragging)
+            {
+                HandleDragging();
+            }
+        }
+    }
+    
+    // 드래그 시작을 처리하는 새로운 임무
+    void HandleDragStart()
     {
         if (selfActor != null && OnPeopleSelectedChannel != null)
         {
             OnPeopleSelectedChannel.RaiseEvent(selfActor);
-        }    
-
+        }
+        
         if (isOverRiver) return;
 
         offset = transform.position - GetMouseWorldPos();
         isDragging = true;
+        lastPosition = transform.position; // 흔들기 감지를 위해 초기 위치 저장
 
         if (deathCoroutine != null)
         {
@@ -79,19 +112,16 @@ public class Draggable : MonoBehaviour
         }
     }
 
-    void OnMouseDrag()
+    // 드래그 중일 때 처리하는 새로운 임무
+    void HandleDragging()
     {
-        if (isDragging)
-        {
-            transform.position = GetMouseWorldPos() + offset;
-
-            // 흔들기 감지 로직
-            if (dropObject != null)
-                DetectShaking();
-        }
+        transform.position = GetMouseWorldPos() + offset;
+        if (dropObject != null)
+            DetectShaking();
     }
 
-    void OnMouseUp()
+    // 드래그 종료를 처리하는 새로운 임무
+    void HandleDragEnd()
     {
         isDragging = false;
 
@@ -108,6 +138,14 @@ public class Draggable : MonoBehaviour
             }
             deathCoroutine = StartCoroutine(DieInRiver());
         }
+    }
+    
+    // 마우스가 현재 이 오브젝트 위에 있는지 확인하는 임무
+    private bool IsMouseCurrentlyOver()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
+        return (hit.collider != null && hit.collider.gameObject == this.gameObject);
     }
 
     void OnTriggerEnter2D(Collider2D other)
