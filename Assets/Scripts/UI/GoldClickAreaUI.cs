@@ -51,6 +51,7 @@ public class GoldClickAreaUI : MonoBehaviour
     IEnumerator UpdateLocalGoldAmount()
     {
         float startTime = _curTime;
+        decimal _startGold = _localCurrentGold;
 
         while (_curTime <= _endTime)
         {
@@ -61,14 +62,13 @@ public class GoldClickAreaUI : MonoBehaviour
 
             long finalAmount = GameManager.instance.GetCurrentGoldAmount();
 
-            decimal nextAmountF = _localCurrentGold + (finalAmount - _localCurrentGold) * dt;
+            decimal nextAmountF = _startGold + (finalAmount - _startGold) * dt;
             long nextAmount = (long)nextAmountF;
             PrintCurrentGoldAmount(nextAmount);
 
 
             // 골드 양이 선형적으로 증가하는 애니메이션
             yield return new WaitForSeconds(_interval);
-
 
         }
         // 최종 양 재지정

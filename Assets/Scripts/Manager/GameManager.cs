@@ -393,7 +393,12 @@ public class GameManager : MonoBehaviour
 
     public long GetClickIncreaseTotalAmount()
     {
-        return (long)(clickIncreaseTotalAmount * currentAuthority);
+        return clickIncreaseTotalAmount;
+    }
+
+    public long GetCurrentAuthority()
+    {
+        return (long)currentAuthority;
     }
 
     public long GetPeriodIncreaseTotalAmount() { return periodIncreaseTotalAmount; }
