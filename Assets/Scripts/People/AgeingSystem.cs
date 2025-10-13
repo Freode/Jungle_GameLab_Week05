@@ -5,6 +5,7 @@ using UnityEngine;
 public class AgeingSystem : MonoBehaviour
 {
     public VoidEventChannelSO OnYearPassedChannel;
+    public OutFloatEventChannelSO OnGetAdditionLifeRateChannel;               // 추가 생존 확률을 가져오는 채널
 
     public SurvivalProfile survivalProfile;
     private PeopleActor owner;
@@ -30,7 +31,7 @@ public class AgeingSystem : MonoBehaviour
         // ★ 운명의 심판 시작
         if (survivalProfile != null)
         {
-            float survivalChance = survivalProfile.GetSurvivalChance(owner.Age);
+            float survivalChance = survivalProfile.GetSurvivalChance(owner.Age) + OnGetAdditionLifeRateChannel.RaiseEvent();
 
             // 주사위를 굴려 생존 확률보다 높게 나오면 (불운하면)
             if (Random.value > survivalChance)

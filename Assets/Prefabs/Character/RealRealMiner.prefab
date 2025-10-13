@@ -417,8 +417,8 @@ MonoBehaviour:
   shakeSensitivity: 0.15
   shakeDecayRate: 20
   shakeCooldown: 3
-  OnPeopleSelectedChannel: {fileID: 11400000, guid: 9c85e2194ab112645a8ef560d79262dc, type: 2}
   dropObject: {fileID: 7413343513413014637}
+  OnPeopleSelectedChannel: {fileID: 11400000, guid: 9c85e2194ab112645a8ef560d79262dc, type: 2}
 --- !u!212 &1172071191988972309
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -529,6 +529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OnYearPassedChannel: {fileID: 11400000, guid: f6f3db6cdae3de645912ac32889e7835, type: 2}
+  OnGetAdditionLifeRateChannel: {fileID: 11400000, guid: a3730037f99ae6d47a3fece20e550bdf, type: 2}
   survivalProfile: {fileID: 11400000, guid: a414ca916988f744ca163aa6c72e26d2, type: 2}
 --- !u!114 &6286918439428936681
 MonoBehaviour:

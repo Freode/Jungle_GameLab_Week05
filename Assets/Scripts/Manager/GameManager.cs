@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [Header("Event Channels")]
     public FloatEventChannelSO OnAuthorityChangedChannel;
     public AuthorityLevelChangeEventChannelSO OnAuthorityLevelChangedChannel;   // 권위 레벨과 색상이 변경됨
+    public OutFloatEventChannelSO OnGetAdditionLifeRateChannel;               // 추가 생존 확률을 가져오는 채널
 
     public GameObject canvasObject;                         // 캔버스 객체
 
@@ -42,7 +43,7 @@ public class GameManager : MonoBehaviour
 
     private Dictionary<AreaType, IncreaseInfo> increaseGoldAmounts;
     private Dictionary<AreaType, bool> checkUnlockStructures;       // 이미 처음으로 열린 구조물 효과인지 확인
-
+    private float additionLifeRate = 0f;                             // 추가 생존 확률
 
     private void Awake()
     {
@@ -60,6 +61,9 @@ public class GameManager : MonoBehaviour
 
         if (OnAuthorityLevelChangedChannel != null)
             OnAuthorityLevelChangedChannel.OnEventRaised += UpdateAuthorityValueAndColor;
+
+        if (OnGetAdditionLifeRateChannel != null)
+            OnGetAdditionLifeRateChannel.OnEventRaised += GetAdditionalLifeRate;
     }
 
     private void OnDisable()
@@ -71,6 +75,9 @@ public class GameManager : MonoBehaviour
 
         if (OnAuthorityLevelChangedChannel != null)
             OnAuthorityLevelChangedChannel.OnEventRaised -= UpdateAuthorityValueAndColor;
+
+        if (OnGetAdditionLifeRateChannel != null)
+            OnGetAdditionLifeRateChannel.OnEventRaised -= GetAdditionalLifeRate;
     }
 
     // ★ 4. '권위 방송'을 받으면 호출될 함수
@@ -340,6 +347,12 @@ public class GameManager : MonoBehaviour
         increaseGoldAmounts[areaType].periodRate += amount;
     }
 
+    // 추가 생존 확률을 증가
+    public void IncreaseAdditionalLifeRate(float amount)
+    {
+        additionLifeRate += amount;
+    }
+
     // ==========================================================
     //                            Setter
     // ==========================================================
@@ -437,4 +450,9 @@ public class GameManager : MonoBehaviour
     public bool GetIsGameOver() { return isGameOver; }
 
     public Dictionary<AreaType, bool> GetCheckUnlockStructures() { return checkUnlockStructures; }
+
+    public float GetAdditionalLifeRate()
+    {
+        return additionLifeRate;
+    }
 }
