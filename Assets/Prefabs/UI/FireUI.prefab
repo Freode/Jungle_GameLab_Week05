@@ -10784,6 +10784,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2513897649967018237}
+  - component: {fileID: 4148221036047916734}
   m_Layer: 5
   m_Name: FireUI
   m_TagString: Untagged
@@ -10814,6 +10815,30 @@ RectTransform:
   m_AnchoredPosition: {x: -927.1, y: -519}
   m_SizeDelta: {x: 116.70935, y: 112.651}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4148221036047916734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5938599311621385947}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd6fdf590ad5c2643a3af69325653163, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  authorityLevelChannel: {fileID: 11400000, guid: e2d045cf2ffb1554b9305e3c75948a9f, type: 2}
+  levelSizeSettings:
+  - level: 1
+    fireSize: {x: 200, y: 200}
+  - level: 2
+    fireSize: {x: 300, y: 300}
+  - level: 3
+    fireSize: {x: 400, y: 400}
+  - level: 4
+    fireSize: {x: 500, y: 500}
+  - level: 6
+    fireSize: {x: 1000, y: 1000}
 --- !u!1 &5941718763671094234
 GameObject:
   m_ObjectHideFlags: 0
