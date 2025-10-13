@@ -216,7 +216,12 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     // 업그레이드 비용 출력
     private void PrintCost()
     {
-        textCost.text = FuncSystem.Format(techState.requaireAmount);
+        //필요수량이 0이 아닐경우 무직 -1 텍스트 출력
+        if (techState.requaireAmount > 0)
+            textCost.text = "금 " + FuncSystem.Format(techState.requaireAmount);
+        else
+            textCost.text = "무직 1";
+
     }
 
     // 레벨 또는 현재 수용량 출력
@@ -308,14 +313,14 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             long nextClickRate = increaseInfo.clickRate + next.clickRateAmount;
 
             long resultClickAmount = nextClickLinear * (100 + nextClickRate) / 100;
-            // 클릭 세금 변경점
+            // 클릭당 금 변경점
             if (techState.techData.printTech.isAcquireClickGold)
             {
                 string clickLine;
                 if (curLinearAmount != resultClickAmount)
-                    clickLine = $"클릭 세금:<color=#00FF00>{FuncSystem.Format(curLinearAmount)}</color>▶<color=#00FF00>{FuncSystem.Format(resultClickAmount)}</color>\n";
+                    clickLine = $"클릭당 금:<color=#00FF00>{FuncSystem.Format(curLinearAmount)}</color>▶<color=#00FF00>{FuncSystem.Format(resultClickAmount)}</color>\n";
                 else
-                    clickLine = $"클릭 세금:{FuncSystem.Format(curLinearAmount)}▶{FuncSystem.Format(resultClickAmount)}\n";
+                    clickLine = $"클릭당 금:{FuncSystem.Format(curLinearAmount)}▶{FuncSystem.Format(resultClickAmount)}\n";
 
                 description += clickLine;
             }
@@ -328,12 +333,12 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
             if (techState.techData.printTech.isAcquirePeriodGold)
             {
-                // 주기 세금 변경점
+                // 초당 금 변경점
                 string periodLine;
                 if (curPeriodAmount != resultPeriodAmount)
-                    periodLine = $"주기 세금:<color=#00FF00>{FuncSystem.Format(curPeriodAmount)}</color>▶<color=#00FF00>{FuncSystem.Format(resultPeriodAmount)}</color>\n";
+                    periodLine = $"초당 금:<color=#00FF00>{FuncSystem.Format(curPeriodAmount)}</color>▶<color=#00FF00>{FuncSystem.Format(resultPeriodAmount)}</color>\n";
                 else
-                    periodLine = $"주기 세금:{FuncSystem.Format(curPeriodAmount)}▶{FuncSystem.Format(resultPeriodAmount)}\n";
+                    periodLine = $"초당 금:{FuncSystem.Format(curPeriodAmount)}▶{FuncSystem.Format(resultPeriodAmount)}\n";
 
                 description += periodLine;
 
@@ -353,12 +358,12 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
                 else
                     nextTotalPeriodPercent = 0;
 
-                // 주기 세금 총 지분
+                // 초당 금 총 지분
                 string periodTechPercentLine;
                 if (curPeriodAmount != resultPeriodAmount)
-                    periodTechPercentLine = $"세금 지분:<color=#00FF00>{curTotalPeriodPercent.ToString("F2")}</color>%▶<color=#00FF00>{nextTotalPeriodPercent.ToString("F2")}</color>%\n";
+                    periodTechPercentLine = $"금 생산 지분:<color=#00FF00>{curTotalPeriodPercent.ToString("F2")}</color>%▶<color=#00FF00>{nextTotalPeriodPercent.ToString("F2")}</color>%\n";
                 else
-                    periodTechPercentLine = $"세금 지분:{curTotalPeriodPercent.ToString("F2")}%▶{nextTotalPeriodPercent.ToString("F2")}%\n";
+                    periodTechPercentLine = $"금 생산 지분:{curTotalPeriodPercent.ToString("F2")}%▶{nextTotalPeriodPercent.ToString("F2")}%\n";
 
                 description += periodTechPercentLine;
             }

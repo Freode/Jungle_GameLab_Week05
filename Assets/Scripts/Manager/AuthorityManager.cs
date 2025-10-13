@@ -61,7 +61,19 @@ public class AuthorityManager : MonoBehaviour
     public TextMeshProUGUI authorityGaugeText;
     [Tooltip("현재 골드 획득 배율을 표시할 텍스트입니다.")]
     public TextMeshProUGUI authorityMultiplierText;
-    
+
+    [Header("Slider Color Settings")]
+    [Tooltip("슬라이더의 채워지는(Fill) 영역의 이미지 컴포넌트입니다.")]
+    public Image sliderFillImage;
+    [Tooltip("슬라이더의 배경(Background) 영역의 이미지 컴포넌트입니다.")]
+    public Image sliderBackgroundImage;
+    [Tooltip("0레벨일 때의 기본 배경색입니다.")]
+    public Color defaultBackgroundColor = Color.white; // 기본값, 인스펙터에서 수정
+    [Tooltip("피버 타임일 때 적용될 불타는 금색입니다.")]
+    public Color feverTimeColor = Color.yellow; // 기본값, 인스펙터에서 수정
+    [Tooltip("권위 레벨별 채우기 색상 목록입니다. (0레벨부터 순서대로)")]
+    public Color[] authorityLevelColors;
+
     // 마지막으로 권위가 증가한 시간을 추적합니다.
     private float timeSinceLastIncrease = 0f;
     
@@ -234,7 +246,7 @@ public class AuthorityManager : MonoBehaviour
                     sliderValue = 100f;
                     hundreds -= 1;
                 }
-                
+
                 if (hundreds <= 0)
                 {
                     authorityGaugeText.gameObject.SetActive(false);
@@ -248,7 +260,7 @@ public class AuthorityManager : MonoBehaviour
                 authorityGaugeSlider.value = sliderValue;
             }
         }
-        
+
         // ★★★ 2. 폐하의 명에 따라 '황금 배율' 보고 절차를 수정합니다. ★★★
         if (authorityMultiplierText != null)
         {
@@ -265,5 +277,44 @@ public class AuthorityManager : MonoBehaviour
                 authorityMultiplierText.text = "";
             }
         }
+
+        
+        if (sliderFillImage != null && sliderBackgroundImage != null && authorityLevelColors.Length > 0)
+        {
+            // 피버 타임일 경우, 특별 색상 적용 후 즉시 종료
+            if (isFeverTime)
+            {
+                sliderFillImage.color = feverTimeColor;
+                sliderBackgroundImage.color = feverTimeColor; // 배경도 통일
+                return; // 아래 로직을 실행하지 않음
+            }
+
+            // 현재 레벨 계산 (0~99.9 => 0레벨, 100~199.9 => 1레벨 ...)
+            int currentLevel = Mathf.FloorToInt(authorityGauge / 100);
+            
+            // 색상 배열의 크기를 넘지 않도록 레벨 값을 제한
+            int clampedLevel = Mathf.Min(currentLevel, authorityLevelColors.Length - 1);
+
+            // 채워지는 색상: 현재 레벨의 색상
+            Color fillColor = authorityLevelColors[clampedLevel];
+
+            // 배경 색상: 이전 레벨의 색상
+            Color backgroundColor;
+            if (clampedLevel == 0)
+            {
+                // 0레벨일 때는 지정된 기본 배경색 사용
+                backgroundColor = defaultBackgroundColor;
+            }
+            else
+            {
+                // 1레벨 이상일 때는 (현재 레벨 - 1)의 색상을 배경으로 사용
+                backgroundColor = authorityLevelColors[clampedLevel - 1];
+            }
+            
+            // 계산된 색상을 실제 이미지에 적용
+            sliderFillImage.color = fillColor;
+            sliderBackgroundImage.color = backgroundColor;
+        }
+
     }
 }

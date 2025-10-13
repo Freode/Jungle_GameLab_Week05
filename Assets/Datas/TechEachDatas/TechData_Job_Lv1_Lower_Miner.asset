@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   techKind: 2
   areaType: 5
-  techName: "\uAE08\uAD11 \uAD11\uBD80 "
+  techName: "\uAE08\uAD11 \uB178\uC608"
   techNamePrint: 
-  techDescription: "\uC789\uC5EC \uC778\uB825 -1\uBA85\\n\uAE08\uAD11 \uAD11\uBD80\uB85C
-    1\uBA85 \uBC30\uCE58\\n\uD074\uB9AD \uC2DC, \uC5BB\uB294 \uAE08 +3"
+  techDescription: "\uBB34\uC9C1 <color=#FF0000>-1</color>\uBA85\\n\uAE08\uAD11 \uAD11\uBD80\uB85C
+    1\uBA85 \uBC30\uCE58"
   techIcon: {fileID: 21300000, guid: 619c7a4fb5f8b5947b267aaabc970924, type: 3}
   baseRequiredGold: 0
   increaseGoldValue: 0
@@ -37,3 +37,5 @@ MonoBehaviour:
     isAcquirePeriodGold: 0
     isReducePeoplePeriod: 0
     isPyramid: 0
+  reduceIncreaseGoldValueLevel: 0
+  reduceIncreaseGoldValue: 0
