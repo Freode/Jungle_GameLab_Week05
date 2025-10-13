@@ -107,9 +107,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 594
-        width: 106
-        height: 106
+        y: 868
+        width: 156
+        height: 156
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,10 +128,10 @@ TextureImporter:
       name: WhipCursor_1_1
       rect:
         serializedVersion: 2
-        x: 76
-        y: 70
-        width: 548
-        height: 560
+        x: 4
+        y: 0
+        width: 1017
+        height: 1024
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
