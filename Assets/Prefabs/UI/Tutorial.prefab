@@ -172,7 +172,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -100}
+  m_AnchoredPosition: {x: 600, y: 170}
   m_SizeDelta: {x: 200, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1474304117292372305
@@ -322,7 +322,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 08017d8905bb7774781c63fbb0bc4e76, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0231243ed50a3594d81f7e4cc9da28f1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -383,27 +383,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pages:
-  - pageImage: {fileID: 21300000, guid: 08017d8905bb7774781c63fbb0bc4e76, type: 3}
+  - pageImage: {fileID: 21300000, guid: d4e6ebddef17c4647b076b08a9a78955, type: 3}
     buttonAnchoredPosition: {x: 0, y: -120}
-  - pageImage: {fileID: 21300000, guid: 759bb282be5dcd748820c9a23c9990a6, type: 3}
-    buttonAnchoredPosition: {x: 230, y: 290}
-  - pageImage: {fileID: 21300000, guid: 34f87043c9f671947af45b1284ceea69, type: 3}
-    buttonAnchoredPosition: {x: 420, y: 270}
-  - pageImage: {fileID: 21300000, guid: d91503ea1b84c5b48ab82b3279d3aaee, type: 3}
-    buttonAnchoredPosition: {x: 420, y: 100}
-  - pageImage: {fileID: 21300000, guid: c6a310567ebee5646bd147c6a2ac7e3b, type: 3}
-    buttonAnchoredPosition: {x: 400, y: -420}
-  - pageImage: {fileID: 21300000, guid: 8871ce70da0739e4bbe5f2334bc164e3, type: 3}
-    buttonAnchoredPosition: {x: 0, y: -350}
-  - pageImage: {fileID: 21300000, guid: 0606666e2d59c9d42a9a067581f8c938, type: 3}
-    buttonAnchoredPosition: {x: 270, y: -30}
-  - pageImage: {fileID: 21300000, guid: 76a90f2d794bf6048aa669bd41e241ca, type: 3}
-    buttonAnchoredPosition: {x: 420, y: 310}
-  - pageImage: {fileID: 21300000, guid: cdfe834f7154c2e47ab0ca614feb1c0c, type: 3}
-    buttonAnchoredPosition: {x: 330, y: -120}
+  - pageImage: {fileID: 21300000, guid: 61f22f5b9093f77479bea9651effcb30, type: 3}
+    buttonAnchoredPosition: {x: 230, y: 280}
+  - pageImage: {fileID: 21300000, guid: 8f164081abf479546bf8b0154d471f82, type: 3}
+    buttonAnchoredPosition: {x: 410, y: 210}
+  - pageImage: {fileID: 21300000, guid: fb137a0a20cbb914db0b0a5fc4068852, type: 3}
+    buttonAnchoredPosition: {x: 420, y: -120}
+  - pageImage: {fileID: 21300000, guid: 945e6f29d7d84534fab6c153d529062d, type: 3}
+    buttonAnchoredPosition: {x: -300, y: -310}
+  - pageImage: {fileID: 21300000, guid: c4bc29d91984cde42969670f33b97472, type: 3}
+    buttonAnchoredPosition: {x: 270, y: -20}
+  - pageImage: {fileID: 21300000, guid: aa306c8002bcd3e4791dcc941f7a168b, type: 3}
+    buttonAnchoredPosition: {x: 410, y: 100}
+  - pageImage: {fileID: 21300000, guid: 8a6d15a27789b834eb81ecb8dea16468, type: 3}
+    buttonAnchoredPosition: {x: 420, y: -270}
+  - pageImage: {fileID: 21300000, guid: b6a7e3ca9db34184eb24c7b18db5d992, type: 3}
+    buttonAnchoredPosition: {x: 330, y: -140}
   - pageImage: {fileID: 21300000, guid: 289bf5b2d931f1c4a8343ac12b843992, type: 3}
-    buttonAnchoredPosition: {x: 570, y: -70}
+    buttonAnchoredPosition: {x: 570, y: -50}
   - pageImage: {fileID: 21300000, guid: 0231243ed50a3594d81f7e4cc9da28f1, type: 3}
+    buttonAnchoredPosition: {x: 600, y: 170}
+  - pageImage: {fileID: 21300000, guid: 0437ee8443ba9a0408d485353288f92d, type: 3}
     buttonAnchoredPosition: {x: 0, y: -350}
   tutorialImage: {fileID: 4937363366144191553}
   nextButton: {fileID: 9050531268697417159}

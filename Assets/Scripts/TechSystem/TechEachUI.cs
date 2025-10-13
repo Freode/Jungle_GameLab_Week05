@@ -376,9 +376,9 @@ public class TechEachUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
             string respawnLine;
             if (curRespawnPeriod != next.respawnTime)
-                respawnLine = $"생성 주기:<color=#00FF00>{curRespawnPeriod.ToString("F3")}</color>s▶<color=#00FF00))>{next.respawnTime.ToString("F3")}</color>s\n";
+                respawnLine = $"무직 생성 주기:<color=#00FF00>{curRespawnPeriod.ToString("F3")}</color>s▶<color=#00FF00))>{next.respawnTime.ToString("F3")}</color>s\n";
             else
-                respawnLine = $"생성 주기:{curRespawnPeriod.ToString("F3")}s▶{next.respawnTime.ToString("F3")}s\n";
+                respawnLine = $"무직 생성 주기:{curRespawnPeriod.ToString("F3")}s▶{next.respawnTime.ToString("F3")}s\n";
 
             description += respawnLine;
         }
