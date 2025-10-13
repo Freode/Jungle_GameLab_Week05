@@ -146,6 +146,10 @@ PrefabInstance:
       propertyPath: levelUpQueueUI
       value: 
       objectReference: {fileID: 1627818729}
+    - target: {fileID: -4753656652460374165, guid: 36049f88c4336974c89d0ef15e1b0e37, type: 3}
+      propertyPath: levelUpParticle
+      value: 
+      objectReference: {fileID: 131791870}
     - target: {fileID: 3105119767067101375, guid: 36049f88c4336974c89d0ef15e1b0e37, type: 3}
       propertyPath: m_Name
       value: Pyramid_Upgradable
@@ -401,6 +405,73 @@ PrefabInstance:
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9113684981745228890, guid: 56504f37af425e746a72113177f52df1, type: 3}
   m_PrefabInstance: {fileID: 114669411}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &131791868
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 646956046}
+    m_Modifications:
+    - target: {fileID: 3935831001073503580, guid: ffb9eef272613914e9317dd876e3a578, type: 3}
+      propertyPath: m_Name
+      value: Smoke Effect
+      objectReference: {fileID: 0}
+    - target: {fileID: 4430759402150689852, guid: ffb9eef272613914e9317dd876e3a578, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 4430759402150689852, guid: ffb9eef272613914e9317dd876e3a578, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4430759402150689852, guid: ffb9eef272613914e9317dd876e3a578, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.034858022
+      objectReference: {fileID: 0}
+    - target: {fileID: 4430759402150689852, guid: ffb9eef272613914e9317dd876e3a578, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4430759402150689852, guid: ffb9eef272613914e9317dd876e3a578, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4430759402150689852, guid: ffb9eef272613914e9317dd876e3a578, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4430759402150689852, guid: ffb9eef272613914e9317dd876e3a578, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4430759402150689852, guid: ffb9eef272613914e9317dd876e3a578, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 4430759402150689852, guid: ffb9eef272613914e9317dd876e3a578, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4430759402150689852, guid: ffb9eef272613914e9317dd876e3a578, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ffb9eef272613914e9317dd876e3a578, type: 3}
+--- !u!4 &131791869 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4430759402150689852, guid: ffb9eef272613914e9317dd876e3a578, type: 3}
+  m_PrefabInstance: {fileID: 131791868}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &131791870 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4304613766102760303, guid: ffb9eef272613914e9317dd876e3a578, type: 3}
+  m_PrefabInstance: {fileID: 131791868}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &141921340 stripped
 MonoBehaviour:
@@ -1144,6 +1215,7 @@ Transform:
   - {fileID: 76681840}
   - {fileID: 1658665850}
   - {fileID: 673310287}
+  - {fileID: 131791869}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &673310286 stripped
@@ -1363,6 +1435,7 @@ GameObject:
   - component: {fileID: 1029914033}
   - component: {fileID: 1029914032}
   - component: {fileID: 1029914031}
+  - component: {fileID: 1029914034}
   m_Layer: 5
   m_Name: Forge Upgrade Button
   m_TagString: Untagged
@@ -1483,6 +1556,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1029914029}
   m_CullTransparentMesh: 1
+--- !u!114 &1029914034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1029914029}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49df9d15e294f5643bd795688dad74a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transitionDuration: 0.1
 --- !u!1001 &1043343014
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1699,9 +1785,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1261087924}
     - target: {fileID: 3338107859811318928, guid: 394ca986a7e92af489082efe1aec1867, type: 3}
-      propertyPath: levelAppearances.Array.size
-      value: 5
-      objectReference: {fileID: 0}
+      propertyPath: levelUpParticle
+      value: 
+      objectReference: {fileID: 131791870}
     - target: {fileID: 9015979082597668135, guid: 394ca986a7e92af489082efe1aec1867, type: 3}
       propertyPath: m_Name
       value: House_Upgradable
@@ -1748,6 +1834,10 @@ PrefabInstance:
       propertyPath: levelUpQueueUI
       value: 
       objectReference: {fileID: 1029914029}
+    - target: {fileID: 2831644512735036401, guid: a78f16d5101b3514e9f7720b71daeee4, type: 3}
+      propertyPath: levelUpParticle
+      value: 
+      objectReference: {fileID: 131791870}
     - target: {fileID: 7428410673399791994, guid: a78f16d5101b3514e9f7720b71daeee4, type: 3}
       propertyPath: m_Name
       value: Forge_Upgradable
@@ -1910,6 +2000,7 @@ GameObject:
   - component: {fileID: 1261087928}
   - component: {fileID: 1261087927}
   - component: {fileID: 1261087926}
+  - component: {fileID: 1261087929}
   m_Layer: 5
   m_Name: House Upgrade Button
   m_TagString: Untagged
@@ -2030,6 +2121,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1261087924}
   m_CullTransparentMesh: 1
+--- !u!114 &1261087929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261087924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49df9d15e294f5643bd795688dad74a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transitionDuration: 0.1
 --- !u!1001 &1298090655
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2292,6 +2396,7 @@ GameObject:
   - component: {fileID: 1627818733}
   - component: {fileID: 1627818732}
   - component: {fileID: 1627818731}
+  - component: {fileID: 1627818734}
   m_Layer: 5
   m_Name: Pyramid Upgrade Button
   m_TagString: Untagged
@@ -2412,6 +2517,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1627818729}
   m_CullTransparentMesh: 1
+--- !u!114 &1627818734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627818729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49df9d15e294f5643bd795688dad74a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transitionDuration: 0.1
 --- !u!1 &1631538282
 GameObject:
   m_ObjectHideFlags: 0
@@ -15041,6 +15159,10 @@ PrefabInstance:
       propertyPath: levelUpQueueUI
       value: 
       objectReference: {fileID: 2072235756}
+    - target: {fileID: 6678617768056138851, guid: 4f7910d38eef1b0449e531e5a10cf6ea, type: 3}
+      propertyPath: levelUpParticle
+      value: 
+      objectReference: {fileID: 131791870}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15340,6 +15462,7 @@ GameObject:
   - component: {fileID: 2072235760}
   - component: {fileID: 2072235759}
   - component: {fileID: 2072235758}
+  - component: {fileID: 2072235761}
   m_Layer: 5
   m_Name: Transport Upgrade Button
   m_TagString: Untagged
@@ -15460,6 +15583,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2072235756}
   m_CullTransparentMesh: 1
+--- !u!114 &2072235761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072235756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49df9d15e294f5643bd795688dad74a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transitionDuration: 0.1
 --- !u!1001 &2952472370118620326
 PrefabInstance:
   m_ObjectHideFlags: 0

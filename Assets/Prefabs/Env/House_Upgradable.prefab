@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   areaType: 5
+  areaIcon: {fileID: 0}
   levelAppearances:
   - level: 0
     sprite: {fileID: 8272431291108847440, guid: 28eb17de431ee5d4a8890007c511c131, type: 3}
@@ -165,12 +166,11 @@ MonoBehaviour:
   - level: 100
     sprite: {fileID: -2263264567363676519, guid: ee0621a419992b74fa554a3a07faa09f, type: 3}
     scale: {x: 0.7, y: 0.7, z: 1}
-  - level: 150
-    sprite: {fileID: -2263264567363676519, guid: ee0621a419992b74fa554a3a07faa09f, type: 3}
-    scale: {x: 0.75, y: 0.75, z: 1}
   isClearStructure: 0
   InfoUI: {fileID: 0}
+  structureType: 0
   levelUpQueueUI: {fileID: 0}
+  levelUpParticle: {fileID: 0}
 --- !u!114 &3388201808746382517
 MonoBehaviour:
   m_ObjectHideFlags: 0

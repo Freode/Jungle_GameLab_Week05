@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   areaType: 4
+  areaIcon: {fileID: 0}
   levelAppearances:
   - level: 1
     sprite: {fileID: 21300000, guid: 703673e0cfaa45345b6c692778c5e598, type: 3}
@@ -122,6 +123,7 @@ MonoBehaviour:
   InfoUI: {fileID: 0}
   structureType: 2
   levelUpQueueUI: {fileID: 0}
+  levelUpParticle: {fileID: 0}
 --- !u!61 &8864272810351741792
 BoxCollider2D:
   m_ObjectHideFlags: 0

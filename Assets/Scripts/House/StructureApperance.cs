@@ -22,6 +22,7 @@ public class StructureApperance : MonoBehaviour
 
     public Queue<bool> levelUpQueue = new Queue<bool>();
     public GameObject levelUpQueueUI;
+    public ParticleSystem levelUpParticle;
 
     private SpriteRenderer spriteRenderer;
     private int currentLevel = 0;
@@ -106,6 +107,10 @@ public class StructureApperance : MonoBehaviour
         levelUpQueue.Dequeue();
         levelUpQueueUI.SetActive(false);
         currentLevelIndex++;
+        
+        // play particle at transform position
+        levelUpParticle.transform.position = transform.position;
+        levelUpParticle.Play();
     }
 
     // 마우스 올려 놓기
