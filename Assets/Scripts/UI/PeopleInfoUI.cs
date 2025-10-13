@@ -38,6 +38,8 @@ public class PeopleInfoUI : MonoBehaviour
     public GameObject displayGroup;     // 이름 표시 그룹
     public GameObject editGroup;        // 이름 편집 그룹
     public TMP_InputField nameInputField; // 이름 입력창
+    [Tooltip("이름을 하사했을 때 상승할 충성심의 양입니다.")]
+    public int nameBestowalLoyaltyBonus = 10;
 
     [Header("Skull Specific UI")]
     public GameObject preserveToggleObject; // 체크박스와 텍스트를 포함한 부모 오브젝트
@@ -180,6 +182,15 @@ public class PeopleInfoUI : MonoBehaviour
             // UI 텍스트도 즉시 갱신
             nameText.text = $"이름: {currentActor.DisplayName}";
             OnNameTagStateChangeChannel?.RaiseEvent(currentActor.gameObject, true);
+
+            currentActor.ChangeLoyalty(nameBestowalLoyaltyBonus);
+            Debug.Log($"<color=cyan>{currentActor.DisplayName}: 이름을 하사받아 충성도가 {nameBestowalLoyaltyBonus}만큼 상승!</color>");
+            EmotionController emotionCtrl = currentActor.GetComponent<EmotionController>();
+            if (emotionCtrl != null)
+            {
+                // 감정 관리인에게 "Emotion_Love"를 표현하라고 명합니다!
+                emotionCtrl.ExpressEmotion("Emotion_Love");
+            }
         }
         // 기본 보기 모드로 전환
         ExitEditMode();
