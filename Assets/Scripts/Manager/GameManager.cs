@@ -327,24 +327,28 @@ public class GameManager : MonoBehaviour
     public void IncreaseClickLinearGoldAcquirementAmount(AreaType areaType, long amount)
     {
         increaseGoldAmounts[areaType].clickEachLinearAddition += amount;
+        AddClickIncreaseTotalAmount();
     }
 
     // 클릭으로 얻는 x 금의 양 추가 증가
     public void IncreaseClickRateGoldAcquirementAmount(AreaType areaType, long amount)
     {
         increaseGoldAmounts[areaType].clickRate += amount;
+        AddClickIncreaseTotalAmount();
     }
 
     // 주기적으로 얻는 + 금의 양 추가 증가
     public void IncreasePeriodLinearGoldAcquirementAmount(AreaType areaType, long amount)
     {
         increaseGoldAmounts[areaType].periodEachLinearrAddition += amount;
+        RecalculatePeriodIncreaseGoldAmount();
     }
 
     // 주기적으로 얻는 x 금의 양 추가 증가
     public void IncreasePeriodRateGoldAcquirementAmount(AreaType areaType, long amount)
     {
         increaseGoldAmounts[areaType].periodRate += amount;
+        RecalculatePeriodIncreaseGoldAmount();
     }
 
     // 추가 생존 확률을 증가

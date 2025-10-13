@@ -1674,6 +1674,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnAuthorityChangedChannel: {fileID: 11400000, guid: 7ad0cd89c7982d446a54f2beac87be71, type: 2}
   OnAuthorityLevelChangedChannel: {fileID: 11400000, guid: e2d045cf2ffb1554b9305e3c75948a9f, type: 2}
+  OnGetAdditionLifeRateChannel: {fileID: 11400000, guid: a3730037f99ae6d47a3fece20e550bdf, type: 2}
   canvasObject: {fileID: 1464799245}
   currentGoldAmount: 100
   clickIncreaseGoldAmountLinear: 1
@@ -2581,8 +2582,12 @@ PrefabInstance:
       value: -89.523926
       objectReference: {fileID: 0}
     - target: {fileID: 1278912486107113720, guid: dc90b49806d88a840a38a9d4ca309fb2, type: 3}
+      propertyPath: m_margin.x
+      value: 2.456543
+      objectReference: {fileID: 0}
+    - target: {fileID: 1278912486107113720, guid: dc90b49806d88a840a38a9d4ca309fb2, type: 3}
       propertyPath: m_margin.z
-      value: -8.731445
+      value: -0.13317871
       objectReference: {fileID: 0}
     - target: {fileID: 1362728016719648362, guid: dc90b49806d88a840a38a9d4ca309fb2, type: 3}
       propertyPath: m_Pivot.x
@@ -2677,8 +2682,12 @@ PrefabInstance:
       value: "\uAC74\uBB3C \uC774\uB984"
       objectReference: {fileID: 0}
     - target: {fileID: 5227368125312354925, guid: dc90b49806d88a840a38a9d4ca309fb2, type: 3}
+      propertyPath: m_margin.x
+      value: -9.346802
+      objectReference: {fileID: 0}
+    - target: {fileID: 5227368125312354925, guid: dc90b49806d88a840a38a9d4ca309fb2, type: 3}
       propertyPath: m_margin.z
-      value: 4.7072754
+      value: 36.643677
       objectReference: {fileID: 0}
     - target: {fileID: 6578276664193482145, guid: dc90b49806d88a840a38a9d4ca309fb2, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -2697,8 +2706,12 @@ PrefabInstance:
       value: 83
       objectReference: {fileID: 0}
     - target: {fileID: 8310090104106406094, guid: dc90b49806d88a840a38a9d4ca309fb2, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 397.4769
+      objectReference: {fileID: 0}
+    - target: {fileID: 8310090104106406094, guid: dc90b49806d88a840a38a9d4ca309fb2, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -2
+      value: 7.2385
       objectReference: {fileID: 0}
     - target: {fileID: 8310090104106406094, guid: dc90b49806d88a840a38a9d4ca309fb2, type: 3}
       propertyPath: m_AnchoredPosition.y
