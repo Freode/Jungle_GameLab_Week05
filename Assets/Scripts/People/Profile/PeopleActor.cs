@@ -23,6 +23,7 @@ public class PeopleActor : MonoBehaviour
     public string DisplayName => displayName;
     public JobType Job => job;
     public CarrierItem CarrierItem => carrierItem;
+    public bool HasReceivedRoyalName { get; private set; } = false;
 
 
     // ★ '죽음'을 명하는 함수
@@ -93,6 +94,7 @@ public class PeopleActor : MonoBehaviour
         if (!string.IsNullOrWhiteSpace(newName))
         {
             displayName = newName;
+            HasReceivedRoyalName = true;
         }
     }
     public void AddAge(int amount)
