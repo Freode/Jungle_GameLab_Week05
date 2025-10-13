@@ -20,17 +20,21 @@ public class CitizenHighlighter : MonoBehaviour
     [Header("황금 하사 설정")]
     [Tooltip("선택되었을 때 떨어뜨릴 황금 주머니 오브젝트입니다.")]
     public GameObject dropObject;
-    [Tooltip("황금을 한번 떨어뜨린 후, 다음 황금을 떨어뜨리기까지의 대기 시간(초)입니다.")]
-    public float goldDropCooldown = 5.0f;
+    [Tooltip("황금과 충성심을 하사한 뒤, 다음 하사까지의 재사용 대기시간(초)입니다.")]
+    public float rewardCooldown = 5.0f;
+    [Tooltip("선택 시 상승할 충성심의 양입니다.")]
+    public int loyaltyBoostAmount = 5;
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
     private bool isSelected = false;
     private bool isMouseOver = false;
     private bool isBeingDragged = false;
     private bool isGoldDropOnCooldown = false;
+    private PeopleActor selfActor;
 
     void Awake()
     {
+        selfActor = GetComponent<PeopleActor>(); 
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null) { originalColor = spriteRenderer.color; }
     }
@@ -91,22 +95,29 @@ public class CitizenHighlighter : MonoBehaviour
         {
             isSelected = true;
 
-            // 1. 감정 표현
+            // 1. 감정 표현 (변경 없음)
             if (emotionController != null)
             {
                 emotionController.ExpressEmotion("Emotion_Love");
             }
 
-            // ★★★ 핵심 개정: 쿨타임 규정을 확인하고 황금을 하사합니다 ★★★
-            // 황금 주머니가 있고, 현재 쿨타임이 아닐 때만 아래를 실행합니다.
+            // ★★★ 핵심 개정: 황금과 충성심을 하나의 어명으로 묶습니다. ★★★
+            // '보상 쿨타임'이 아닐 때만 아래를 실행합니다.
             if (dropObject != null && !isGoldDropOnCooldown)
             {
-                // 황금 하사 어명을 내립니다.
+                // 2. 황금 하사
                 GameManager.instance.DropGoldEasterEgg(dropObject);
+                
+                // 3. 충성심 고취 (황금 하사 직후 바로 실행)
+                if (selfActor != null)
+                {
+                    selfActor.ChangeLoyalty(loyaltyBoostAmount);
+                    Debug.Log($"{selfActor.DisplayName}의 충성도가 {loyaltyBoostAmount}만큼 상승했습니다!");
+                }
 
-                // 즉시 쿨타임 깃발을 올리고, 쿨타임이 끝날 때까지 기다리는 임무를 시작합니다.
+                // 4. 통합된 쿨타임을 시작합니다.
                 isGoldDropOnCooldown = true;
-                StartCoroutine(GoldDropCooldownCoroutine());
+                StartCoroutine(RewardCooldownCoroutine());
             }
         }
         else
@@ -115,14 +126,16 @@ public class CitizenHighlighter : MonoBehaviour
         }
         UpdateHighlight();
     }
-    private IEnumerator GoldDropCooldownCoroutine()
+    // ★★★ 이름 변경 및 통합: GoldDropCooldownCoroutine -> RewardCooldownCoroutine ★★★
+    private IEnumerator RewardCooldownCoroutine()
     {
-        // 설정된 쿨타임 시간만큼 기다립니다.
-        yield return new WaitForSeconds(goldDropCooldown);
+        // 설정된 '보상 쿨타임' 시간만큼 기다립니다.
+        yield return new WaitForSeconds(rewardCooldown);
 
-        // 시간이 지나면, 다시 황금을 하사할 수 있도록 쿨타임 깃발을 내립니다.
+        // 시간이 지나면, 다시 황금과 충성심을 하사할 수 있도록 쿨타임 깃발을 내립니다.
         isGoldDropOnCooldown = false;
     }
+
 
     private void OnDeselected()
     {

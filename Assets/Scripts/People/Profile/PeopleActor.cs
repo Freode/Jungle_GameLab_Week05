@@ -66,13 +66,13 @@ public class PeopleActor : MonoBehaviour
             OnActorDiedChannel.RaiseEvent(this);
         }
     }
-    
+
     void OnEnable()
     {
         // 스폰될 때마다 새 ID 부여
         id = RuntimeIdGenerator.Next();
     }
-     
+
     public void Apply(PeopleValue v)
     {
         if (v == null) return;
@@ -119,5 +119,25 @@ public class PeopleActor : MonoBehaviour
         displayName = null;
         job = JobType.None;
         carrierItem = CarrierItem.None;
+    }
+
+    /// <summary>
+    /// 충성심을 지정된 양만큼 변경합니다. (음수도 가능)
+    /// </summary>
+    /// <param name="amount">변화시킬 충성도의 양</param>
+    public void ChangeLoyalty(int amount)
+    {
+        loyalty += amount;
+        // 충성심은 0과 100 사이를 벗어날 수 없다는 왕국의 법도를 적용합니다.
+        loyalty = Mathf.Clamp(loyalty, 0, 100);
+    }
+    
+    /// <summary>
+    /// 충성심을 특정 값으로 즉시 설정합니다.
+    /// </summary>
+    /// <param name="value">설정할 충성도의 값</param>
+    public void SetLoyalty(int value)
+    {
+        loyalty = Mathf.Clamp(value, 0, 100);
     }
 }
